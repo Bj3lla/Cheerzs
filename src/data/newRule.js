@@ -1,0 +1,141 @@
+// 🎲 Utility: Random number of rounds for each rule
+function getRandomRounds(min = 10, max = 30) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// 📜 Exported list of all rules
+export const newRules = [
+  {
+    id: 1,
+    en: "Every time someone swears, they drink.",
+    repelEn: "Hell yeah! Let's swear again!",
+    no: "Hver gang noen banner, drikker de.",
+    repelNo: "Hell yeah! La oss banne igjen!",
+  },
+  {
+    id: 2,
+    en: "You must speak in movie quotes until your next turn.",
+    repelEn: "Phew! Back to normal speech.",
+    no: "Du må snakke i filmsitater til din neste tur.",
+    repelNo: "Digg! Tilbake til normal tale.",
+  },
+  {
+    id: 3,
+    en: "Every time someone laughs, everyone drinks.",
+    repelEn: "No more laugh-sips, relax!",
+    no: "Hver gang noen ler, drikker alle.",
+    repelNo: "Ikke mer latter-sipper, slapp av!",
+  },
+  {
+    id: 4,
+    en: "If you point, take a sip.",
+    repelEn: "Pointing is safe now!",
+    no: "Hvis du peker, ta en slurk.",
+    repelNo: "Peking er trygt nå!",
+  },
+  {
+    id: 5,
+    en: "Every sentence must end with 'your majesty.'",
+    repelEn: "Freedom from 'your majesty!'",
+    no: "Hver setning må slutte med 'deres majestet.'",
+    repelNo: "Frihet fra 'deres majestet!'",
+  },
+  {
+    id: 6,
+    en: "You can’t use anyone’s name — only nicknames.",
+    repelEn: "Names are back in!",
+    no: "Du kan ikke bruke noens navn – bare kallenavn.",
+    repelNo: "Navn er tilbake!",
+  },
+  {
+    id: 7,
+    en: "You must drink with your non-dominant hand.",
+    repelEn: "Use your dominant hand again!",
+    no: "Du må drikke med din ikke-dominante hånd.",
+    repelNo: "Bruk din dominante hånd igjen!",
+  },
+  {
+    id: 8,
+    en: "Whenever someone says 'cheers,' everyone drinks.",
+    repelEn: "'Cheers' no longer requires a sip.",
+    no: "Når noen sier 'skål,' drikker alle.",
+    repelNo: "'Skål' krever ikke lenger en slurk.",
+  },
+  {
+    id: 9,
+    en: "Anyone who checks their phone drinks.",
+    repelEn: "Phone-checks are safe now!",
+    no: "Alle som sjekker telefonen sin, drikker.",
+    repelNo: "Telefon-sjekker er trygge nå!",
+  },
+  {
+    id: 10,
+    en: "You can only speak in rhymes until your next turn.",
+    repelEn: "No more rhymes, speak freely!",
+    no: "Du kan bare snakke i rim til din neste tur.",
+    repelNo: "Ikke mer rim, snakk fritt!",
+  },
+  {
+    id: 11,
+    en: "The last person to raise their glass drinks.",
+    repelEn: "No more last-person sips.",
+    no: "Den siste personen til å heve glasset sitt, drikker.",
+    repelNo: "Ikke mer siste-person slurker.",
+  },
+  {
+    id: 12,
+    en: "Anyone who mentions work drinks.",
+    repelEn: "Work-talk is safe now!",
+    no: "Alle som nevner jobb, drikker.",
+    repelNo: "Jobb-snakk er trygt nå!",
+  },
+  {
+    id: 13,
+    en: "No one can say 'drink' or 'sip.'",
+    repelEn: "You can say 'drink' again!",
+    no: "Ingen kan si 'drikk' eller 'slurk.'",
+    repelNo: "Du kan si 'drikk' igjen!",
+  },
+  {
+    id: 14,
+    en: "If someone forgets a rule, they drink twice.",
+    repelEn: "Rule-forgetting is forgiven!",
+    no: "Hvis noen glemmer en regel, drikker de to ganger.",
+    repelNo: "Regel-glemming er tilgitt!",
+  },
+  {
+    id: 15,
+    en: "If someone compliments you, both drink.",
+    repelEn: "Compliments are free now!",
+    no: "Hvis noen gir deg et kompliment, drikker begge.",
+    repelNo: "Komplimenter er gratis nå!",
+  },
+  {
+    id: 16,
+    en: "If someone yawns, everyone cheers.",
+    repelEn: "Yawns are safe!",
+    no: "Hvis noen gjesper, skåler alle.",
+    repelNo: "Gjesp er trygt!",
+  },
+  {
+    id: 17,
+    en: "When you laugh, take a sip.",
+    repelEn: "Laughing is free!",
+    no: "Når du ler, ta en slurk.",
+    repelNo: "Latter er gratis!",
+  },
+  {
+    id: 18,
+    en: "Every time someone says 'I,' they drink.",
+    repelEn: "Say 'I' without penalty!",
+    no: "Hver gang noen sier 'jeg,' drikker de.",
+    repelNo: "Si 'jeg' uten straff!",
+  },
+  {
+    id: 19, 
+    en: "Switch seats with someone when you draw this card.",
+    repelEn: "Seat-swapping is over!",
+    no: "Bytt plass med noen når du trekker dette kortet.",
+    repelNo: "Sete-bytte er over!",
+  },
+];

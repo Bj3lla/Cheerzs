@@ -1,0 +1,48 @@
+button {
+  font-family: "Shrikhand", cursive;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  letter-spacing: 0.1em;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.small {
+  font-size: 16px;
+  padding: 0.5rem 1rem;
+}
+
+button.medium {
+  font-size: 18px;
+  padding: 0.8rem 2rem;
+}
+
+button.large {
+  font-size: 20px;
+  padding: 1rem 2.5rem;
+}
+
+/* Colors */
+button.accent {
+  background-color: var(--pink);
+  color: var(--pale-yellow);
+}
+
+button.primary {
+  background-color: var(--pink);
+  color: var(--pale-yellow);
+}
+
+button.light {
+  background-color: var(--pale-yellow);
+  color: var(--dark);
+}

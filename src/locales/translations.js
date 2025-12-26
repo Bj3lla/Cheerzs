@@ -1,0 +1,49 @@
+export const translations = {
+  en: {
+    ui: {
+      add: "Add",
+      startGame: "Start Game",
+      editGame: "Edit Game",
+      next: "Next",
+      activeRules: "Active Rules",
+      placeholder: "playername...",
+      noMoreRules: "No more new rules available!",
+      pressNext: "Press next to get a question!",
+      cheers: "Cheers",
+      year: "2025",
+      selectLanguage: "Select Language",
+    },
+    categories: {
+      truth: "Truth",
+      dare: "Dare",
+      never: "Never Have I Ever...",
+      point: "Point At Someone Who...",
+      rule: "New Rule!",
+      repeal: "Rule Repealed!",
+    },
+  },
+
+  no: {
+    ui: {
+      add: "Legg til",
+      startGame: "Start spill",
+      editGame: "Rediger spill",
+      next: "Neste",
+      activeRules: "Aktive regler",
+      placeholder: "spillernavn...",
+      noMoreRules: "Ingen nye regler igjen!",
+      pressNext: "Trykk neste for å få et spørsmål!",
+      cheers: "Skål",
+      year: "2025",
+      selectLanguage: "Velg språk",
+    },
+    categories: {
+      truth: "Sannhet",
+      dare: "Utfordring",
+      never: "Jeg har aldri...",
+      point: "Pekeleken!",
+      rule: "Ny regel!",
+      repeal: "Regel opphevet!",
+    },
+  },
+};
