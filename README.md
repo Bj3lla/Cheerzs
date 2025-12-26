@@ -3,7 +3,8 @@
 This application uses React working in Vite with HMR and some ESLint rules. Vercel is used for hosting the webapplication, and is linked to the GitHub repository, so whenever a an update is pushed to main, Vercel auto-deploys this change.  
 
 ## Important terminal commands
-
+npm install -> to install dependencies
+npm install ably 
 npm run dev -> runs localhost
 npm run build -> updates build for later deployment
 

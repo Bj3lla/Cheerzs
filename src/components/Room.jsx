@@ -7,6 +7,9 @@ export default function Room({ roomID }) {
   useEffect(() => {
     const ably = new Ably.Realtime({ authUrl: '/api/ably-auth' });
     const channel = ably.channels.get(`room-${roomID}`);
+    channel.subscribe("player-joined", (msg) => {
+      console.log(msg.data);
+    });
 
     channel.subscribe('player-joined', (msg) => {
       setPlayers(prev => [...prev, msg.data.username]);
