@@ -5,26 +5,16 @@ import { BsChevronCompactDown, BsChevronCompactUp } from "react-icons/bs";
 import { GrLanguage } from "react-icons/gr";
 import { IoClose } from "react-icons/io5";
 import { translations } from "./locales/translations";
+import { categoryColors } from "./utils/gameUtils";
 import useLanguage from "./hooks/useLanguage";
 import useGameLogic from "./hooks/useGameLogic";
 
 /* ---------------------------------------
    🧮 Helpers
 --------------------------------------- */
-const getRandomRounds = (min = 10, max = 20) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;
 
 const getNameCategory = (category, language) =>
   translations[language].categories[category] || "";
-
-const categoryColors = {
-  truth: "#4169e1",
-  dare: "#e91e63",
-  point: "#7541dd",
-  never: "#007f96",
-  rule: "#b42a82",
-  repeal: "#b42a82",
-};
 
 /* ---------------------------------------
    🕹️ Main Component
@@ -49,7 +39,6 @@ export default function App() {
     repelActive,
     showActiveRules,
     setShowActiveRules,
-    categoryColors,
     translations: hookTranslations,
   } = useGameLogic(language);
 

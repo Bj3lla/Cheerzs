@@ -1,36 +1,21 @@
 import { useState, useEffect } from "react";
-import { truthOrDare } from "../data/truthOrDare";
-import { neverHaveIEver } from "../data/neverHaveIEver";
 import { newRules } from "../data/newRule";
-import { pointAtSomeone } from "../data/pointAtSomeone";
-import { getRandomItem } from "../utils/randomItem";
+import { getRandomItem, getRandomRounds, getRandomCategory } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
-
-const getRandomRounds = (min = 10, max = 20) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;
-
-const getRandomCategory = () => {
-  const random = Math.random() * 100;
-  if (random < 10) return "rule";
-  if (random < 35) return "point";
-  if (random < 60) return "never";
-  if (random < 80) return "truth";
-  return "dare";
-};
-
-const categoryColors = {
-  truth: "#4169e1",
-  dare: "#e91e63",
-  point: "#7541dd",
-  never: "#007f96",
-  rule: "#b42a82",
-  repeal: "#b42a82",
-};
+import useQuestionState from "./useQuestionState";
+import useFriendManagement from "./useFriendManagement";
 
 export default function useGameLogic(language) {
-  const [friends, setFriends] = useState([]);
-  const [friendInput, setFriendInput] = useState("");
-  const [player, setPlayer] = useState("");
+  const { unread, read, pickQuestion } = useQuestionState();
+  const {
+    friends,
+    friendInput,
+    setFriendInput,
+    addFriend,
+    removeFriend,
+    player,
+    setPlayer,
+  } = useFriendManagement();
 
   const [gameStarted, setGameStarted] = useState(false);
   const [category, setCategory] = useState(null);
@@ -42,55 +27,11 @@ export default function useGameLogic(language) {
   const [repelActive, setRepelActive] = useState(false);
   const [showActiveRules, setShowActiveRules] = useState(true);
 
-  const [unread, setUnread] = useState({
-    truth: [...truthOrDare.truth],
-    dare: [...truthOrDare.dare],
-    never: [...neverHaveIEver],
-    point: [...pointAtSomeone],
-  });
-
-  const [read, setRead] = useState({
-    truth: [],
-    dare: [],
-    never: [],
-    point: [],
-  });
-
-  const addFriend = () => {
-    const name = friendInput.trim();
-    if (name && !friends.includes(name)) {
-      setFriends((prev) => [...prev, name]);
-      setFriendInput("");
-    }
-  };
-
-  const removeFriend = (nameToRemove) => {
-    setFriends((prev) => prev.filter((name) => name !== nameToRemove));
-    if (player === nameToRemove) setPlayer("");
-  };
-
-  const pickQuestion = (categoryKey) => {
-    let categoryUnread = [...unread[categoryKey]];
-    let categoryRead = [...read[categoryKey]];
-
-    if (categoryUnread.length > 0) {
-      const questionObj = getRandomItem(categoryUnread);
-      categoryUnread = categoryUnread.filter((q) => q.id !== questionObj.id);
-      categoryRead.push(questionObj);
-
-      setUnread((prev) => ({ ...prev, [categoryKey]: categoryUnread }));
-      setRead((prev) => ({ ...prev, [categoryKey]: categoryRead }));
-
-      return questionObj;
-    }
-
-    const questionObj = getRandomItem(categoryRead);
-    setUnread((prev) => ({ ...prev, [categoryKey]: categoryRead }));
-    setRead((prev) => ({ ...prev, [categoryKey]: [] }));
-    return questionObj;
-  };
-
   const updateActiveRules = () => {
+    if (!Array.isArray(activeRules) || activeRules.length === 0) {
+      return false;
+    }
+
     let ruleExpired = null;
 
     const updated = activeRules.map((rule) => {
@@ -205,8 +146,6 @@ export default function useGameLogic(language) {
     repelActive,
     showActiveRules,
     setShowActiveRules,
-    categoryColors,
     translations,
   };
 }
-
