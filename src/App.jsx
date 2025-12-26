@@ -8,6 +8,7 @@ import { translations } from "./locales/translations";
 import { categoryColors } from "./utils/gameUtils";
 import useLanguage from "./hooks/useLanguage";
 import useGameLogic from "./hooks/useGameLogic";
+import Room from './components/Room';
 
 /* ---------------------------------------
    🧮 Helpers
@@ -102,6 +103,7 @@ export default function App() {
             <br />
             {i18n.ui.year}
           </h1>
+          <Room roomID="room123" />
 
           <div className="friend-input">
               <input

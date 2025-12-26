@@ -1,11 +1,11 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This application uses React working in Vite with HMR and some ESLint rules. Vercel is used for hosting the webapplication, and is linked to the GitHub repository, so whenever a an update is pushed to main, Vercel auto-deploys this change.  
 
-Currently, two official plugins are available:
+## Important terminal commands
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+npm run dev -> runs localhost
+npm run build -> updates build for later deployment
 
 ## React Compiler
 
