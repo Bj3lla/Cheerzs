@@ -1,50 +1,42 @@
 import { useState } from "react";
 import Button from "./Button";
+import AddPlayer from "./AddPlayer";
 import { translations } from "../locales/translations";
-
-// Map error codes to translation keys
-const getErrorMessage = (errorCode, i18n) => {
-  const errorMap = {
-    emptyRoomID: i18n.ui.pleaseEnterRoomID || "Please enter a room ID",
-    roomNotFound: i18n.ui.roomNotFound || "Opsie! This room does not exist",
-    networkError: i18n.ui.networkError || "Network error",
-  };
-  return errorMap[errorCode] || null;
-};
 
 export default function JoinRoom({ onRoomJoined, language = "en" }) {
   const [roomID, setRoomID] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorCode, setErrorCode] = useState(null);
+  const [error, setError] = useState("");
   const i18n = translations[language];
 
-  const errorMessage = getErrorMessage(errorCode, i18n);
- 
-  const handleJoin = async () => {
+  const handleJoin = async (username) => {
     if (!roomID.trim()) {
-      setErrorCode("emptyRoomID");
+      setError(i18n.ui.pleaseEnterRoomID || "Please enter a room ID");
       return;
     }
 
     setLoading(true);
-    setErrorCode(null);
+    setError("");
 
     try {
       const res = await fetch("/api/join-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: roomID.trim() }),
+        body: JSON.stringify({ roomID: roomID.trim(), username }),
       });
+
       const data = await res.json();
 
       if (res.ok) {
-        onRoomJoined(roomID.trim());
+        onRoomJoined({ roomID: roomID.trim(), username });
+      } else if (res.status === 404) {
+        setError(i18n.ui.roomNotFound || "Room not found");
       } else {
-        setErrorCode("roomNotFound");
+        setError(i18n.ui.networkError || "Network error");
       }
     } catch (err) {
       console.error(err);
-      setErrorCode("roomNotFound");
+      setError(i18n.ui.networkError || "Network error");
     } finally {
       setLoading(false);
     }
@@ -52,28 +44,22 @@ export default function JoinRoom({ onRoomJoined, language = "en" }) {
 
   return (
     <div className="join-room">
-      <h2> {i18n.ui.joinRoom} </h2>
+      <h2>{i18n.ui.joinRoom}</h2>
       <div className="friend-input">
-      <input
-        type="text"
-        placeholder= {i18n.ui.placeholderRoomID}
-        value={roomID}
-        onChange={(e) => setRoomID(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && !loading && handleJoin()}
-        disabled={loading}
-        className={errorMessage ? "error" : ""} 
-      />
-      </div>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <div className="join-room-button">
-        <Button
-            label={loading ? i18n.ui.joiningRoom : i18n.ui.joinRoom}
-            color="primary"
-            onClick={handleJoin}
-            disabled={loading || !roomID.trim()}
-            size="medium"
+        <input
+          type="text"
+          placeholder={i18n.ui.placeholderRoomID || "Enter room ID"}
+          value={roomID}
+          onChange={(e) => setRoomID(e.target.value)}
+          disabled={loading}
         />
       </div>
+      <AddPlayer
+        language={language}
+        onPlayerAdded={handleJoin}
+        isLoading={loading}
+      />
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 }
