@@ -34,9 +34,15 @@ export default function useQuestionState() {
       return questionObj;
     }
 
-    const questionObj = getRandomItem(categoryRead);
-    setUnread((prev) => ({ ...prev, [categoryKey]: categoryRead }));
-    setRead((prev) => ({ ...prev, [categoryKey]: [] }));
+    // unread is empty - reset the cycle by moving read back to unread
+    const resetUnread = [...categoryRead];
+    const questionObj = getRandomItem(resetUnread);
+    const newUnread = resetUnread.filter((q) => q.id !== questionObj.id);
+    const newRead = [questionObj];
+
+    setUnread((prev) => ({ ...prev, [categoryKey]: newUnread }));
+    setRead((prev) => ({ ...prev, [categoryKey]: newRead }));
+
     return questionObj;
   };
 

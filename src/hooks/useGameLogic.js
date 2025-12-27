@@ -35,7 +35,7 @@ export default function useGameLogic(language) {
   const generatePrompt = () => {
     if (repelActive) {
       clearRepel();
-      return;
+      // Continue to generate the next prompt instead of returning
     }
 
     const expired = updateActiveRules();
