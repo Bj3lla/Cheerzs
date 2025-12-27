@@ -1,3 +1,11 @@
+// Get current year in Norwegian timezone (Europe/Oslo)
+const getCurrentYearNorwegian = () => {
+  const norweegianTime = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Europe/Oslo" })
+  );
+  return norweegianTime.getFullYear().toString();
+};
+
 export const translations = {
   en: {
     ui: {
@@ -10,11 +18,12 @@ export const translations = {
       noMoreRules: "No more new rules available!",
       pressNext: "Press next to get a question!",
       cheers: "Cheerzs!",
-      year: "2025",
       selectLanguage: "Select Language",
       createRoom: "Create Room",
       joinRoom: "Join Room",
-      orAddPlayers: "or add players manually",
+      orAddPlayers: "...or add players manually",
+      here: "here",
+      year: getCurrentYearNorwegian(),
     },
     categories: {
       truth: "Truth",
@@ -37,11 +46,12 @@ export const translations = {
       noMoreRules: "Ingen nye regler igjen!",
       pressNext: "Trykk neste for å få et spørsmål!",
       cheers: "Cheerzs!",
-      year: "2025",
       selectLanguage: "Velg språk",
-      createRoom: "Opprett rom",
-      joinRoom: "Bli med i rom",
-      orAddPlayers: "eller legg til spillere manuelt",
+      createRoom: "Opprett et rom",
+      joinRoom: "Bli med i et rom",
+      orAddPlayers: "...eller legg til spillere manuelt",
+      here: "her",
+      year: getCurrentYearNorwegian(),
     },
     categories: {
       truth: "Sannhet",

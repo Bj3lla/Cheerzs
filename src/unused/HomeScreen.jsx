@@ -15,7 +15,7 @@ export default function HomePage({ onRoomCreated, onRoomJoined, onManualAdd }) {
         <button className="btn purple" onClick={() => onRoomCreated()}>
           CREATE ROOM
         </button>
-        <button className="button" onClick={() => onRoomJoined()}>
+        <button className="btn red" onClick={() => onRoomJoined()}>
           JOIN ROOM
         </button>
       </div>

@@ -10,7 +10,6 @@ export default function LanguageSelector({ language, onLanguageChange }) {
 
   const handleLanguageChange = (newLanguage) => {
     onLanguageChange(newLanguage);
-    setIsOpen(false);
   };
 
   return (
@@ -29,7 +28,7 @@ export default function LanguageSelector({ language, onLanguageChange }) {
               className="popup-close-btn"
               onClick={() => setIsOpen(false)}
             />
-            <h2>{i18n.ui.selectLanguage}</h2>
+            <h3>{i18n.ui.selectLanguage}</h3>
             <div className="language-options">
               <label>
                 <input

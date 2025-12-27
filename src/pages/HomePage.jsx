@@ -23,7 +23,7 @@ export default function HomePage({ language = "en" }) {
         {i18n.ui.cheers}
         <br />
         {i18n.ui.year}
-      </h1>
+    </h1>
       
       <div className="friend-input">
         <AddPlayer
@@ -41,7 +41,7 @@ export default function HomePage({ language = "en" }) {
       </div>
 
       <p className="manual-add">
-        {i18n.ui.orAddPlayers || "or add players manually"} <span className="manual-link" onClick={() => navigate("/add-players")}>here</span>
+        {i18n.ui.orAddPlayers || "or add players manually"} <span className="manual-link" onClick={() => navigate("/add-players")}>{i18n.ui.here || "here"}</span>
       </p>
     </div>
   );

@@ -3,10 +3,11 @@ import JoinRoom from "../components/JoinRoom";
 import Topbar from "../components/Topbar";
 import { translations } from "../locales/translations";
 
-const i18n = translations.en;
+
 
 export default function JoinRoomPage({ language }) {
   const navigate = useNavigate();
+  const i18n = translations[language];
 
   const handleRoomJoined = (roomId) => {
     navigate(`/room/${roomId}`);
@@ -20,7 +21,7 @@ export default function JoinRoomPage({ language }) {
         <br />
         {i18n.ui.year}
       </h1>
-      <JoinRoom onRoomJoined={handleRoomJoined} />
+      <JoinRoom onRoomJoined={handleRoomJoined} language={language} />
     </div>
   );
 }

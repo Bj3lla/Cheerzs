@@ -3,10 +3,9 @@ import CreateRoom from "../components/CreateRoom";
 import Topbar from "../components/Topbar";
 import { translations } from "../locales/translations";
 
-const i18n = translations.en; // Default to English or modify as needed
-
 export default function CreateRoomPage({ language }) {
   const navigate = useNavigate();
+  const i18n = translations[language];
 
   const handleRoomCreated = (roomId) => {
     navigate(`/room/${roomId}`);
@@ -20,7 +19,7 @@ export default function CreateRoomPage({ language }) {
         <br />
         {i18n.ui.year}
       </h1>
-      <CreateRoom onRoomCreated={handleRoomCreated} />
+      <CreateRoom onRoomCreated={handleRoomCreated} language={language} />
     </div>
   );
 }

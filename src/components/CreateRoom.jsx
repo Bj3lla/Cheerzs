@@ -1,13 +1,15 @@
 import { useState } from "react";
 import Button from "./Button";
+import { translations } from "../locales/translations";
 import "../index.css";
 
-export default function CreateRoom({ onRoomCreated }) {
+export default function CreateRoom({ onRoomCreated, language = "en" }) {
   const [roomID, setRoomID] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [createdRoomID, setCreatedRoomID] = useState("");
   const [copied, setCopied] = useState(false);
+  const i18n = translations[language];
 
   const handleCreate = async () => {
     if (!roomID.trim()) {
@@ -48,7 +50,7 @@ export default function CreateRoom({ onRoomCreated }) {
 
   return (
     <div className="create-room">
-      <h2>Create Room</h2>
+      <h2>{i18n.ui.createRoom}</h2>
       {!createdRoomID ? (
         <>
         <div className="friend-input"> 
