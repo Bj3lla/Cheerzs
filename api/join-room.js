@@ -75,6 +75,33 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: roomError.message, requestId });
     }
 
+    // Treat very old rooms as expired so their codes become reusable.
+    const cutoffIso = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
+    const isExpired = Boolean(room?.created_at) && room.created_at < cutoffIso;
+    if (isExpired) {
+      const { error: deletePlayersError } = await supabase
+        .from("players")
+        .delete()
+        .eq("room_id", roomID);
+
+      if (deletePlayersError) {
+        console.error("[join-room] expired cleanup players failed", { requestId, deletePlayersError });
+        return res.status(500).json({ error: deletePlayersError.message, requestId });
+      }
+
+      const { error: deleteRoomError } = await supabase
+        .from("rooms")
+        .delete()
+        .eq("id", roomID);
+
+      if (deleteRoomError) {
+        console.error("[join-room] expired cleanup room failed", { requestId, deleteRoomError });
+        return res.status(500).json({ error: deleteRoomError.message, requestId });
+      }
+
+      return res.status(404).json({ error: "Room not found", requestId });
+    }
+
     // Add player
     const { error: playerError } = await supabase
       .from("players")
