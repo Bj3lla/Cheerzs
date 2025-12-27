@@ -65,13 +65,15 @@ export default function JoinRoom({ onRoomJoined, language = "en" }) {
       />
       </div>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <Button
-        label={loading ? i18n.ui.joiningRoom : i18n.ui.joinRoom}
-        color="primary"
-        onClick={handleJoin}
-        disabled={loading || !roomID.trim()}
-        size="medium"
-      />
+      <div className="join-room-button">
+        <Button
+            label={loading ? i18n.ui.joiningRoom : i18n.ui.joinRoom}
+            color="primary"
+            onClick={handleJoin}
+            disabled={loading || !roomID.trim()}
+            size="medium"
+        />
+      </div>
     </div>
   );
 }
