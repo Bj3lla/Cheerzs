@@ -1,8 +1,26 @@
 import { createClient } from "@supabase/supabase-js";
 import Ably from "ably";
 
+const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+
+const safeJson = async (req) => {
+  if (req?.body == null) return null;
+  if (typeof req.body === "object") return req.body;
+  if (typeof req.body === "string") {
+    try {
+      return JSON.parse(req.body);
+    } catch {
+      return null;
+    }
+  }
+  return null;
+};
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
+
+  const requestId = makeRequestId();
+  console.log("[create-room] start", { requestId, method: req.method, contentType: req.headers?.["content-type"] });
 
   try {
     if (
@@ -10,8 +28,13 @@ export default async function handler(req, res) {
       !process.env.SUPABASE_SERVICE_ROLE_KEY ||
       !process.env.ABLY_API_KEY
     ) {
-      console.error("❌ Missing environment variables");
-      return res.status(500).json({ error: "Server misconfiguration" });
+      console.error("[create-room] missing env", {
+        requestId,
+        hasSupabaseUrl: Boolean(process.env.SUPABASE_URL),
+        hasServiceRoleKey: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+        hasAblyKey: Boolean(process.env.ABLY_API_KEY),
+      });
+      return res.status(500).json({ error: "Server misconfiguration", requestId });
     }
 
     const supabase = createClient(
@@ -20,10 +43,22 @@ export default async function handler(req, res) {
     );
     const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
 
-    const { roomID, username } = req.body;
+    const body = await safeJson(req);
+    if (!body) {
+      console.error("[create-room] invalid JSON body", { requestId, bodyType: typeof req.body });
+      return res.status(400).json({ error: "Invalid JSON body", requestId });
+    }
+
+    const { roomID, username } = body;
+
+    console.log("[create-room] payload", {
+      requestId,
+      roomID: typeof roomID === "string" ? roomID : null,
+      username: typeof username === "string" ? username : null,
+    });
 
     if (!roomID || !username) {
-      return res.status(400).json({ error: "Missing roomID or username" });
+      return res.status(400).json({ error: "Missing roomID or username", requestId });
     }
 
     // Check if room exists
@@ -34,12 +69,12 @@ export default async function handler(req, res) {
       .single();
 
     if (fetchError && fetchError.code !== "PGRST116") {
-      console.error("Supabase fetch error:", fetchError);
-      return res.status(500).json({ error: fetchError.message });
+      console.error("[create-room] supabase fetch error", { requestId, fetchError });
+      return res.status(500).json({ error: fetchError.message, requestId });
     }
 
     if (existingRoom) {
-      return res.status(409).json({ error: "Room already exists" });
+      return res.status(409).json({ error: "Room already exists", requestId });
     }
 
     // Create room
@@ -48,8 +83,8 @@ export default async function handler(req, res) {
       .insert({ id: roomID, host: username });
 
     if (roomError) {
-      console.error("Supabase room insert error:", roomError);
-      return res.status(500).json({ error: roomError.message });
+      console.error("[create-room] supabase room insert error", { requestId, roomError });
+      return res.status(500).json({ error: roomError.message, requestId });
     }
 
     // Add host as first player
@@ -58,16 +93,24 @@ export default async function handler(req, res) {
       .insert({ room_id: roomID, username });
 
     if (playerError) {
-      console.error("Supabase player insert error:", playerError);
-      return res.status(500).json({ error: playerError.message });
+      console.error("[create-room] supabase player insert error", { requestId, playerError });
+      return res.status(500).json({ error: playerError.message, requestId });
     }
 
     // Notify Ably
-    await ably.channels.get(`room-${roomID}`).publish("room-created", { roomID, username });
+    try {
+      await ably.channels
+        .get(`room-${roomID}`)
+        .publish("room-created", { roomID, username, requestId });
+    } catch (ablyError) {
+      console.error("[create-room] ably publish failed", { requestId, ablyError });
+      // Not fatal for room creation; client can still proceed.
+    }
 
-    return res.status(200).json({ roomID, username });
+    console.log("[create-room] success", { requestId, roomID, username });
+    return res.status(200).json({ roomID, username, requestId });
   } catch (err) {
-    console.error("❌ create-room.js crashed:", err);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("[create-room] crashed", { requestId, err });
+    return res.status(500).json({ error: "Internal Server Error", requestId });
   }
 }
