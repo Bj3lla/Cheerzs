@@ -9,18 +9,23 @@ export default function useRuleManagement(language) {
   const [repelActive, setRepelActive] = useState(false);
 
   const replaceActiveRules = (nextActiveRules) => {
-    setActiveRules(Array.isArray(nextActiveRules) ? nextActiveRules : []);
+    const normalized = Array.isArray(nextActiveRules) ? nextActiveRules : [];
+    setActiveRules(normalized);
+    // Keep availableRules in sync (important for host refresh / late join).
+    const activeIds = new Set(normalized.map((r) => r?.id).filter(Boolean));
+    setAvailableRules(newRules.filter((r) => !activeIds.has(r.id)));
   };
 
-  const updateActiveRules = () => {
-    if (!Array.isArray(activeRules) || activeRules.length === 0) {
-      return null;
+  const updateActiveRules = (baseActiveRules = activeRules) => {
+    if (!Array.isArray(baseActiveRules) || baseActiveRules.length === 0) {
+      return { expiredRule: null, activeRules: [] };
     }
 
     let ruleExpired = null;
 
-    const updated = activeRules.map((rule) => {
-      const newRounds = rule.roundsLeft - 1;
+    const updated = baseActiveRules.map((rule) => {
+      const currentRounds = typeof rule.roundsLeft === "number" ? rule.roundsLeft : 0;
+      const newRounds = currentRounds - 1;
       if (newRounds <= 0 && !ruleExpired) ruleExpired = rule;
       return { ...rule, roundsLeft: newRounds };
     });
@@ -30,16 +35,19 @@ export default function useRuleManagement(language) {
       setActiveRules(stillActive);
       setRepelMessage(language === "en" ? ruleExpired.repelEn : ruleExpired.repelNo);
       setRepelActive(true);
-      return ruleExpired;
+      return { expiredRule: ruleExpired, activeRules: stillActive };
     }
 
     setActiveRules(updated);
-    return null;
+    return { expiredRule: null, activeRules: updated };
   };
 
-  const addRule = (rule) => {
-    setActiveRules([...activeRules, { ...rule, roundsLeft: getRandomRounds() }]);
-    setAvailableRules(availableRules.filter((r) => r.id !== rule.id));
+  const addRule = (rule, baseActiveRules = activeRules) => {
+    const ruleWithRounds = { ...rule, roundsLeft: getRandomRounds() };
+    const nextActive = [...(Array.isArray(baseActiveRules) ? baseActiveRules : []), ruleWithRounds];
+    setActiveRules(nextActive);
+    setAvailableRules((prev) => prev.filter((r) => r.id !== rule.id));
+    return { rule: ruleWithRounds, activeRules: nextActive };
   };
 
   const clearRepel = () => {

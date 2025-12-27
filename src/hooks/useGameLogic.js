@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getRandomItem, getRandomCategory } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 import useQuestionState from "./useQuestionState";
@@ -42,6 +42,9 @@ export default function useGameLogic(language) {
   // Used for multiplayer sync (host broadcasts; clients apply).
   const [currentCard, setCurrentCard] = useState(null);
 
+  // Keep a synchronous snapshot for multiplayer publish.
+  const broadcastStateRef = useRef(null);
+
   const [roomId, setRoomId] = useState(null);
   const [roomPlayers, setRoomPlayers] = useState([]);
 
@@ -70,10 +73,13 @@ export default function useGameLogic(language) {
       // Continue to generate the next prompt instead of returning
     }
 
-    const expiredRule = updateActiveRules();
-    if (expiredRule) {
-      const nextCard = { kind: "repeal", ruleId: expiredRule.id };
+    const tick = updateActiveRules(activeRules);
+    const activeAfterTick = tick?.activeRules ?? Array.isArray(activeRules) ? activeRules : [];
+
+    if (tick?.expiredRule) {
+      const nextCard = { kind: "repeal", ruleId: tick.expiredRule.id };
       setCurrentCard(nextCard);
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
       return nextCard;
     }
 
@@ -81,22 +87,23 @@ export default function useGameLogic(language) {
     setCategory(cat);
 
     if (cat === "rule") {
-      const remainingRules = availableRules.filter(
-        (r) => !activeRules.some((a) => a.id === r.id)
-      );
+      const remainingRules = newRules.filter((r) => !activeAfterTick.some((a) => a.id === r.id));
 
       if (remainingRules.length === 0) {
         setPrompt(translations[language].ui.noMoreRules);
         const nextCard = { kind: "info", messageKey: "noMoreRules" };
         setCurrentCard(nextCard);
+        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
         return nextCard;
       }
 
       const picked = getRandomItem(remainingRules);
-      addRule(picked);
+      const addResult = addRule(picked, activeAfterTick);
+      const nextActiveRules = addResult?.activeRules ?? activeAfterTick;
       setPrompt(picked[language]);
       const nextCard = { kind: "rule", ruleId: picked.id };
       setCurrentCard(nextCard);
+      broadcastStateRef.current = { card: nextCard, activeRules: nextActiveRules };
       return nextCard;
     }
 
@@ -113,6 +120,7 @@ export default function useGameLogic(language) {
           selectedPlayer: null,
         };
         setCurrentCard(nextCard);
+        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
         setPrompt(newPrompt);
         return nextCard;
       } else {
@@ -126,6 +134,7 @@ export default function useGameLogic(language) {
           selectedPlayer,
         };
         setCurrentCard(nextCard);
+        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
         setPrompt(newPrompt);
         return nextCard;
       }
@@ -133,6 +142,7 @@ export default function useGameLogic(language) {
       newPrompt = questionObj[language];
       const nextCard = { kind: "question", category: cat, questionId: questionObj.id };
       setCurrentCard(nextCard);
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
       setPrompt(newPrompt);
       return nextCard;
     }
@@ -166,7 +176,12 @@ export default function useGameLogic(language) {
   }, [language]);
 
   const getRoomBroadcastState = () => {
-    return { card: currentCard };
+    return (
+      broadcastStateRef.current || {
+        card: currentCard,
+        activeRules: Array.isArray(activeRules) ? activeRules : [],
+      }
+    );
   };
 
   const applyRoomBroadcastState = (state, nextLanguage = language) => {
@@ -175,6 +190,30 @@ export default function useGameLogic(language) {
     const nextCard = state.card;
 
     if (!nextCard || typeof nextCard !== "object") return;
+
+    // Sync active rules across the room (host and non-host).
+    if (Array.isArray(state.activeRules)) {
+      replaceActiveRules(state.activeRules);
+    } else {
+      // Backward-compatible fallback: apply deltas.
+      if (nextCard.kind === "repeal" && nextCard.ruleId) {
+        replaceActiveRules(activeRules.filter((r) => r.id !== nextCard.ruleId));
+      }
+      if (nextCard.kind === "rule" && nextCard.ruleId) {
+        const existing = activeRules.some((r) => r.id === nextCard.ruleId);
+        if (!existing) {
+          const rule = newRules.find((r) => r.id === nextCard.ruleId);
+          if (rule) {
+            replaceActiveRules([...activeRules, { ...rule, roundsLeft: 999 }]);
+          }
+        }
+      }
+    }
+
+    broadcastStateRef.current = {
+      card: nextCard,
+      activeRules: Array.isArray(state.activeRules) ? state.activeRules : activeRules,
+    };
 
     setCurrentCard(nextCard);
 
