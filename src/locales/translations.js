@@ -1,3 +1,11 @@
+// Get current year in Norwegian timezone (Europe/Oslo)
+const getCurrentYearNorwegian = () => {
+  const norweegianTime = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Europe/Oslo" })
+  );
+  return norweegianTime.getFullYear().toString();
+};
+
 export const translations = {
   en: {
     ui: {
@@ -6,12 +14,25 @@ export const translations = {
       editGame: "Edit Game",
       next: "Next",
       activeRules: "Active Rules",
-      placeholder: "playername...",
+      placeholderPlayerName: "playername...",
       noMoreRules: "No more new rules available!",
       pressNext: "Press next to get a question!",
-      cheers: "Cheers",
-      year: "2025",
+      cheers: "Cheerzs!",
       selectLanguage: "Select Language",
+      createRoom: "Create Room",
+      joinRoom: "Join Room",
+      joiningRoom: "Joining room...",
+      orAddPlayers: "...or add players manually",
+      here: "here",
+      year: getCurrentYearNorwegian(),
+      pleaseEnterRoomID: "Please enter a room ID",
+      placeholderRoomID: "enter room ID...",
+      roomNotFound: "Opsie! This room does not exist",
+      failedToCreateRoom: "Failed to create room",
+      networkError: "Network error",
+      roomCreated: "Room created! Share this ID with your friends:",
+      loading: "Loading...",
+      pleaseAddFriend: "Please enter a name first",
     },
     categories: {
       truth: "Truth",
@@ -30,12 +51,25 @@ export const translations = {
       editGame: "Rediger spill",
       next: "Neste",
       activeRules: "Aktive regler",
-      placeholder: "spillernavn...",
+      placeholderPlayerName: "spillernavn...",
       noMoreRules: "Ingen nye regler igjen!",
       pressNext: "Trykk neste for å få et spørsmål!",
-      cheers: "Skål",
-      year: "2025",
+      cheers: "Cheerzs!",
       selectLanguage: "Velg språk",
+      createRoom: "Opprett et rom",
+      joinRoom: "Bli med i et rom",
+      joiningRoom: "Blir med i rommet",
+      orAddPlayers: "...eller legg til spillere manuelt",
+      here: "her",
+      year: getCurrentYearNorwegian(),
+      pleaseEnterRoomID: "Vennligst skriv inn rom-ID",
+      placeholderRoomID: "skriv inn rom ID...",
+      roomNotFound: "Oops! Dette rommet finnes ikke",
+      failedToCreateRoom: "Kunne ikke opprette rom",
+      networkError: "Nettverksfeil",
+      roomCreated: "Rom opprettet! Del denne ID-en med vennene dine:",
+      Loading: "Laster inn...",
+      pleaseAddFriend: "Vennligst skriv inn navn på venn",
     },
     categories: {
       truth: "Sannhet",

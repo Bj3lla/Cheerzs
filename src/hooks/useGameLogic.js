@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { newRules } from "../data/newRule";
-import { getRandomItem, getRandomRounds, getRandomCategory } from "../utils/gameUtils";
+import { getRandomItem, getRandomCategory } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 import useQuestionState from "./useQuestionState";
 import useFriendManagement from "./useFriendManagement";
+import useRuleManagement from "./useRuleManagement";
 
 export default function useGameLogic(language) {
   const { unread, read, pickQuestion } = useQuestionState();
@@ -17,46 +17,25 @@ export default function useGameLogic(language) {
     setPlayer,
   } = useFriendManagement();
 
+  const {
+    availableRules,
+    activeRules,
+    repelMessage,
+    repelActive,
+    updateActiveRules,
+    addRule,
+    clearRepel,
+  } = useRuleManagement(language);
+
   const [gameStarted, setGameStarted] = useState(false);
   const [category, setCategory] = useState(null);
   const [prompt, setPrompt] = useState("");
-
-  const [availableRules, setAvailableRules] = useState([...newRules]);
-  const [activeRules, setActiveRules] = useState([]);
-  const [repelMessage, setRepelMessage] = useState("");
-  const [repelActive, setRepelActive] = useState(false);
   const [showActiveRules, setShowActiveRules] = useState(true);
-
-  const updateActiveRules = () => {
-    if (!Array.isArray(activeRules) || activeRules.length === 0) {
-      return false;
-    }
-
-    let ruleExpired = null;
-
-    const updated = activeRules.map((rule) => {
-      const newRounds = rule.roundsLeft - 1;
-      if (newRounds <= 0 && !ruleExpired) ruleExpired = rule;
-      return { ...rule, roundsLeft: newRounds };
-    });
-
-    if (ruleExpired) {
-      const stillActive = updated.filter((r) => r.id !== ruleExpired.id);
-      setActiveRules(stillActive);
-      setRepelMessage(language === "en" ? ruleExpired.repelEn : ruleExpired.repelNo);
-      setRepelActive(true);
-      return true;
-    }
-
-    setActiveRules(updated);
-    return false;
-  };
 
   const generatePrompt = () => {
     if (repelActive) {
-      setRepelActive(false);
-      setRepelMessage("");
-      return;
+      clearRepel();
+      // Continue to generate the next prompt instead of returning
     }
 
     const expired = updateActiveRules();
@@ -76,8 +55,7 @@ export default function useGameLogic(language) {
       }
 
       const picked = getRandomItem(remainingRules);
-      setActiveRules([...activeRules, { ...picked, roundsLeft: getRandomRounds() }]);
-      setAvailableRules(remainingRules.filter((r) => r.id !== picked.id));
+      addRule(picked);
       setPrompt(picked[language]);
       return;
     }
