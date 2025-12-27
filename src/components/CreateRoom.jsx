@@ -21,21 +21,37 @@ export default function CreateRoom({ onRoomCreated, language = "en", username })
     setCopied(false);
 
     try {
+      const payload = { roomID: roomID.trim(), username };
+      console.groupCollapsed("[CreateRoom] POST /api/create-room");
+      console.log("payload", payload);
+
       const res = await fetch("/api/create-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: roomID.trim(), username }),
+        body: JSON.stringify(payload),
       });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        data = null;
+        console.warn("[CreateRoom] failed to parse JSON", parseErr);
+      }
+
+      console.log("status", res.status);
+      console.log("response", data);
+      console.groupEnd();
 
       if (res.ok) {
         setCreatedRoomID(roomID.trim());
         onRoomCreated({ roomID: roomID.trim(), username });
       } else {
-        const data = await res.json();
-        setError(data.error || i18n.ui.networkError || "Network error");
+        setError((data && data.error) || i18n.ui.networkError || "Network error");
       }
     } catch (err) {
       console.error(err);
+      console.groupEnd?.();
       setError(i18n.ui.networkError || "Network error");
     } finally {
       setLoading(false);

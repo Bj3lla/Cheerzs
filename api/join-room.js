@@ -1,8 +1,26 @@
 import { createClient } from "@supabase/supabase-js";
 import Ably from "ably";
 
+const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+
+const safeJson = async (req) => {
+  if (req?.body == null) return null;
+  if (typeof req.body === "object") return req.body;
+  if (typeof req.body === "string") {
+    try {
+      return JSON.parse(req.body);
+    } catch {
+      return null;
+    }
+  }
+  return null;
+};
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
+
+  const requestId = makeRequestId();
+  console.log("[join-room] start", { requestId, method: req.method, contentType: req.headers?.["content-type"] });
 
   try {
     if (
@@ -10,8 +28,13 @@ export default async function handler(req, res) {
       !process.env.SUPABASE_SERVICE_ROLE_KEY ||
       !process.env.ABLY_API_KEY
     ) {
-      console.error("❌ Missing environment variables");
-      return res.status(500).json({ error: "Server misconfiguration" });
+      console.error("[join-room] missing env", {
+        requestId,
+        hasSupabaseUrl: Boolean(process.env.SUPABASE_URL),
+        hasServiceRoleKey: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+        hasAblyKey: Boolean(process.env.ABLY_API_KEY),
+      });
+      return res.status(500).json({ error: "Server misconfiguration", requestId });
     }
 
     const supabase = createClient(
@@ -20,10 +43,22 @@ export default async function handler(req, res) {
     );
     const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
 
-    const { roomID, username } = req.body;
-    if (!roomID || !username) {
-      return res.status(400).json({ error: "Missing roomID or username" });
+    const body = await safeJson(req);
+    if (!body) {
+      console.error("[join-room] invalid JSON body", { requestId, bodyType: typeof req.body });
+      return res.status(400).json({ error: "Invalid JSON body", requestId });
     }
+
+    const { roomID, username } = body;
+    if (!roomID || !username) {
+      return res.status(400).json({ error: "Missing roomID or username", requestId });
+    }
+
+    console.log("[join-room] payload", {
+      requestId,
+      roomID: typeof roomID === "string" ? roomID : null,
+      username: typeof username === "string" ? username : null,
+    });
 
     // Check if room exists
     const { data: room, error: roomError } = await supabase
@@ -33,9 +68,11 @@ export default async function handler(req, res) {
       .single();
 
     if (roomError) {
-      if (roomError.code === "PGRST116") return res.status(404).json({ error: "Room not found" });
-      console.error("Supabase error:", roomError);
-      return res.status(500).json({ error: roomError.message });
+      if (roomError.code === "PGRST116") {
+        return res.status(404).json({ error: "Room not found", requestId });
+      }
+      console.error("[join-room] supabase room fetch error", { requestId, roomError });
+      return res.status(500).json({ error: roomError.message, requestId });
     }
 
     // Add player
@@ -44,16 +81,24 @@ export default async function handler(req, res) {
       .insert({ room_id: roomID, username });
 
     if (playerError) {
-      console.error("Supabase player insert error:", playerError);
-      return res.status(500).json({ error: playerError.message });
+      console.error("[join-room] supabase player insert error", { requestId, playerError });
+      return res.status(500).json({ error: playerError.message, requestId });
     }
 
     // Notify Ably
-    await ably.channels.get(`room-${roomID}`).publish("player-joined", { username });
+    try {
+      await ably.channels
+        .get(`room-${roomID}`)
+        .publish("player-joined", { username, roomID, requestId });
+    } catch (ablyError) {
+      console.error("[join-room] ably publish failed", { requestId, ablyError });
+      // Not fatal for join
+    }
 
-    return res.status(200).json({ success: true, roomID, username });
+    console.log("[join-room] success", { requestId, roomID, username, host: room?.host });
+    return res.status(200).json({ success: true, roomID, username, requestId });
   } catch (err) {
-    console.error("❌ join-room.js crashed:", err);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("[join-room] crashed", { requestId, err });
+    return res.status(500).json({ error: "Internal Server Error", requestId });
   }
 }
