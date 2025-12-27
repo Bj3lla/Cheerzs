@@ -1,11 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 
-export default function Topbar() {
+export default function Topbar({ to }) {
   const navigate = useNavigate();
 
   const handleBack = (e) => {
     e?.preventDefault?.();
+
+    if (typeof to === "string" && to.length > 0) {
+      navigate(to);
+      return;
+    }
+
     // Some navigation flows (direct link / refresh) have no usable history entry.
     if (typeof window !== "undefined" && window.history && window.history.length <= 1) {
       navigate("/");

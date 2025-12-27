@@ -57,6 +57,24 @@ export default function GamePage({ language }) {
       : prompt || i18n.ui.pressNext;
 
   useEffect(() => {
+    // Guard against manual URL navigation.
+    // Multiplayer requires both username + roomID; single-mode requires gameStarted.
+    if (isRoomGame) {
+      if (!username || !normalizedRoomID) {
+        clearRoomSession();
+        setGameStarted(false);
+        navigate("/", { replace: true });
+      }
+      return;
+    }
+
+    if (!gameStarted) {
+      navigate("/", { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameStarted, isRoomGame, normalizedRoomID, username]);
+
+  useEffect(() => {
     if (isRoomGame) return;
     if (gameStarted && !prompt) {
       generatePrompt();

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import JoinRoom from "../components/JoinRoom";
 import Topbar from "../components/Topbar";
@@ -13,6 +14,12 @@ export default function JoinRoomPage({ language }) {
 
   const playerName = location.state?.playerName || localStorage.getItem("playerName") || "";
 
+  useEffect(() => {
+    if (!playerName || !playerName.trim()) {
+      navigate("/", { replace: true });
+    }
+  }, [navigate, playerName]);
+
   const handleRoomJoined = ({ roomID, gameStarted }) => {
     if (gameStarted) {
       setRoomSession({ roomID, players: [] });
@@ -26,7 +33,7 @@ export default function JoinRoomPage({ language }) {
 
   return (
     <div className="join-room-page">
-      <Topbar />
+      <Topbar to="/" />
       <h1 className="home-title">
         {i18n.ui.cheers}
         <br />

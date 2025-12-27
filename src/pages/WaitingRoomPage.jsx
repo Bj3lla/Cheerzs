@@ -30,6 +30,14 @@ export default function WaitingRoomPage({ language = "en" }) {
 
   const isHost = Boolean(username) && Boolean(host) && username === host;
 
+  useEffect(() => {
+    if (!normalizedRoomID || !username) {
+      clearRoomSession();
+      setGameStarted(false);
+      navigate("/", { replace: true });
+    }
+  }, [clearRoomSession, navigate, normalizedRoomID, setGameStarted, username]);
+
   const fetchRoomState = async () => {
     if (!normalizedRoomID) return;
 
@@ -88,10 +96,12 @@ export default function WaitingRoomPage({ language = "en" }) {
   };
 
   const leaveGame = async () => {
+    const destination = isHost ? "/create-room" : "/join-room";
+
     if (!normalizedRoomID || !username) {
       clearRoomSession();
       setGameStarted(false);
-      navigate(-1);
+      navigate(destination);
       return;
     }
 
@@ -113,11 +123,7 @@ export default function WaitingRoomPage({ language = "en" }) {
       clearRoomSession();
       setGameStarted(false);
 
-      if (data?.roomDeleted) {
-        navigate("/");
-      } else {
-        navigate(-1);
-      }
+      navigate(destination);
     } catch (err) {
       console.error("[WaitingRoom] leave-room failed", err);
       setError(i18n.ui.failedToLeaveRoom);

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import CreateRoom from "../components/CreateRoom";
 import Topbar from "../components/Topbar";
@@ -11,13 +12,19 @@ export default function CreateRoomPage({ language }) {
   // Get username from navigation state or localStorage
   const playerName = location.state?.playerName || localStorage.getItem("playerName") || "";
 
+  useEffect(() => {
+    if (!playerName || !playerName.trim()) {
+      navigate("/", { replace: true });
+    }
+  }, [navigate, playerName]);
+
   const handleRoomCreated = ({ roomID }) => {
     navigate(`/room/${roomID}`);
   };
 
   return (
     <div className="create-room-page">
-      <Topbar />
+      <Topbar to="/" />
       <h1 className="home-title">
         {i18n.ui.cheers}
         <br />
