@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import Ably from "ably";
+import { validateRoomId, validateUsername } from "./_lib/security.js";
 
 const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -36,9 +37,25 @@ export default async function handler(req, res) {
     }
 
     const { roomID, username, targetUsername } = body;
-    if (!roomID || !username || !targetUsername) {
-      return res.status(400).json({ error: "Missing roomID, username, or targetUsername", requestId });
+
+    const roomIdCheck = validateRoomId(roomID);
+    if (!roomIdCheck.ok) {
+      return res.status(400).json({ error: roomIdCheck.error, requestId });
     }
+
+    const usernameCheck = validateUsername(username);
+    if (!usernameCheck.ok) {
+      return res.status(400).json({ error: usernameCheck.error, requestId });
+    }
+
+    const targetCheck = validateUsername(targetUsername);
+    if (!targetCheck.ok) {
+      return res.status(400).json({ error: targetCheck.error, requestId });
+    }
+
+    const normalizedRoomID = roomIdCheck.value;
+    const normalizedUsername = usernameCheck.value;
+    const normalizedTargetUsername = targetCheck.value;
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -48,7 +65,7 @@ export default async function handler(req, res) {
     const { data: room, error: roomError } = await supabase
       .from("rooms")
       .select("id, host")
-      .eq("id", roomID)
+      .eq("id", normalizedRoomID)
       .single();
 
     if (roomError) {
@@ -58,19 +75,19 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: roomError.message, requestId });
     }
 
-    if (room.host !== username) {
+    if (room.host !== normalizedUsername) {
       return res.status(403).json({ error: "Only the host can remove players", requestId });
     }
 
-    if (targetUsername === room.host) {
+    if (normalizedTargetUsername === room.host) {
       return res.status(400).json({ error: "Host cannot be removed", requestId });
     }
 
     const { error: deleteError } = await supabase
       .from("players")
       .delete()
-      .eq("room_id", roomID)
-      .eq("username", targetUsername);
+      .eq("room_id", normalizedRoomID)
+      .eq("username", normalizedTargetUsername);
 
     if (deleteError) {
       console.error("[remove-player] delete failed", { requestId, deleteError });
@@ -81,20 +98,20 @@ export default async function handler(req, res) {
 
     try {
       await ably.channels
-        .get(`room-${roomID}`)
+        .get(`room-${normalizedRoomID}`)
         .publish("player-removed", {
-          roomID,
-          removedUsername: targetUsername,
-          removedBy: username,
+          roomID: normalizedRoomID,
+          removedUsername: normalizedTargetUsername,
+          removedBy: normalizedUsername,
           requestId,
         });
 
       // Also publish a generic "left" event so older clients refresh.
       await ably.channels
-        .get(`room-${roomID}`)
+        .get(`room-${normalizedRoomID}`)
         .publish("player-left", {
-          roomID,
-          username: targetUsername,
+          roomID: normalizedRoomID,
+          username: normalizedTargetUsername,
           reason: "removed",
           requestId,
         });

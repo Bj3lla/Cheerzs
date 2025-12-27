@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import Ably from "ably";
+import { validateRoomId, validateUsername } from "./_lib/security.js";
 
 const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -36,9 +37,19 @@ export default async function handler(req, res) {
     }
 
     const { roomID, username } = body;
-    if (!roomID || !username) {
-      return res.status(400).json({ error: "Missing roomID or username", requestId });
+
+    const roomIdCheck = validateRoomId(roomID);
+    if (!roomIdCheck.ok) {
+      return res.status(400).json({ error: roomIdCheck.error, requestId });
     }
+
+    const usernameCheck = validateUsername(username);
+    if (!usernameCheck.ok) {
+      return res.status(400).json({ error: usernameCheck.error, requestId });
+    }
+
+    const normalizedRoomID = roomIdCheck.value;
+    const normalizedUsername = usernameCheck.value;
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -48,7 +59,7 @@ export default async function handler(req, res) {
     const { data: room, error: roomError } = await supabase
       .from("rooms")
       .select("id, host")
-      .eq("id", roomID)
+      .eq("id", normalizedRoomID)
       .single();
 
     if (roomError) {
@@ -58,7 +69,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: roomError.message, requestId });
     }
 
-    if (room.host !== username) {
+    if (room.host !== normalizedUsername) {
       return res.status(403).json({ error: "Only the host can start the game", requestId });
     }
 
@@ -66,7 +77,7 @@ export default async function handler(req, res) {
     const { error: resetError } = await supabase
       .from("room_game_state")
       .delete()
-      .eq("room_id", roomID);
+      .eq("room_id", normalizedRoomID);
 
     if (resetError) {
       console.error("[start-game] reset game state failed", { requestId, resetError });
@@ -76,8 +87,8 @@ export default async function handler(req, res) {
     const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
 
     await ably.channels
-      .get(`room-${roomID}`)
-      .publish("game-started", { roomID, startedBy: username, requestId });
+      .get(`room-${normalizedRoomID}`)
+      .publish("game-started", { roomID: normalizedRoomID, startedBy: normalizedUsername, requestId });
 
     return res.status(200).json({ ok: true, requestId });
   } catch (err) {

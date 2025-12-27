@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { validateRoomId } from "./_lib/security.js";
 
 const makeRequestId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -13,10 +14,12 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Server misconfiguration", requestId });
     }
 
-    const roomID = req.query?.roomID;
-    if (!roomID || typeof roomID !== "string") {
-      return res.status(400).json({ error: "Missing roomID", requestId });
+    const roomIdCheck = validateRoomId(req.query?.roomID);
+    if (!roomIdCheck.ok) {
+      return res.status(400).json({ error: roomIdCheck.error, requestId });
     }
+
+    const roomID = roomIdCheck.value;
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
