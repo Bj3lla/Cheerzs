@@ -2,13 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Ably from "ably";
 import Button from "../components/Button";
-import Topbar from "../components/Topbar";
 import { useGame } from "../context/GameContext";
 
 export default function WaitingRoomPage() {
   const navigate = useNavigate();
   const { roomId } = useParams();
-  const { setGameStarted, setRoomSession } = useGame();
+  const { setGameStarted, setRoomSession, clearRoomSession } = useGame();
 
   const username = useMemo(() => {
     return localStorage.getItem("playerName") || "";
@@ -34,6 +33,14 @@ export default function WaitingRoomPage() {
       const res = await fetch(`/api/room-state?roomID=${encodeURIComponent(roomId)}`);
       const data = await res.json().catch(() => null);
 
+      if (res.status === 404) {
+        // Room deleted (likely host left). Kick back to Home.
+        clearRoomSession();
+        setGameStarted(false);
+        navigate("/");
+        return;
+      }
+
       if (!res.ok) {
         setError((data && data.error) || "Failed to load room");
         setPlayers([]);
@@ -50,6 +57,43 @@ export default function WaitingRoomPage() {
       setError("Failed to load room");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const leaveGame = async () => {
+    if (!roomId || !username) {
+      clearRoomSession();
+      setGameStarted(false);
+      navigate(-1);
+      return;
+    }
+
+    setError("");
+
+    try {
+      const res = await fetch("/api/leave-room", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomID: roomId, username }),
+      });
+
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        setError((data && data.error) || "Failed to leave room");
+        return;
+      }
+
+      clearRoomSession();
+      setGameStarted(false);
+
+      if (data?.roomDeleted) {
+        navigate("/");
+      } else {
+        navigate(-1);
+      }
+    } catch (err) {
+      console.error("[WaitingRoom] leave-room failed", err);
+      setError("Failed to leave room");
     }
   };
 
@@ -175,6 +219,12 @@ export default function WaitingRoomPage() {
     channel.subscribe("player-removed", refetch);
     channel.subscribe("room-created", refetch);
 
+    channel.subscribe("room-deleted", () => {
+      clearRoomSession();
+      setGameStarted(false);
+      navigate("/");
+    });
+
     channel.subscribe("game-started", async () => {
       await fetchRoomState();
       setGameStarted(true);
@@ -199,7 +249,17 @@ export default function WaitingRoomPage() {
 
   return (
     <div className="waiting-room-page">
-      <Topbar />
+      <div className="top-bar">
+        <button
+          type="button"
+          className="dark-border small"
+          onClick={leaveGame}
+          aria-label="Leave game"
+          title="Leave game"
+        >
+          Leave game
+        </button>
+      </div>
 
       <h2 className="waiting-room-title">Room: {roomId}</h2>
 
