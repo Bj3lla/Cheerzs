@@ -70,7 +70,10 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
           onChange={(e) => setRoomID(e.target.value.toUpperCase())}
           onKeyDown={(e) => e.key === "Enter" && !loading && handleJoin()}
           disabled={loading}
-          className={error ? "error" : ""}
+          autoCapitalize="characters"
+          autoCorrect="off"
+          spellCheck={false}
+          className={`${error ? "error " : ""}room-code-input`}
         />
       </div>
       {error && <p className="error-message">{error}</p>}
