@@ -32,7 +32,8 @@ export const translations = {
       networkError: "Network error",
       roomCreated: "Room created! Share this ID with your friends:",
       loading: "Loading...",
-      pleaseAddFriend: "Please enter a name first",
+      pleaseAddFriend: "Please enter a friend name",
+      pleaseEnterPlayerName: "Please enter a name first",
     },
     categories: {
       truth: "Truth",
@@ -70,6 +71,7 @@ export const translations = {
       roomCreated: "Rom opprettet! Del denne ID-en med vennene dine:",
       Loading: "Laster inn...",
       pleaseAddFriend: "Vennligst skriv inn navn på venn",
+      pleaseEnterPlayerName: "Vennligst skriv inn navn først",
     },
     categories: {
       truth: "Sannhet",

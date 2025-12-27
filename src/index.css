@@ -95,7 +95,16 @@ p.error-message {
 .create-room-button {
   margin-top: 1.5rem;
 }
-
+.create-room-page,
+.join-room-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5rem;
+  padding-bottom: 2rem;
+  width: 100%;
+  min-height: 100vh;
+}
 span.manual-link, .link {
   color: var(--pink);
   text-decoration: underline;

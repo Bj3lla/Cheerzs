@@ -1,15 +1,14 @@
 import { useState } from "react";
 import Button from "./Button";
-import AddPlayer from "./AddPlayer";
 import { translations } from "../locales/translations";
 
-export default function JoinRoom({ onRoomJoined, language = "en" }) {
+export default function JoinRoom({ onRoomJoined, language = "en", username }) {
   const [roomID, setRoomID] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const i18n = translations[language];
 
-  const handleJoin = async (username) => {
+  const handleJoin = async () => {
     if (!roomID.trim()) {
       setError(i18n.ui.pleaseEnterRoomID || "Please enter a room ID");
       return;
@@ -25,14 +24,11 @@ export default function JoinRoom({ onRoomJoined, language = "en" }) {
         body: JSON.stringify({ roomID: roomID.trim(), username }),
       });
 
-      const data = await res.json();
-
       if (res.ok) {
         onRoomJoined({ roomID: roomID.trim(), username });
-      } else if (res.status === 404) {
-        setError(i18n.ui.roomNotFound || "Room not found");
       } else {
-        setError(i18n.ui.networkError || "Network error");
+        const data = await res.json();
+        setError(data.error || i18n.ui.networkError || "Network error");
       }
     } catch (err) {
       console.error(err);
@@ -48,18 +44,24 @@ export default function JoinRoom({ onRoomJoined, language = "en" }) {
       <div className="friend-input">
         <input
           type="text"
-          placeholder={i18n.ui.placeholderRoomID || "Enter room ID"}
+          placeholder={i18n.ui.placeholderRoomID}
           value={roomID}
           onChange={(e) => setRoomID(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && !loading && handleJoin()}
           disabled={loading}
+          className={error ? "error" : ""}
         />
       </div>
-      <AddPlayer
-        language={language}
-        onPlayerAdded={handleJoin}
-        isLoading={loading}
-      />
       {error && <p className="error-message">{error}</p>}
+      <div className="join-room-button">
+        <Button
+          label={loading ? i18n.ui.joiningRoom : i18n.ui.joinRoom}
+          color="primary"
+          onClick={handleJoin}
+          disabled={loading || !roomID.trim()}
+          size="medium"
+        />
+      </div>
     </div>
   );
 }

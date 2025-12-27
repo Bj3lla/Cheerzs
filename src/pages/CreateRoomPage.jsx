@@ -1,14 +1,18 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import CreateRoom from "../components/CreateRoom";
 import Topbar from "../components/Topbar";
 import { translations } from "../locales/translations";
 
 export default function CreateRoomPage({ language }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const i18n = translations[language];
 
-  const handleRoomCreated = (roomId) => {
-    navigate(`/room/${roomId}`);
+  // Get username from navigation state or localStorage
+  const playerName = location.state?.playerName || localStorage.getItem("playerName") || "";
+
+  const handleRoomCreated = ({ roomID }) => {
+    navigate(`/room/${roomID}`);
   };
 
   return (
@@ -19,7 +23,7 @@ export default function CreateRoomPage({ language }) {
         <br />
         {i18n.ui.year}
       </h1>
-      <CreateRoom onRoomCreated={handleRoomCreated} language={language} />
+      <CreateRoom onRoomCreated={handleRoomCreated} language={language} username={playerName} />
     </div>
   );
 }

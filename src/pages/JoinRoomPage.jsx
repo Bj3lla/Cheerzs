@@ -1,16 +1,17 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import JoinRoom from "../components/JoinRoom";
 import Topbar from "../components/Topbar";
 import { translations } from "../locales/translations";
 
-
-
 export default function JoinRoomPage({ language }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const i18n = translations[language];
 
-  const handleRoomJoined = (roomId) => {
-    navigate(`/room/${roomId}`);
+  const playerName = location.state?.playerName || localStorage.getItem("playerName") || "";
+
+  const handleRoomJoined = ({ roomID }) => {
+    navigate(`/room/${roomID}`);
   };
 
   return (
@@ -21,7 +22,7 @@ export default function JoinRoomPage({ language }) {
         <br />
         {i18n.ui.year}
       </h1>
-      <JoinRoom onRoomJoined={handleRoomJoined} language={language} />
+      <JoinRoom onRoomJoined={handleRoomJoined} language={language} username={playerName} />
     </div>
   );
 }
