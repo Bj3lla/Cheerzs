@@ -1,95 +1,48 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AddPlayer from "../components/AddPlayer";
 import Button from "../components/Button";
-import CreateRoom from "../components/CreateRoom";
-import JoinRoom from "../components/JoinRoom";
 import { translations } from "../locales/translations";
 
-export default function HomePage({
-  language,
-  onCreateRoom,
-  onJoinRoom,
-  onStartSingleplayerGame,
-}) {
-  const [friends, setFriends] = useState([]);
-  const [friendInput, setFriendInput] = useState("");
+export default function HomePage({ language = "en" }) {
+  const [playerName, setPlayerName] = useState("");
+  const navigate = useNavigate();
+  const i18n = translations[language] || translations.en;
 
-  const i18n = translations[language];
-
-  const addFriend = () => {
-    const name = friendInput.trim();
-    if (name && !friends.includes(name)) {
-      setFriends((prev) => [...prev, name]);
-      setFriendInput("");
-    }
+  const goCreateRoom = () => {
+    navigate("/create-room", { state: { playerName } });
   };
 
-  const removeFriend = (nameToRemove) => {
-    setFriends((prev) => prev.filter((name) => name !== nameToRemove));
-  };
-
-  const handleStartGame = () => {
-    if (friends.length > 0) {
-      onStartSingleplayerGame(friends);
-    }
+  const goJoinRoom = () => {
+    navigate("/join-room", { state: { playerName } });
   };
 
   return (
     <div className="home-screen">
-      <h1>
+    <h1 className="home-title">
         {i18n.ui.cheers}
         <br />
         {i18n.ui.year}
       </h1>
-
-      {/* Single Player Setup */}
-      <section className="singleplayer-section">
-        <h2>Single Player Game</h2>
-        <div className="friend-input">
-          <input
-            type="text"
-            placeholder={i18n.ui.placeholder}
-            value={friendInput}
-            onChange={(e) => setFriendInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && addFriend()}
-          />
-          <Button
-            label={i18n.ui.add}
-            color="accent"
-            onClick={addFriend}
-            size="small"
-          />
-        </div>
-
-        <div className="friends-list">
-          {friends.map((friend, index) => (
-            <div key={index} className="friend-item">
-              <span>{friend}</span>
-              <button
-                className="remove-btn"
-                onClick={() => removeFriend(friend)}
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <Button
-          label={i18n.ui.startGame}
-          color="primary"
-          onClick={handleStartGame}
-          size="large"
-          disabled={friends.length === 0}
+      
+      <div className="friend-input">
+        <AddPlayer
+          language={language}
+          value={playerName}
+          onChange={setPlayerName}
+          hideButton={true}
+          placeholder={i18n.ui.placeholder}
         />
-      </section>
+      </div>
 
-      {/* Multiplayer Setup */}
-      <section className="multiplayer-section">
-        <h2>Multiplayer Game</h2>
-        <CreateRoom onRoomCreated={onCreateRoom} />
-        <hr />
-        <JoinRoom onRoomJoined={onJoinRoom} />
-      </section>
+      <div className="room-buttons">
+        <Button label={i18n.ui.createRoom || "Create Room"} color="accent" onClick={goCreateRoom} />
+        <Button label={i18n.ui.joinRoom || "Join Room"} color="primary" onClick={goJoinRoom} />
+      </div>
+
+      <p className="manual-add">
+        {i18n.ui.orAddPlayers || "or add players manually"} <span className="manual-link" onClick={() => navigate("/add-players")}>here</span>
+      </p>
     </div>
   );
 }

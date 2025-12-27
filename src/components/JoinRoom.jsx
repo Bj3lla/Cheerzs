@@ -1,57 +1,62 @@
 import { useState } from "react";
+import Button from "./Button";
 
 export default function JoinRoom({ onRoomJoined }) {
-  const [username, setUsername] = useState("");
   const [roomID, setRoomID] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleJoin = async () => {
-    if (!username || !roomID) {
-      setError("Please enter your name and room ID");
+    if (!roomID.trim()) {
+      setError("Please enter a room ID");
       return;
     }
+
     setLoading(true);
     setError("");
+
     try {
       const res = await fetch("/api/join-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, roomID }),
+        body: JSON.stringify({ roomID: roomID.trim() }),
       });
       const data = await res.json();
+
       if (res.ok) {
-        onRoomJoined(roomID);
+        onRoomJoined(roomID.trim());
       } else {
-        setError(data.error || "Failed to join room");
+        setError("Opsie! This room does not exist");
       }
     } catch (err) {
       console.error(err);
-      setError("Network error");
+      setError("Opsie! This room does not exist");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Join a Room</h2>
+    <div className="join-room">
+      <h2>Join Room</h2>
+      <div className="friend-input">
       <input
         type="text"
-        placeholder="Enter your name"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Enter Room ID"
+        placeholder="enter room ID..."
         value={roomID}
         onChange={(e) => setRoomID(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && !loading && handleJoin()}
+        disabled={loading}
       />
-      <button onClick={handleJoin} disabled={loading}>
-        {loading ? "Joining..." : "Join Room"}
-      </button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      </div>
+      {error && <p className="error-message">{error}</p>}
+      <Button
+        label={loading ? "Joining..." : "Join Room"}
+        color="primary"
+        onClick={handleJoin}
+        disabled={loading || !roomID.trim()}
+        size="medium"
+      />
     </div>
   );
 }

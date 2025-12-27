@@ -19,6 +19,7 @@ export default function LanguageSelector({ language, onLanguageChange }) {
         className="language-btn"
         onClick={() => setIsOpen(true)}
         title="Change language"
+        size ={26}
       />
 
       {isOpen && (

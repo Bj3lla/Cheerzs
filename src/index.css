@@ -10,7 +10,7 @@
   --light-pink: #ffa9f9;
   --light-yellow: #fff7ad;
   --pale-yellow: #ffffcf;
-  --rule: #b42a82;
+  --rule: #b42a82; 
 }
 
 /* -------------------------------
@@ -38,9 +38,20 @@ h1, h2, h3 {
   margin: 0.5em 0;
 }
 
-h1 { font-size: 50px; line-height: 1.1; }
-h2 { font-size: 30px; }
-h3 { font-size: 20px; }
+h1 { font-size: 60px; line-height: 1.1; }
+h2 { font-size: 40px; }
+h3 { font-size: 30px; }
+
+p {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  margin: 0.5em 0;
+  font-family: "Montserrat", sans-serif;
+}
+p.error-message {
+  color: var(--pink);
+  margin-top: 0.5rem;
+}
 
 /* -------------------------------
    🏠 Home Screen & Friend List
@@ -51,13 +62,15 @@ h3 { font-size: 20px; }
   align-items: center;
 }
 
-.friend-input {
+.room-input {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   margin-top: 1rem;
+  padding-bottom: 1rem;
 }
 
-.friend-input input {
+.room-input input {
   background-color: var(--pale-yellow);
   border: none;
   border-radius: 8px;
@@ -66,6 +79,40 @@ h3 { font-size: 20px; }
   color: var(--dark);
   letter-spacing: 0.1em;
   outline: none;
+}
+
+.room-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-bottom: 7rem;
+}
+
+span.manual-link, .link {
+  color: var(--pink);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.friend-input {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.friend-input input {
+  background-color: var(--pale-yellow);
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 1.3rem;
+  color: var(--dark);
+  letter-spacing: 0.1em;
+  outline: none;
+  flex: 1;
+  min-width: 0;
 }
 
 .friends-list {
@@ -106,7 +153,6 @@ h3 { font-size: 20px; }
   top: -4px; bottom: -4px;
   left: -4px; right: -4px;
 }
-
 /* -------------------------------
    🧩 App Container
 --------------------------------*/
@@ -140,9 +186,36 @@ h3 { font-size: 20px; }
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1rem;
   background: transparent;
   z-index: 1000;
+}
+
+.top-bar button {
+  top: 1rem;
+  background-color: transparent;
+  color: var(--dark);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.start-game-btn {
+  position: fixed;
+  bottom: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 300px;
+}
+/* -------------------------------
+   🃏 Create and Join rooms
+--------------------------------*/
+.create-room h2 {
+  color: var(--rule)
+}
+
+.join-room h2 {
+  color: var(--pink)
 }
 
 /* -------------------------------
@@ -154,7 +227,7 @@ h3 { font-size: 20px; }
   font-size: 2.5rem;
 }
 
-.card-wrapper {
+.game-screen {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -229,7 +302,7 @@ button.medium { font-size: 18px; padding: 0.8rem 2rem; }
 button.large { font-size: 20px; padding: 1rem 2.5rem; }
 
 /* Color variants */
-button.accent,
+button.accent { background-color: var(--rule); color: var(--pale-yellow); }
 button.primary { background-color: var(--pink); color: var(--pale-yellow); }
 button.light { background-color: var(--pale-yellow); color: var(--dark); }
 button.dark { background-color: var(--dark); color: var(--pale-yellow); }
@@ -278,6 +351,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   color: var(--dark);
   text-align: left;
   font-family: "Montserrat", sans-serif;
+  
 }
 
 .active-rules ul {
@@ -299,12 +373,11 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   position: absolute;
   display: flex;
   align-items: right;
-  top: 1rem;
-  right: 1rem;         /* 👉 changed from left to right */
+  top: 2rem;
+  right: 2rem;         /* 👉 changed from left to right */
   z-index: 1100;
 
-  background-color: var(--dark);
-  color: var(--pale-yellow);
+  color: var(--dark);
   border-radius: 10px;
   transition: all 0.2s ease;
 }
@@ -451,4 +524,3 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
     left: 0.3rem;
   }
 }
-

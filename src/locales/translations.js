@@ -12,6 +12,9 @@ export const translations = {
       cheers: "Cheerzs!",
       year: "2025",
       selectLanguage: "Select Language",
+      createRoom: "Create Room",
+      joinRoom: "Join Room",
+      orAddPlayers: "or add players manually",
     },
     categories: {
       truth: "Truth",
@@ -36,6 +39,9 @@ export const translations = {
       cheers: "Cheerzs!",
       year: "2025",
       selectLanguage: "Velg språk",
+      createRoom: "Opprett rom",
+      joinRoom: "Bli med i rom",
+      orAddPlayers: "eller legg til spillere manuelt",
     },
     categories: {
       truth: "Sannhet",

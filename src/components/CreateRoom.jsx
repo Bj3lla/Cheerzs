@@ -1,30 +1,35 @@
 import { useState } from "react";
+import Button from "./Button";
+import "../index.css";
 
 export default function CreateRoom({ onRoomCreated }) {
-  const [username, setUsername] = useState("");
   const [roomID, setRoomID] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [createdRoomID, setCreatedRoomID] = useState("");
   const [copied, setCopied] = useState(false);
 
   const handleCreate = async () => {
-    if (!username) {
-      setError("Please enter your name");
+    if (!roomID.trim()) {
+      setError("Please enter a room ID");
       return;
     }
+
     setLoading(true);
     setError("");
     setCopied(false);
+
     try {
       const res = await fetch("/api/create-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify({ roomID: roomID.trim() }),
       });
       const data = await res.json();
+
       if (res.ok) {
-        setRoomID(data.roomID);
-        onRoomCreated(data.roomID);
+        setCreatedRoomID(roomID);
+        onRoomCreated(roomID);
       } else {
         setError(data.error || "Failed to create room");
       }
@@ -37,36 +42,47 @@ export default function CreateRoom({ onRoomCreated }) {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(roomID);
+    navigator.clipboard.writeText(createdRoomID);
     setCopied(true);
   };
 
   return (
-    <div>
-      <h2>Create a Room</h2>
-      {!roomID ? (
+    <div className="create-room">
+      <h2>Create Room</h2>
+      {!createdRoomID ? (
         <>
+        <div className="friend-input"> 
           <input
             type="text"
-            placeholder="Enter your name"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="enter room ID..."
+            value={roomID}
+            onChange={(e) => setRoomID(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && !loading && handleCreate()}
+            disabled={loading}
           />
-          <button onClick={handleCreate} disabled={loading}>
-            {loading ? "Creating..." : "Create Room"}
-          </button>
+        </div>
+          {error && <p className="error-message" >{error}</p>}
+          <Button
+            label={loading ? "Creating..." : "Create Room"}
+            color="accent"
+            onClick={handleCreate}
+            disabled={loading || !roomID.trim()}
+            size="medium"
+          />
         </>
       ) : (
-        <div>
+        <div className="room-created">
           <p>
-            Room created! Share this ID with your friends: <strong>{roomID}</strong>
+            Room created! Share this ID with your friends: <strong>{createdRoomID}</strong>
           </p>
-          <button onClick={copyToClipboard}>
-            {copied ? "Copied!" : "Copy Room ID"}
-          </button>
+          <Button
+            label={copied ? "Copied!" : "Copy Room ID"}
+            color="accent"
+            onClick={copyToClipboard}
+            size="small"
+          />
         </div>
       )}
-      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }

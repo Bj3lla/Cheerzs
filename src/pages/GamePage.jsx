@@ -1,34 +1,38 @@
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { BsChevronCompactDown, BsChevronCompactUp } from "react-icons/bs";
 import Button from "../components/Button";
 import Card from "../components/Card";
+import Topbar from "../components/Topbar";
+import { useGame } from "../context/GameContext";
 import { categoryColors } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 
-export default function GamePage({
-  language,
-  category,
-  prompt,
-  repelActive,
-  repelMessage,
-  showActiveRules,
-  setShowActiveRules,
-  activeRules,
-  onGeneratePrompt,
-  onBackToHome,
-}) {
+export default function GamePage({ language }) {
+    const {
+    gameStarted,
+    category,
+    prompt,
+    generatePrompt,
+    activeRules,
+    repelMessage,
+    repelActive,
+    showActiveRules,
+    setShowActiveRules,
+    } = useGame();
+
+
   const i18n = translations[language];
+
+  useEffect(() => {
+    if (gameStarted && !prompt) {
+      generatePrompt();
+    }
+  }, [gameStarted, prompt, generatePrompt]);
 
   return (
     <div className="game-screen">
-      <div className="top-bar">
-        <Button
-          label={i18n.ui.editGame}
-          color="dark"
-          onClick={onBackToHome}
-          size="small"
-        />
-      </div>
-
+      <Topbar />
       <h2
         className="category-header"
         style={{
@@ -42,34 +46,32 @@ export default function GamePage({
           : i18n.categories[category] || ""}
       </h2>
 
-      <div className="card-wrapper">
         <Card
           prompt={repelActive ? repelMessage : prompt || i18n.ui.pressNext}
           category={repelActive ? "repeal" : category}
         />
-      </div>
 
       <Button
         label={i18n.ui.next}
         color="primary"
-        onClick={onGeneratePrompt}
-        size="medium"
+        onClick={generatePrompt}
+        size="large"
       />
 
       {activeRules.length > 0 && (
         <div className="active-rules-container">
           <div
             className="active-rules-header"
-            onClick={() => setShowActiveRules((prev) => !prev)}
+            // onClick={() => setShowActiveRules((prev) => !prev)}
             style={{ cursor: "pointer" }}
           >
             <h3>{i18n.ui.activeRules}</h3>
             <span className="toggle-icon">
-              {showActiveRules ? (
-                <BsChevronCompactUp fontSize={25} />
+              {/* {showActiveRules ? (
+                <BsChevronCompactUp fontSize={24} />
               ) : (
-                <BsChevronCompactDown fontSize={25} />
-              )}
+                <BsChevronCompactDown fontSize={24} />
+              )} */}
             </span>
           </div>
 

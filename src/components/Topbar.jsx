@@ -1,0 +1,23 @@
+import { useNavigate } from "react-router-dom";
+import { IoArrowBack } from "react-icons/io5";
+
+export default function Topbar() {
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  return (
+    <div className="top-bar">
+      <button
+        className="button"
+        onClick={handleBack}
+        title="Go back"
+        aria-label="Go back to previous page"
+      >
+        <IoArrowBack size={24} />
+      </button>
+    </div>
+  );
+}
