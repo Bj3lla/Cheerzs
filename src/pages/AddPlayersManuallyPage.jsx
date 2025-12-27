@@ -48,7 +48,7 @@ export default function AddPlayersManuallyPage({ language }) {
 
   return (
     <div className="add-players-manually">
-      <Topbar />
+      <Topbar to="/" />
       <h1 className="home-title">
         {i18n.ui.cheers}
         <br />

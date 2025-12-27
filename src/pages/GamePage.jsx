@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Ably from "ably";
 import Button from "../components/Button";
 import Card from "../components/Card";
-import Topbar from "../components/Topbar";
 import { useGame } from "../context/GameContext";
 import { categoryColors } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
@@ -56,6 +55,24 @@ export default function GamePage({ language }) {
     : isRepealCard
       ? repelMessage || prompt
       : prompt || i18n.ui.pressNext;
+
+  useEffect(() => {
+    // Guard against manual URL navigation.
+    // Multiplayer requires both username + roomID; single-mode requires gameStarted.
+    if (isRoomGame) {
+      if (!username || !normalizedRoomID) {
+        clearRoomSession();
+        setGameStarted(false);
+        navigate("/", { replace: true });
+      }
+      return;
+    }
+
+    if (!gameStarted) {
+      navigate("/", { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameStarted, isRoomGame, normalizedRoomID, username]);
 
   useEffect(() => {
     if (isRoomGame) return;
@@ -132,6 +149,36 @@ export default function GamePage({ language }) {
       setRoomSession({ roomID: data?.roomID || normalizedRoomID, players: nextPlayers });
     } catch {
       // ignore (room sync is best-effort)
+    }
+  };
+
+  const leaveFromGamePage = async () => {
+    if (!isRoomGame || !normalizedRoomID || !username) {
+      setGameStarted(false);
+      navigate("/join-room");
+      return;
+    }
+
+    // Host should be able to go back to the waiting room without deleting the room.
+    if (isHost) {
+      setGameStarted(false);
+      navigate(`/room/${encodeURIComponent(normalizedRoomID)}`);
+      return;
+    }
+
+    // Non-host: actually leave the room/game.
+    try {
+      await fetch("/api/leave-room", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomID: normalizedRoomID, username }),
+      });
+    } catch {
+      // ignore
+    } finally {
+      clearRoomSession();
+      setGameStarted(false);
+      navigate("/join-room");
     }
   };
 
@@ -261,7 +308,17 @@ export default function GamePage({ language }) {
 
   return (
     <div className="game-screen">
-      <Topbar />
+      <div className="top-bar">
+        <button
+          type="button"
+          className="dark-border small"
+          onClick={leaveFromGamePage}
+          aria-label={i18n.ui.leaveGame}
+          title={i18n.ui.leaveGame}
+        >
+          {i18n.ui.leaveGame}
+        </button>
+      </div>
       <h2
         className="category-header"
         style={{

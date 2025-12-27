@@ -30,6 +30,14 @@ export default function WaitingRoomPage({ language = "en" }) {
 
   const isHost = Boolean(username) && Boolean(host) && username === host;
 
+  useEffect(() => {
+    if (!normalizedRoomID || !username) {
+      clearRoomSession();
+      setGameStarted(false);
+      navigate("/", { replace: true });
+    }
+  }, [clearRoomSession, navigate, normalizedRoomID, setGameStarted, username]);
+
   const fetchRoomState = async () => {
     if (!normalizedRoomID) return;
 
@@ -55,7 +63,10 @@ export default function WaitingRoomPage({ language = "en" }) {
         return;
       }
 
-      setHost(data.host || "");
+      const nextHost = data.host || "";
+      const nextIsHost = Boolean(username) && Boolean(nextHost) && username === nextHost;
+
+      setHost(nextHost);
       const nextPlayers = Array.isArray(data.players) ? data.players : [];
       setPlayers(nextPlayers);
       setRoomSession({ roomID: data?.roomID || normalizedRoomID, players: nextPlayers });
@@ -66,7 +77,9 @@ export default function WaitingRoomPage({ language = "en" }) {
         const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
         const gsData = await gsRes.json().catch(() => null);
         const started = Boolean(gsData?.state?.started);
-        if (gsRes.ok && started) {
+        // If someone opens the waiting room after the host already started the game,
+        // only non-hosts should be forced into the game.
+        if (gsRes.ok && started && !nextIsHost) {
           setGameStarted(true);
           navigate("/game");
           return;
@@ -83,10 +96,12 @@ export default function WaitingRoomPage({ language = "en" }) {
   };
 
   const leaveGame = async () => {
+    const destination = isHost ? "/create-room" : "/join-room";
+
     if (!normalizedRoomID || !username) {
       clearRoomSession();
       setGameStarted(false);
-      navigate(-1);
+      navigate(destination);
       return;
     }
 
@@ -108,11 +123,7 @@ export default function WaitingRoomPage({ language = "en" }) {
       clearRoomSession();
       setGameStarted(false);
 
-      if (data?.roomDeleted) {
-        navigate("/");
-      } else {
-        navigate(-1);
-      }
+      navigate(destination);
     } catch (err) {
       console.error("[WaitingRoom] leave-room failed", err);
       setError(i18n.ui.failedToLeaveRoom);
@@ -249,7 +260,7 @@ export default function WaitingRoomPage({ language = "en" }) {
         const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
         const gsData = await gsRes.json().catch(() => null);
         const started = Boolean(gsData?.state?.started);
-        if (gsRes.ok && started) {
+        if (gsRes.ok && started && !isHost) {
           setGameStarted(true);
           navigate("/game");
         }

@@ -628,4 +628,29 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
     top: 0.3rem;
     left: 0.3rem;
   }
+
+  /* -------------------------------
+     📱 GamePage mobile centering
+  --------------------------------*/
+  .game-screen {
+    width: 100%;
+    min-height: calc(100svh - 9rem);
+    padding-top: 1rem;
+    padding-bottom: 2.5rem;
+    justify-content: center;
+    margin-top: 0;
+  }
+
+  .category-header {
+    margin-top: 0;
+    font-size: 2rem;
+  }
+
+  .card-container {
+    width: 92vw;
+    max-width: 92vw;
+    min-width: 0;
+    padding: 1.4rem 1rem;
+    margin-bottom: 1rem;
+  }
 }
