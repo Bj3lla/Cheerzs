@@ -3,11 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import Ably from "ably";
 import Button from "../components/Button";
 import { useGame } from "../context/GameContext";
+import { translations } from "../locales/translations";
 
-export default function WaitingRoomPage() {
+export default function WaitingRoomPage({ language = "en" }) {
   const navigate = useNavigate();
   const { roomId } = useParams();
   const { setGameStarted, setRoomSession, clearRoomSession } = useGame();
+
+  const i18n = translations[language] || translations.en;
 
   const normalizedRoomID = useMemo(() => {
     return typeof roomId === "string" ? roomId.trim().toUpperCase() : "";
@@ -46,7 +49,7 @@ export default function WaitingRoomPage() {
       }
 
       if (!res.ok) {
-        setError((data && data.error) || "Failed to load room");
+        setError((data && data.error) || i18n.ui.failedToLoadRoom);
         setPlayers([]);
         setHost("");
         return;
@@ -73,7 +76,7 @@ export default function WaitingRoomPage() {
       }
     } catch (err) {
       console.error("[WaitingRoom] room-state failed", err);
-      setError("Failed to load room");
+      setError(i18n.ui.failedToLoadRoom);
     } finally {
       setLoading(false);
     }
@@ -98,7 +101,7 @@ export default function WaitingRoomPage() {
 
       const data = await res.json().catch(() => null);
       if (!res.ok) {
-        setError((data && data.error) || "Failed to leave room");
+        setError((data && data.error) || i18n.ui.failedToLeaveRoom);
         return;
       }
 
@@ -112,7 +115,7 @@ export default function WaitingRoomPage() {
       }
     } catch (err) {
       console.error("[WaitingRoom] leave-room failed", err);
-      setError("Failed to leave room");
+      setError(i18n.ui.failedToLeaveRoom);
     }
   };
 
@@ -155,7 +158,7 @@ export default function WaitingRoomPage() {
 
       const data = await res.json().catch(() => null);
       if (!res.ok) {
-        setError((data && data.error) || "Failed to start game");
+        setError((data && data.error) || i18n.ui.failedToStartGame);
         return;
       }
 
@@ -166,7 +169,7 @@ export default function WaitingRoomPage() {
       navigate("/game");
     } catch (err) {
       console.error("[WaitingRoom] start-game failed", err);
-      setError("Failed to start game");
+      setError(i18n.ui.failedToStartGame);
     }
   };
 
@@ -184,14 +187,14 @@ export default function WaitingRoomPage() {
 
       const data = await res.json().catch(() => null);
       if (!res.ok) {
-        setError((data && data.error) || "Failed to remove player");
+        setError((data && data.error) || i18n.ui.failedToRemovePlayer);
         return;
       }
 
       await fetchRoomState();
     } catch (err) {
       console.error("[WaitingRoom] remove-player failed", err);
-      setError("Failed to remove player");
+      setError(i18n.ui.failedToRemovePlayer);
     }
   };
 
@@ -240,6 +243,21 @@ export default function WaitingRoomPage() {
     channel.subscribe("player-removed", refetch);
     channel.subscribe("room-created", refetch);
 
+    channel.subscribe("card-updated", async () => {
+      // If the host is already in-game, pull game-state and redirect.
+      try {
+        const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
+        const gsData = await gsRes.json().catch(() => null);
+        const started = Boolean(gsData?.state?.started);
+        if (gsRes.ok && started) {
+          setGameStarted(true);
+          navigate("/game");
+        }
+      } catch {
+        // ignore
+      }
+    });
+
     channel.subscribe("room-deleted", () => {
       clearRoomSession();
       setGameStarted(false);
@@ -275,16 +293,16 @@ export default function WaitingRoomPage() {
           type="button"
           className="dark-border small"
           onClick={leaveGame}
-          aria-label="Leave game"
-          title="Leave game"
+          aria-label={i18n.ui.leaveGame}
+          title={i18n.ui.leaveGame}
         >
-          Leave game
+          {i18n.ui.leaveGame}
         </button>
       </div>
 
-      <h2 className="waiting-room-title">Room: {normalizedRoomID || roomId}</h2>
+      <h2 className="waiting-room-title">{i18n.ui.roomID}{normalizedRoomID || roomId}</h2>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p>{i18n.ui.loading}</p>}
       {error && <p className="error-message">{error}</p>}
 
       {!loading && !error && (
@@ -309,7 +327,7 @@ export default function WaitingRoomPage() {
 
           <div className="start-game-btn">
             <Button
-              label="Start Game"
+              label={i18n.ui.startGame}
               color="primary"
               onClick={startGame}
               size="large"

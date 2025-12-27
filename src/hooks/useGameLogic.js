@@ -176,12 +176,14 @@ export default function useGameLogic(language) {
   }, [language]);
 
   const getRoomBroadcastState = () => {
-    return (
+    const base =
       broadcastStateRef.current || {
         card: currentCard,
         activeRules: Array.isArray(activeRules) ? activeRules : [],
-      }
-    );
+      };
+
+    // In room games, once you're on the game page, treat state as started.
+    return roomId ? { ...base, started: true } : base;
   };
 
   const applyRoomBroadcastState = (state, nextLanguage = language) => {

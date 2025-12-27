@@ -83,7 +83,7 @@ export default async function handler(req, res) {
 
     const { data: existingState, error: existingError } = await supabase
       .from("room_game_state")
-      .select("seq")
+      .select("seq, state")
       .eq("room_id", normalizedRoomID)
       .maybeSingle();
 
@@ -93,13 +93,20 @@ export default async function handler(req, res) {
 
     const nextSeq = (existingState?.seq ?? 0) + 1;
 
+    const prevState = isPlainObject(existingState?.state) ? existingState.state : {};
+    const mergedState = {
+      ...prevState,
+      ...state,
+      started: true,
+    };
+
     const { error: upsertError } = await supabase
       .from("room_game_state")
       .upsert(
         {
           room_id: normalizedRoomID,
           seq: nextSeq,
-          state,
+          state: mergedState,
           updated_at: new Date().toISOString(),
         },
         { onConflict: "room_id" }

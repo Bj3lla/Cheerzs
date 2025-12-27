@@ -12,7 +12,12 @@ export default function AddPlayersManuallyPage({ language }) {
   const [friendInput, setFriendInput] = useState("");
   const [friends, setFriends] = useState([]);
   const [friendErrorCode, setFriendErrorCode] = useState(null);
-  const { setGameStarted, generatePrompt, addFriend: addFriendToGame } = useGame();
+  const {
+    setGameStarted,
+    generatePrompt,
+    addFriend: addFriendToGame,
+    removeFriend: removeFriendFromGame,
+  } = useGame();
 
   const addFriend = () => {
     const name = friendInput.trim();
@@ -32,6 +37,7 @@ export default function AddPlayersManuallyPage({ language }) {
 
   const removeFriend = (friend) => {
     setFriends(friends.filter((f) => f !== friend));
+    removeFriendFromGame(friend);
   };
 
   const startGame = () => {
