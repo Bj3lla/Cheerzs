@@ -105,6 +105,20 @@ p.error-message {
   width: 100%;
   min-height: 100vh;
 }
+
+.waiting-room-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5rem;
+  padding-bottom: 2rem;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.waiting-room-title {
+  margin-top: 0.5rem;
+}
 span.manual-link, .link {
   color: var(--pink);
   text-decoration: underline;
