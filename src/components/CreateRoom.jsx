@@ -11,6 +11,11 @@ export default function CreateRoom({ onRoomCreated, language = "en", username })
   const i18n = translations[language];
 
   const handleCreate = async () => {
+    if (!username || typeof username !== "string" || !username.trim()) {
+      setError(i18n.ui.pleaseEnterPlayerName || "Please enter a name first");
+      return;
+    }
+
     if (!roomID.trim()) {
       setError(i18n.ui.pleaseEnterRoomID || "Please enter a room ID");
       return;
@@ -21,7 +26,7 @@ export default function CreateRoom({ onRoomCreated, language = "en", username })
     setCopied(false);
 
     try {
-      const payload = { roomID: roomID.trim(), username };
+      const payload = { roomID: roomID.trim().toUpperCase(), username: username.trim() };
       console.groupCollapsed("[CreateRoom] POST /api/create-room");
       console.log("payload", payload);
 
@@ -44,8 +49,8 @@ export default function CreateRoom({ onRoomCreated, language = "en", username })
       console.groupEnd();
 
       if (res.ok) {
-        setCreatedRoomID(roomID.trim());
-        onRoomCreated({ roomID: roomID.trim(), username });
+        setCreatedRoomID(roomID.trim().toUpperCase());
+        onRoomCreated({ roomID: roomID.trim().toUpperCase(), username: username.trim() });
       } else {
         setError((data && data.error) || i18n.ui.networkError || "Network error");
       }
@@ -66,10 +71,13 @@ export default function CreateRoom({ onRoomCreated, language = "en", username })
           type="text"
           placeholder={i18n.ui.placeholderRoomID}
           value={roomID}
-          onChange={(e) => setRoomID(e.target.value)}
+          onChange={(e) => setRoomID(e.target.value.toUpperCase())}
           onKeyDown={(e) => e.key === "Enter" && !loading && handleCreate()}
           disabled={loading}
-          className={error ? "error" : ""}
+          autoCapitalize="characters"
+          autoCorrect="off"
+          spellCheck={false}
+          className={`${error ? "error " : ""}room-code-input`}
         />
       </div>
       {error && <p className="error-message">{error}</p>}

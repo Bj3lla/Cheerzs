@@ -134,7 +134,14 @@ export default async function handler(req, res) {
     }
 
     if (existingPlayer?.id) {
-      return res.status(200).json({ success: true, roomID: normalizedRoomID, username: normalizedUsername, requestId });
+      const { data: gameState } = await supabase
+        .from("room_game_state")
+        .select("state")
+        .eq("room_id", normalizedRoomID)
+        .maybeSingle();
+
+      const gameStarted = Boolean(gameState?.state?.started);
+      return res.status(200).json({ success: true, roomID: normalizedRoomID, username: normalizedUsername, gameStarted, requestId });
     }
 
     // Add player
@@ -158,7 +165,15 @@ export default async function handler(req, res) {
     }
 
     console.log("[join-room] success", { requestId, roomID: normalizedRoomID, username: normalizedUsername, host: room?.host });
-    return res.status(200).json({ success: true, roomID: normalizedRoomID, username: normalizedUsername, requestId });
+
+    const { data: gameState } = await supabase
+      .from("room_game_state")
+      .select("state")
+      .eq("room_id", normalizedRoomID)
+      .maybeSingle();
+
+    const gameStarted = Boolean(gameState?.state?.started);
+    return res.status(200).json({ success: true, roomID: normalizedRoomID, username: normalizedUsername, gameStarted, requestId });
   } catch (err) {
     console.error("[join-room] crashed", { requestId, err });
     return res.status(500).json({ error: "Internal Server Error", requestId });

@@ -2,15 +2,25 @@ import { useNavigate, useLocation } from "react-router-dom";
 import JoinRoom from "../components/JoinRoom";
 import Topbar from "../components/Topbar";
 import { translations } from "../locales/translations";
+import { useGame } from "../context/GameContext";
 
 export default function JoinRoomPage({ language }) {
   const navigate = useNavigate();
   const location = useLocation();
   const i18n = translations[language];
 
+  const { setRoomSession, setGameStarted } = useGame();
+
   const playerName = location.state?.playerName || localStorage.getItem("playerName") || "";
 
-  const handleRoomJoined = ({ roomID }) => {
+  const handleRoomJoined = ({ roomID, gameStarted }) => {
+    if (gameStarted) {
+      setRoomSession({ roomID, players: [] });
+      setGameStarted(true);
+      navigate("/game");
+      return;
+    }
+
     navigate(`/room/${roomID}`);
   };
 

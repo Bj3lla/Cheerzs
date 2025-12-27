@@ -73,15 +73,23 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: "Only the host can start the game", requestId });
     }
 
-    // Reset any previous game state for this room.
-    const { error: resetError } = await supabase
+    // Mark game as started and reset any previous state.
+    // This also enables mid-game joiners to skip the waiting room.
+    const { error: upsertError } = await supabase
       .from("room_game_state")
-      .delete()
-      .eq("room_id", normalizedRoomID);
+      .upsert(
+        {
+          room_id: normalizedRoomID,
+          seq: 0,
+          state: { started: true, card: null, activeRules: [] },
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "room_id" }
+      );
 
-    if (resetError) {
-      console.error("[start-game] reset game state failed", { requestId, resetError });
-      return res.status(500).json({ error: resetError.message, requestId });
+    if (upsertError) {
+      console.error("[start-game] init game state failed", { requestId, upsertError });
+      return res.status(500).json({ error: upsertError.message, requestId });
     }
 
     const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
