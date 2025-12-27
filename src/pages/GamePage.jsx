@@ -42,7 +42,7 @@ export default function GamePage({ language }) {
     return typeof roomId === "string" ? roomId.trim().toUpperCase() : "";
   }, [roomId]);
 
-  const isSyncing = Boolean(isRoomGame && gameStarted && !currentCard);
+  const isSyncing = Boolean(isRoomGame && !currentCard);
 
   const ablyRef = useRef(null);
   const channelRef = useRef(null);
@@ -199,6 +199,10 @@ export default function GamePage({ language }) {
     const refetch = () => {
       fetchRoomState();
     };
+
+    channel.subscribe("player-joined", refetch);
+    channel.subscribe("player-left", refetch);
+    channel.subscribe("player-removed", refetch);
 
     channel.subscribe("card-updated", (msg) => {
       // DB is the source of truth; Ably is only used to notify clients to refetch.

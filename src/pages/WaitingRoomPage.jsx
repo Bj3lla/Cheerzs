@@ -56,6 +56,21 @@ export default function WaitingRoomPage() {
       const nextPlayers = Array.isArray(data.players) ? data.players : [];
       setPlayers(nextPlayers);
       setRoomSession({ roomID: data?.roomID || normalizedRoomID, players: nextPlayers });
+
+      // If someone opens the waiting room after the host already started the game,
+      // skip straight to the game page.
+      try {
+        const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
+        const gsData = await gsRes.json().catch(() => null);
+        const started = Boolean(gsData?.state?.started);
+        if (gsRes.ok && started) {
+          setGameStarted(true);
+          navigate("/game");
+          return;
+        }
+      } catch {
+        // ignore
+      }
     } catch (err) {
       console.error("[WaitingRoom] room-state failed", err);
       setError("Failed to load room");

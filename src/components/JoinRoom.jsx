@@ -46,7 +46,11 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
       console.groupEnd();
 
       if (res.ok) {
-        onRoomJoined({ roomID: roomID.trim().toUpperCase(), username: username.trim() });
+        onRoomJoined({
+          roomID: roomID.trim().toUpperCase(),
+          username: username.trim(),
+          gameStarted: Boolean(data?.gameStarted),
+        });
       } else {
         setError((data && data.error) || i18n.ui.networkError || "Network error");
       }

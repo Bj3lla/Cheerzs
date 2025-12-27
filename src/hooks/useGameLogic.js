@@ -189,12 +189,10 @@ export default function useGameLogic(language) {
 
     const nextCard = state.card;
 
-    if (!nextCard || typeof nextCard !== "object") return;
-
     // Sync active rules across the room (host and non-host).
     if (Array.isArray(state.activeRules)) {
       replaceActiveRules(state.activeRules);
-    } else {
+    } else if (nextCard && typeof nextCard === "object") {
       // Backward-compatible fallback: apply deltas.
       if (nextCard.kind === "repeal" && nextCard.ruleId) {
         replaceActiveRules(activeRules.filter((r) => r.id !== nextCard.ruleId));
@@ -208,6 +206,14 @@ export default function useGameLogic(language) {
           }
         }
       }
+    }
+
+    // Allow an initial "started" state with no card yet.
+    if (!nextCard || typeof nextCard !== "object") {
+      setCurrentCard(null);
+      setPlayer("");
+      setCategory(null);
+      return;
     }
 
     broadcastStateRef.current = {
