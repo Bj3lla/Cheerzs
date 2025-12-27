@@ -31,7 +31,7 @@ export default function HomePage({ language = "en" }) {
           value={playerName}
           onChange={setPlayerName}
           hideButton={true}
-          placeholder={i18n.ui.placeholder}
+          placeholder={i18n.ui.placeholderPlayerName}
         />
       </div>
 

@@ -94,35 +94,60 @@ span.manual-link, .link {
   cursor: pointer;
 }
 
-.friend-input {
+.add-player-error {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+}
+
+.friend-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
   margin-top: 2rem;
   margin-bottom: 3rem;
 }
 
+.friend-input {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
 .friend-input input {
   background-color: var(--pale-yellow);
-  border: none;
+  border: 2px solid transparent; /* ensures layout stays stable */
   border-radius: 8px;
   padding: 0.6rem 1rem;
   font-size: 1.3rem;
+  font-family: "Montserrat", sans-serif;
   color: var(--dark);
   letter-spacing: 0.1em;
   outline: none;
   flex: 1;
   min-width: 0;
+  transition: border-color 0.25s ease;
+}
+
+/* ✨ Error state */
+.friend-input input.error {
+  border-color: var(--pink);
+}
+
+.friend-input input:focus {
+  border-color: var(--pale-yellow); /* or another color you prefer */
+  box-shadow: 0 0 0 3px var(--light-yellow); /* soft glow (optional) */
+  outline: none; /* removes the browser’s default blue outline */
 }
 
 .friends-list {
   margin: 1.5rem 0;
 }
 
+/* Friend "pill" container */
 .friend-item {
   background-color: var(--light-yellow);
   color: var(--pink);
-  font-weight: 600;
   border-radius: 10px;
   padding: 0.4rem 1rem;
   margin: 0.4rem;
@@ -131,6 +156,14 @@ span.manual-link, .link {
   gap: 0.5rem;
 }
 
+/* Friend name text */
+.friend-item .friend-name {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400; /* 🩷 regular weight (not bold) */
+  font-size: 1.1rem;
+}
+
+/* Remove button */
 .friend-item .remove-btn {
   background-color: var(--pink);
   color: var(--light-yellow);
@@ -145,14 +178,23 @@ span.manual-link, .link {
   align-items: center;
   flex-shrink: 0;
   position: relative;
+  transition: transform 0.2s ease;
 }
 
+.friend-item .remove-btn:hover {
+  transform: scale(1.15);
+}
+
+/* Optional: larger clickable area */
 .friend-item .remove-btn::before {
   content: "";
   position: absolute;
-  top: -4px; bottom: -4px;
-  left: -4px; right: -4px;
+  top: -4px;
+  bottom: -4px;
+  left: -4px;
+  right: -4px;
 }
+
 /* -------------------------------
    🧩 App Container
 --------------------------------*/

@@ -9,7 +9,7 @@ export default function AddPlayer({
   value, // optional controlled value
   onChange, // optional controlled change handler
   hideButton = false, // hide internal add button when used as simple input
-  placeholder,
+  placeholderPlayerName,
 }) {
   const [internalName, setInternalName] = useState("");
   const [error, setError] = useState("");
@@ -22,7 +22,7 @@ export default function AddPlayer({
     const name = (playerName || "").trim();
 
     if (!name) {
-      setError(i18n?.ui?.placeholder || "Please enter a player name");
+      setError(i18n.ui.pleaseEnterPlayerName || "Please enter a player name");
       return;
     }
 
@@ -48,10 +48,11 @@ export default function AddPlayer({
 
   return (
     <div className="add-player">
+    <div className= "add-player-error"> 
       <div className="player-input">
         <input
           type="text"
-          placeholder={placeholder || i18n?.ui?.placeholder || "Enter your name"}
+          placeholder={placeholderPlayerName || i18n?.ui?.placeholderPlayerName || "Enter your name"}
           value={playerName}
           onChange={(e) => setPlayerName(e.target.value)}
           onKeyDown={handleKeyPress}
@@ -68,6 +69,7 @@ export default function AddPlayer({
         )}
       </div>
       {error && <p className="error-message">{error}</p>}
+      </div>
     </div>
   );
 }

@@ -3,22 +3,34 @@ import Button from "./Button";
 import { translations } from "../locales/translations";
 import "../index.css";
 
+// Map error codes to translation keys
+const getErrorMessage = (errorCode, i18n) => {
+  const errorMap = {
+    emptyRoomID: i18n.ui.pleaseEnterRoomID || "Please enter a room ID",
+    createFailed: i18n.ui.failedToCreateRoom || "Failed to create room",
+    networkError: i18n.ui.networkError || "Network error",
+  };
+  return errorMap[errorCode] || null;
+};
+
 export default function CreateRoom({ onRoomCreated, language = "en" }) {
   const [roomID, setRoomID] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errorCode, setErrorCode] = useState(null);
   const [createdRoomID, setCreatedRoomID] = useState("");
   const [copied, setCopied] = useState(false);
   const i18n = translations[language];
 
+  const errorMessage = getErrorMessage(errorCode, i18n);
+
   const handleCreate = async () => {
     if (!roomID.trim()) {
-      setError("Please enter a room ID");
+      setErrorCode("emptyRoomID");
       return;
     }
 
     setLoading(true);
-    setError("");
+    setErrorCode(null);
     setCopied(false);
 
     try {
@@ -33,11 +45,11 @@ export default function CreateRoom({ onRoomCreated, language = "en" }) {
         setCreatedRoomID(roomID);
         onRoomCreated(roomID);
       } else {
-        setError(data.error || "Failed to create room");
+        setErrorCode("createFailed");
       }
     } catch (err) {
       console.error(err);
-      setError("Network error");
+      setErrorCode("networkError");
     } finally {
       setLoading(false);
     }
@@ -56,16 +68,17 @@ export default function CreateRoom({ onRoomCreated, language = "en" }) {
         <div className="friend-input"> 
           <input
             type="text"
-            placeholder="enter room ID..."
+            placeholder= {i18n.ui.placeholderRoomID}
             value={roomID}
             onChange={(e) => setRoomID(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !loading && handleCreate()}
             disabled={loading}
+            className={errorMessage ? "error" : ""} 
           />
         </div>
-          {error && <p className="error-message" >{error}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <Button
-            label={loading ? "Creating..." : "Create Room"}
+            label={loading ? i18n.ui.joiningRoom : i18n.ui.joinRoom}
             color="accent"
             onClick={handleCreate}
             disabled={loading || !roomID.trim()}
@@ -75,7 +88,7 @@ export default function CreateRoom({ onRoomCreated, language = "en" }) {
       ) : (
         <div className="room-created">
           <p>
-            Room created! Share this ID with your friends: <strong>{createdRoomID}</strong>
+            {i18n.ui.roomCreated} <strong>{createdRoomID}</strong>
           </p>
           <Button
             label={copied ? "Copied!" : "Copy Room ID"}

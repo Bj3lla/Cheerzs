@@ -11,14 +11,23 @@ export default function AddPlayersManuallyPage({ language }) {
   const i18n = translations[language];
   const [friendInput, setFriendInput] = useState("");
   const [friends, setFriends] = useState([]);
-  const { setGameStarted, generatePrompt } = useGame();
+  const [friendErrorCode, setFriendErrorCode] = useState(null);
+  const { setGameStarted, generatePrompt, addFriend: addFriendToGame } = useGame();
 
   const addFriend = () => {
     const name = friendInput.trim();
-    if (name && !friends.includes(name)) {
-      setFriends([...friends, name]);
-      setFriendInput("");
+    if (!name) {
+      setFriendErrorCode("emptyFriend");
+      return;
     }
+    if (friends.includes(name)) {
+      setFriendErrorCode(null);
+      return;
+    }
+    setFriendErrorCode(null);
+    setFriends([...friends, name]);
+    addFriendToGame(name);
+    setFriendInput("");
   };
 
   const removeFriend = (friend) => {
@@ -26,8 +35,8 @@ export default function AddPlayersManuallyPage({ language }) {
   };
 
   const startGame = () => {
-      setGameStarted(true);
-      generatePrompt();
+    setGameStarted(true);
+    generatePrompt();
     navigate("/game", { state: { friends } });
   };
 
@@ -45,21 +54,25 @@ export default function AddPlayersManuallyPage({ language }) {
         friendInput={friendInput}
         setFriendInput={setFriendInput}
         onAddFriend={addFriend}
+        errorCode={friendErrorCode}
       />
 
-      <div className="friends-list">
+        <div className="friends-list">
         {friends.map((friend, index) => (
-          <div key={index} className="friend-item">
-            <span>{friend}</span>
+            <div key={index} className="friend-item">
+            <span className="friend-name">{friend}</span>
             <button
-              className="remove-btn"
-              onClick={() => removeFriend(friend)}
+                type="button"
+                className="remove-btn"
+                onClick={() => removeFriend(friend)}
+                aria-label={`Remove ${friend}`}
             >
-              ×
+                ×
             </button>
-          </div>
+            </div>
         ))}
-      </div>
+        </div>
+
 
       <div className="start-game-btn">
       <Button
