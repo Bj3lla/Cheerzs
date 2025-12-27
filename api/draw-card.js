@@ -1,7 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import Ably from "ably";
 
-const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+const makeRequestId = () =>
+  `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
 const safeJson = async (req) => {
   if (req?.body == null) return null;
@@ -15,6 +16,9 @@ const safeJson = async (req) => {
   }
   return null;
 };
+
+const isPlainObject = (v) =>
+  v != null && typeof v === "object" && !Array.isArray(v);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
@@ -35,9 +39,13 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid JSON body", requestId });
     }
 
-    const { roomID, username } = body;
+    const { roomID, username, state } = body;
     if (!roomID || !username) {
       return res.status(400).json({ error: "Missing roomID or username", requestId });
+    }
+
+    if (!isPlainObject(state)) {
+      return res.status(400).json({ error: "Missing state", requestId });
     }
 
     const supabase = createClient(
@@ -59,29 +67,55 @@ export default async function handler(req, res) {
     }
 
     if (room.host !== username) {
-      return res.status(403).json({ error: "Only the host can start the game", requestId });
+      return res.status(403).json({ error: "Only the host can draw cards", requestId });
     }
 
-    // Reset any previous game state for this room.
-    const { error: resetError } = await supabase
+    const { data: existingState, error: existingError } = await supabase
       .from("room_game_state")
-      .delete()
-      .eq("room_id", roomID);
+      .select("seq")
+      .eq("room_id", roomID)
+      .maybeSingle();
 
-    if (resetError) {
-      console.error("[start-game] reset game state failed", { requestId, resetError });
-      return res.status(500).json({ error: resetError.message, requestId });
+    if (existingError) {
+      return res.status(500).json({ error: existingError.message, requestId });
+    }
+
+    const nextSeq = (existingState?.seq ?? 0) + 1;
+
+    const { error: upsertError } = await supabase
+      .from("room_game_state")
+      .upsert(
+        {
+          room_id: roomID,
+          seq: nextSeq,
+          state,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "room_id" }
+      );
+
+    if (upsertError) {
+      return res.status(500).json({ error: upsertError.message, requestId });
     }
 
     const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+    try {
+      await ably.channels
+        .get(`room-${roomID}`)
+        .publish("card-updated", {
+          roomID,
+          seq: nextSeq,
+          state,
+          requestId,
+          updatedBy: username,
+        });
+    } catch (ablyError) {
+      console.error("[draw-card] ably publish failed", { requestId, ablyError });
+    }
 
-    await ably.channels
-      .get(`room-${roomID}`)
-      .publish("game-started", { roomID, startedBy: username, requestId });
-
-    return res.status(200).json({ ok: true, requestId });
+    return res.status(200).json({ ok: true, roomID, seq: nextSeq, requestId });
   } catch (err) {
-    console.error("[start-game] crashed", { requestId, err });
+    console.error("[draw-card] crashed", { requestId, err });
     return res.status(500).json({ error: "Internal Server Error", requestId });
   }
 }

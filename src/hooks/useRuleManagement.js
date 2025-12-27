@@ -8,9 +8,13 @@ export default function useRuleManagement(language) {
   const [repelMessage, setRepelMessage] = useState("");
   const [repelActive, setRepelActive] = useState(false);
 
+  const replaceActiveRules = (nextActiveRules) => {
+    setActiveRules(Array.isArray(nextActiveRules) ? nextActiveRules : []);
+  };
+
   const updateActiveRules = () => {
     if (!Array.isArray(activeRules) || activeRules.length === 0) {
-      return false;
+      return null;
     }
 
     let ruleExpired = null;
@@ -26,11 +30,11 @@ export default function useRuleManagement(language) {
       setActiveRules(stillActive);
       setRepelMessage(language === "en" ? ruleExpired.repelEn : ruleExpired.repelNo);
       setRepelActive(true);
-      return true;
+      return ruleExpired;
     }
 
     setActiveRules(updated);
-    return false;
+    return null;
   };
 
   const addRule = (rule) => {
@@ -51,5 +55,6 @@ export default function useRuleManagement(language) {
     updateActiveRules,
     addRule,
     clearRepel,
+    replaceActiveRules,
   };
 }
