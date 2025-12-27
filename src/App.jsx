@@ -8,7 +8,7 @@ import GamePage from "./pages/GamePage";
 import CreateRoomPage from "./pages/CreateRoomPage";
 import JoinRoomPage from "./pages/JoinRoomPage";
 import AddPlayersManuallyPage from "./pages/AddPlayersManuallyPage";
-import Room from "./components/Room";
+import WaitingRoomPage from "./pages/WaitingRoomPage";
 
 export default function App() {
   const { language, setLanguage } = useLanguage();
@@ -25,7 +25,7 @@ export default function App() {
             <Route path="/create-room" element={<CreateRoomPage language={language} />} />
             <Route path="/join-room" element={<JoinRoomPage language={language} />} />
             <Route path="/add-players" element={<AddPlayersManuallyPage language={language} />} />
-            <Route path="/room/:roomId" element={<Room />} />
+            <Route path="/room/:roomId" element={<WaitingRoomPage language={language} />} />
           </Routes>
         </div>
       </BrowserRouter>

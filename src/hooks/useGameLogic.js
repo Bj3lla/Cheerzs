@@ -9,6 +9,7 @@ export default function useGameLogic(language) {
   const { unread, read, pickQuestion } = useQuestionState();
   const {
     friends,
+    replaceFriends,
     friendInput,
     setFriendInput,
     addFriend,
@@ -31,6 +32,28 @@ export default function useGameLogic(language) {
   const [category, setCategory] = useState(null);
   const [prompt, setPrompt] = useState("");
   const [showActiveRules, setShowActiveRules] = useState(true);
+
+  const [roomId, setRoomId] = useState(null);
+  const [roomPlayers, setRoomPlayers] = useState([]);
+
+  const playersForPrompts = roomId ? roomPlayers : friends;
+
+  const setRoomSession = ({ roomID, players }) => {
+    setRoomId(roomID || null);
+    setRoomPlayers(Array.isArray(players) ? players : []);
+  };
+
+  const clearRoomSession = () => {
+    setRoomId(null);
+    setRoomPlayers([]);
+  };
+
+  useEffect(() => {
+    // If current selected player left the room, clear it.
+    if (!roomId) return;
+    if (player && !roomPlayers.includes(player)) setPlayer("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomId, roomPlayers]);
 
   const generatePrompt = () => {
     if (repelActive) {
@@ -64,10 +87,10 @@ export default function useGameLogic(language) {
     let newPrompt;
 
     if (cat === "truth" || cat === "dare") {
-      if (friends.length === 0) {
+      if (playersForPrompts.length === 0) {
         newPrompt = questionObj[language];
       } else {
-        const selectedPlayer = getRandomItem(friends);
+        const selectedPlayer = getRandomItem(playersForPrompts);
         setPlayer(selectedPlayer);
         newPrompt = `${selectedPlayer}, ${questionObj[language]}`;
       }
@@ -107,6 +130,7 @@ export default function useGameLogic(language) {
 
   return {
     friends,
+    replaceFriends,
     friendInput,
     setFriendInput,
     addFriend,
@@ -115,6 +139,11 @@ export default function useGameLogic(language) {
     setPlayer,
     gameStarted,
     setGameStarted,
+    roomId,
+    roomPlayers,
+    playersForPrompts,
+    setRoomSession,
+    clearRoomSession,
     category,
     prompt,
     generatePrompt,
