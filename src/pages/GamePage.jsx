@@ -167,6 +167,7 @@ export default function GamePage({ language }) {
 
     // Load existing current card (supports reconnect / late join)
     fetchGameState();
+    fetchRoomState();
     heartbeat();
 
     const intervalId = window.setInterval(heartbeat, 5 * 60 * 1000);

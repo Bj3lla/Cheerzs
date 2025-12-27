@@ -19,11 +19,13 @@ export default function useFriendManagement() {
     if (player && !friends.includes(player)) setPlayer("");
   }, [friends, player]);
 
-  const addFriend = () => {
-    const name = friendInput.trim();
+  const addFriend = (explicitName) => {
+    const name = (typeof explicitName === "string" ? explicitName : friendInput).trim();
     if (name && !friends.includes(name)) {
       setFriends((prev) => [...prev, name]);
-      setFriendInput("");
+      if (typeof explicitName !== "string") {
+        setFriendInput("");
+      }
     }
   };
 
