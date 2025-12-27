@@ -64,7 +64,7 @@ export default async function handler(req, res) {
     // Check if room exists
     const { data: existingRoom, error: fetchError } = await supabase
       .from("rooms")
-      .select("id")
+      .select("id, created_at")
       .eq("id", roomID)
       .single();
 
@@ -74,7 +74,33 @@ export default async function handler(req, res) {
     }
 
     if (existingRoom) {
-      return res.status(409).json({ error: "Room already exists", requestId });
+      const cutoffIso = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
+      const isExpired = Boolean(existingRoom.created_at) && existingRoom.created_at < cutoffIso;
+
+      if (!isExpired) {
+        return res.status(409).json({ error: "Room already exists", requestId });
+      }
+
+      // Expired room: delete it (and any players) so the ID can be reused.
+      const { error: deletePlayersError } = await supabase
+        .from("players")
+        .delete()
+        .eq("room_id", roomID);
+
+      if (deletePlayersError) {
+        console.error("[create-room] expired cleanup players failed", { requestId, deletePlayersError });
+        return res.status(500).json({ error: deletePlayersError.message, requestId });
+      }
+
+      const { error: deleteRoomError } = await supabase
+        .from("rooms")
+        .delete()
+        .eq("id", roomID);
+
+      if (deleteRoomError) {
+        console.error("[create-room] expired cleanup room failed", { requestId, deleteRoomError });
+        return res.status(500).json({ error: deleteRoomError.message, requestId });
+      }
     }
 
     // Create room
