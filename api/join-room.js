@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import Ably from "ably";
+import { getClientIp, rateLimit, validateRoomId, validateUsername } from "./_lib/security";
 
 const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -23,6 +24,13 @@ export default async function handler(req, res) {
   console.log("[join-room] start", { requestId, method: req.method, contentType: req.headers?.["content-type"] });
 
   try {
+    const ip = getClientIp(req);
+    const rl = rateLimit({ key: `join-room:${ip}`, limit: 15, windowMs: 60 * 1000 });
+    if (!rl.allowed) {
+      res.setHeader("Retry-After", String(rl.retryAfterSec));
+      return res.status(429).json({ error: "Too many requests", requestId });
+    }
+
     if (
       !process.env.SUPABASE_URL ||
       !process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -50,21 +58,31 @@ export default async function handler(req, res) {
     }
 
     const { roomID, username } = body;
-    if (!roomID || !username) {
-      return res.status(400).json({ error: "Missing roomID or username", requestId });
+
+    const roomIdCheck = validateRoomId(roomID);
+    if (!roomIdCheck.ok) {
+      return res.status(400).json({ error: roomIdCheck.error, requestId });
     }
+
+    const usernameCheck = validateUsername(username);
+    if (!usernameCheck.ok) {
+      return res.status(400).json({ error: usernameCheck.error, requestId });
+    }
+
+    const normalizedRoomID = roomIdCheck.value;
+    const normalizedUsername = usernameCheck.value;
 
     console.log("[join-room] payload", {
       requestId,
-      roomID: typeof roomID === "string" ? roomID : null,
-      username: typeof username === "string" ? username : null,
+      roomID: normalizedRoomID,
+      username: normalizedUsername,
     });
 
     // Check if room exists
     const { data: room, error: roomError } = await supabase
       .from("rooms")
       .select("*")
-      .eq("id", roomID)
+      .eq("id", normalizedRoomID)
       .single();
 
     if (roomError) {
@@ -82,7 +100,7 @@ export default async function handler(req, res) {
       const { error: deletePlayersError } = await supabase
         .from("players")
         .delete()
-        .eq("room_id", roomID);
+        .eq("room_id", normalizedRoomID);
 
       if (deletePlayersError) {
         console.error("[join-room] expired cleanup players failed", { requestId, deletePlayersError });
@@ -92,7 +110,7 @@ export default async function handler(req, res) {
       const { error: deleteRoomError } = await supabase
         .from("rooms")
         .delete()
-        .eq("id", roomID);
+        .eq("id", normalizedRoomID);
 
       if (deleteRoomError) {
         console.error("[join-room] expired cleanup room failed", { requestId, deleteRoomError });
@@ -102,10 +120,27 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "Room not found", requestId });
     }
 
+    // Idempotent join: if already in the room, do not insert a duplicate.
+    const { data: existingPlayer, error: existingPlayerError } = await supabase
+      .from("players")
+      .select("id")
+      .eq("room_id", normalizedRoomID)
+      .eq("username", normalizedUsername)
+      .maybeSingle();
+
+    if (existingPlayerError) {
+      console.error("[join-room] existing player check failed", { requestId, existingPlayerError });
+      return res.status(500).json({ error: existingPlayerError.message, requestId });
+    }
+
+    if (existingPlayer?.id) {
+      return res.status(200).json({ success: true, roomID: normalizedRoomID, username: normalizedUsername, requestId });
+    }
+
     // Add player
     const { error: playerError } = await supabase
       .from("players")
-      .insert({ room_id: roomID, username });
+      .insert({ room_id: normalizedRoomID, username: normalizedUsername });
 
     if (playerError) {
       console.error("[join-room] supabase player insert error", { requestId, playerError });
@@ -115,15 +150,15 @@ export default async function handler(req, res) {
     // Notify Ably
     try {
       await ably.channels
-        .get(`room-${roomID}`)
-        .publish("player-joined", { username, roomID, requestId });
+        .get(`room-${normalizedRoomID}`)
+        .publish("player-joined", { username: normalizedUsername, roomID: normalizedRoomID, requestId });
     } catch (ablyError) {
       console.error("[join-room] ably publish failed", { requestId, ablyError });
       // Not fatal for join
     }
 
-    console.log("[join-room] success", { requestId, roomID, username, host: room?.host });
-    return res.status(200).json({ success: true, roomID, username, requestId });
+    console.log("[join-room] success", { requestId, roomID: normalizedRoomID, username: normalizedUsername, host: room?.host });
+    return res.status(200).json({ success: true, roomID: normalizedRoomID, username: normalizedUsername, requestId });
   } catch (err) {
     console.error("[join-room] crashed", { requestId, err });
     return res.status(500).json({ error: "Internal Server Error", requestId });

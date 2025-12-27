@@ -204,7 +204,9 @@ export default function WaitingRoomPage() {
   useEffect(() => {
     if (!roomId) return;
 
-    const ably = new Ably.Realtime({ authUrl: "/api/ably-auth" });
+    const ably = new Ably.Realtime({
+      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(roomId)}&username=${encodeURIComponent(username)}`,
+    });
     ablyRef.current = ably;
 
     const channel = ably.channels.get(`room-${roomId}`);

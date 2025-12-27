@@ -105,7 +105,6 @@ export default async function handler(req, res) {
         .publish("card-updated", {
           roomID,
           seq: nextSeq,
-          state,
           requestId,
           updatedBy: username,
         });
