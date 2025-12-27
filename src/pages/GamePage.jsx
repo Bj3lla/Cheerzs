@@ -78,15 +78,18 @@ export default function GamePage({ language }) {
     }
   };
 
-  const publishCurrentCard = async (card) => {
+  const publishCurrentRoomState = async () => {
     if (!roomId || !username) return;
-    if (!card) return;
+
+    const state = getRoomBroadcastState();
+    if (!state || typeof state !== "object") return;
+    if (!state.card) return;
 
     try {
       await fetch("/api/draw-card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: roomId, username, state: { card } }),
+        body: JSON.stringify({ roomID: roomId, username, state }),
       });
     } catch {
       // ignore
@@ -95,8 +98,8 @@ export default function GamePage({ language }) {
 
   const hostNext = async () => {
     if (!isHost) return;
-    const card = generatePrompt();
-    await publishCurrentCard(card);
+    generatePrompt();
+    await publishCurrentRoomState();
   };
 
   const fetchRoomState = async () => {
@@ -233,8 +236,8 @@ export default function GamePage({ language }) {
       // Ensure we have host info (from DB) before drawing.
       await fetchGameState();
       if (roomHost && username !== roomHost) return;
-      const card = generatePrompt();
-      await publishCurrentCard(card);
+      generatePrompt();
+      await publishCurrentRoomState();
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRoomGame, gameStarted, isHost]);
