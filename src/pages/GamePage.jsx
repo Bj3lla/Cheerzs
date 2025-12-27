@@ -43,6 +43,7 @@ export default function GamePage({ language }) {
 
 
   const i18n = translations[language];
+  const isRepealCard = Boolean(repelActive || category === "repeal");
 
   useEffect(() => {
     if (isRoomGame) return;
@@ -172,7 +173,9 @@ export default function GamePage({ language }) {
   useEffect(() => {
     if (!roomId) return;
 
-    const ably = new Ably.Realtime({ authUrl: "/api/ably-auth" });
+    const ably = new Ably.Realtime({
+      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(roomId)}&username=${encodeURIComponent(username)}`,
+    });
     ablyRef.current = ably;
 
     const channel = ably.channels.get(`room-${roomId}`);
@@ -183,8 +186,8 @@ export default function GamePage({ language }) {
     };
 
     channel.subscribe("card-updated", (msg) => {
-      const nextState = msg?.data?.state;
-      if (nextState) applyRoomBroadcastState(nextState, language);
+      // DB is the source of truth; Ably is only used to notify clients to refetch.
+      void fetchGameState();
     });
 
     channel.subscribe("room-deleted", () => {
@@ -210,6 +213,16 @@ export default function GamePage({ language }) {
   }, [roomId, language]);
 
   useEffect(() => {
+    if (!isRoomGame) return;
+    if (!gameStarted) return;
+    if (isHost) return;
+    if (prompt) return;
+
+    void fetchGameState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRoomGame, gameStarted, isHost, prompt]);
+
+  useEffect(() => {
     // Host: if game starts and there is no current card stored yet, draw the first card and publish it.
     if (!isRoomGame) return;
     if (!gameStarted) return;
@@ -233,27 +246,28 @@ export default function GamePage({ language }) {
         className="category-header"
         style={{
           color:
-            categoryColors[repelActive ? "repeal" : category] ||
+            categoryColors[isRepealCard ? "repeal" : category] ||
             "var(--dark)",
         }}
       >
-        {repelActive
+        {isRepealCard
           ? i18n.categories.repeal
           : i18n.categories[category] || ""}
       </h2>
 
         <Card
-          prompt={repelActive ? repelMessage : prompt || i18n.ui.pressNext}
-          category={repelActive ? "repeal" : category}
+          prompt={isRepealCard ? repelMessage || prompt : prompt || i18n.ui.pressNext}
+          category={isRepealCard ? "repeal" : category}
         />
 
-      <Button
-        label={i18n.ui.next}
-        color="primary"
-        onClick={isRoomGame ? hostNext : generatePrompt}
-        size="large"
-        disabled={isRoomGame && !isHost}
-      />
+      {(!isRoomGame || isHost) && (
+        <Button
+          label={i18n.ui.next}
+          color="primary"
+          onClick={isRoomGame ? hostNext : generatePrompt}
+          size="large"
+        />
+      )}
 
       {activeRules.length > 0 && (
         <div className="active-rules-container">
