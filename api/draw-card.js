@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import Ably from "ably";
+import { validateRoomId, validateUsername } from "./_lib/security.js";
 
 const makeRequestId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -40,9 +41,19 @@ export default async function handler(req, res) {
     }
 
     const { roomID, username, state } = body;
-    if (!roomID || !username) {
-      return res.status(400).json({ error: "Missing roomID or username", requestId });
+
+    const roomIdCheck = validateRoomId(roomID);
+    if (!roomIdCheck.ok) {
+      return res.status(400).json({ error: roomIdCheck.error, requestId });
     }
+
+    const usernameCheck = validateUsername(username);
+    if (!usernameCheck.ok) {
+      return res.status(400).json({ error: usernameCheck.error, requestId });
+    }
+
+    const normalizedRoomID = roomIdCheck.value;
+    const normalizedUsername = usernameCheck.value;
 
     if (!isPlainObject(state)) {
       return res.status(400).json({ error: "Missing state", requestId });
@@ -56,7 +67,7 @@ export default async function handler(req, res) {
     const { data: room, error: roomError } = await supabase
       .from("rooms")
       .select("id, host")
-      .eq("id", roomID)
+      .eq("id", normalizedRoomID)
       .single();
 
     if (roomError) {
@@ -66,14 +77,14 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: roomError.message, requestId });
     }
 
-    if (room.host !== username) {
+    if (room.host !== normalizedUsername) {
       return res.status(403).json({ error: "Only the host can draw cards", requestId });
     }
 
     const { data: existingState, error: existingError } = await supabase
       .from("room_game_state")
       .select("seq")
-      .eq("room_id", roomID)
+      .eq("room_id", normalizedRoomID)
       .maybeSingle();
 
     if (existingError) {
@@ -86,7 +97,7 @@ export default async function handler(req, res) {
       .from("room_game_state")
       .upsert(
         {
-          room_id: roomID,
+          room_id: normalizedRoomID,
           seq: nextSeq,
           state,
           updated_at: new Date().toISOString(),
@@ -101,18 +112,18 @@ export default async function handler(req, res) {
     const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
     try {
       await ably.channels
-        .get(`room-${roomID}`)
+        .get(`room-${normalizedRoomID}`)
         .publish("card-updated", {
-          roomID,
+          roomID: normalizedRoomID,
           seq: nextSeq,
           requestId,
-          updatedBy: username,
+          updatedBy: normalizedUsername,
         });
     } catch (ablyError) {
       console.error("[draw-card] ably publish failed", { requestId, ablyError });
     }
 
-    return res.status(200).json({ ok: true, roomID, seq: nextSeq, requestId });
+    return res.status(200).json({ ok: true, roomID: normalizedRoomID, seq: nextSeq, requestId });
   } catch (err) {
     console.error("[draw-card] crashed", { requestId, err });
     return res.status(500).json({ error: "Internal Server Error", requestId });

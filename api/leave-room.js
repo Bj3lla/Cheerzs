@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import Ably from "ably";
+import { validateRoomId, validateUsername } from "./_lib/security.js";
 
 const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -36,9 +37,19 @@ export default async function handler(req, res) {
     }
 
     const { roomID, username } = body;
-    if (!roomID || !username) {
-      return res.status(400).json({ error: "Missing roomID or username", requestId });
+
+    const roomIdCheck = validateRoomId(roomID);
+    if (!roomIdCheck.ok) {
+      return res.status(400).json({ error: roomIdCheck.error, requestId });
     }
+
+    const usernameCheck = validateUsername(username);
+    if (!usernameCheck.ok) {
+      return res.status(400).json({ error: usernameCheck.error, requestId });
+    }
+
+    const normalizedRoomID = roomIdCheck.value;
+    const normalizedUsername = usernameCheck.value;
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -51,11 +62,11 @@ export default async function handler(req, res) {
     const { data: room, error: roomError } = await supabase
       .from("rooms")
       .select("id, host")
-      .eq("id", roomID)
+      .eq("id", normalizedRoomID)
       .single();
 
     const roomNotFound = roomError?.code === "PGRST116";
-    const isHost = Boolean(room?.host) && room.host === username;
+    const isHost = Boolean(room?.host) && room.host === normalizedUsername;
 
     if (roomNotFound) {
       return res.status(200).json({ ok: true, roomDeleted: true, requestId });
@@ -70,7 +81,7 @@ export default async function handler(req, res) {
       const { error: deletePlayersError } = await supabase
         .from("players")
         .delete()
-        .eq("room_id", roomID);
+        .eq("room_id", normalizedRoomID);
 
       if (deletePlayersError) {
         console.error("[leave-room] delete players failed", { requestId, deletePlayersError });
@@ -80,7 +91,7 @@ export default async function handler(req, res) {
       const { error: deleteRoomError } = await supabase
         .from("rooms")
         .delete()
-        .eq("id", roomID);
+        .eq("id", normalizedRoomID);
 
       if (deleteRoomError) {
         console.error("[leave-room] delete room failed", { requestId, deleteRoomError });
@@ -89,10 +100,10 @@ export default async function handler(req, res) {
 
       try {
         await ably.channels
-          .get(`room-${roomID}`)
+          .get(`room-${normalizedRoomID}`)
           .publish("room-deleted", {
-            roomID,
-            deletedBy: username,
+            roomID: normalizedRoomID,
+            deletedBy: normalizedUsername,
             reason: "host-left",
             requestId,
           });
@@ -106,8 +117,8 @@ export default async function handler(req, res) {
     const { error: deleteError } = await supabase
       .from("players")
       .delete()
-      .eq("room_id", roomID)
-      .eq("username", username);
+      .eq("room_id", normalizedRoomID)
+      .eq("username", normalizedUsername);
 
     if (deleteError) {
       console.error("[leave-room] delete failed", { requestId, deleteError });
@@ -116,8 +127,8 @@ export default async function handler(req, res) {
 
     try {
       await ably.channels
-        .get(`room-${roomID}`)
-        .publish("player-left", { username, roomID, requestId });
+        .get(`room-${normalizedRoomID}`)
+        .publish("player-left", { username: normalizedUsername, roomID: normalizedRoomID, requestId });
     } catch (ablyError) {
       console.error("[leave-room] ably publish failed", { requestId, ablyError });
     }

@@ -9,6 +9,10 @@ export default function WaitingRoomPage() {
   const { roomId } = useParams();
   const { setGameStarted, setRoomSession, clearRoomSession } = useGame();
 
+  const normalizedRoomID = useMemo(() => {
+    return typeof roomId === "string" ? roomId.trim().toUpperCase() : "";
+  }, [roomId]);
+
   const username = useMemo(() => {
     return localStorage.getItem("playerName") || "";
   }, []);
@@ -24,13 +28,13 @@ export default function WaitingRoomPage() {
   const isHost = Boolean(username) && Boolean(host) && username === host;
 
   const fetchRoomState = async () => {
-    if (!roomId) return;
+    if (!normalizedRoomID) return;
 
     setLoading(true);
     setError("");
 
     try {
-      const res = await fetch(`/api/room-state?roomID=${encodeURIComponent(roomId)}`);
+      const res = await fetch(`/api/room-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
       const data = await res.json().catch(() => null);
 
       if (res.status === 404) {
@@ -51,7 +55,7 @@ export default function WaitingRoomPage() {
       setHost(data.host || "");
       const nextPlayers = Array.isArray(data.players) ? data.players : [];
       setPlayers(nextPlayers);
-      setRoomSession({ roomID: roomId, players: nextPlayers });
+      setRoomSession({ roomID: data?.roomID || normalizedRoomID, players: nextPlayers });
     } catch (err) {
       console.error("[WaitingRoom] room-state failed", err);
       setError("Failed to load room");
@@ -61,7 +65,7 @@ export default function WaitingRoomPage() {
   };
 
   const leaveGame = async () => {
-    if (!roomId || !username) {
+    if (!normalizedRoomID || !username) {
       clearRoomSession();
       setGameStarted(false);
       navigate(-1);
@@ -74,7 +78,7 @@ export default function WaitingRoomPage() {
       const res = await fetch("/api/leave-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: roomId, username }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username }),
       });
 
       const data = await res.json().catch(() => null);
@@ -98,13 +102,13 @@ export default function WaitingRoomPage() {
   };
 
   const heartbeat = async () => {
-    if (!roomId || !username) return;
+    if (!normalizedRoomID || !username) return;
 
     try {
       await fetch("/api/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: roomId, username }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username }),
       });
     } catch (err) {
       console.warn("[WaitingRoom] heartbeat failed", err);
@@ -112,11 +116,11 @@ export default function WaitingRoomPage() {
   };
 
   const sendLeaveBeacon = () => {
-    if (!roomId || !username) return;
+    if (!normalizedRoomID || !username) return;
 
     try {
       const blob = new Blob([
-        JSON.stringify({ roomID: roomId, username }),
+        JSON.stringify({ roomID: normalizedRoomID, username }),
       ], { type: "application/json" });
       navigator.sendBeacon("/api/leave-room", blob);
     } catch (err) {
@@ -125,13 +129,13 @@ export default function WaitingRoomPage() {
   };
 
   const startGame = async () => {
-    if (!roomId || !username) return;
+    if (!normalizedRoomID || !username) return;
 
     try {
       const res = await fetch("/api/start-game", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: roomId, username }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username }),
       });
 
       const data = await res.json().catch(() => null);
@@ -152,7 +156,7 @@ export default function WaitingRoomPage() {
   };
 
   const removePlayer = async (targetUsername) => {
-    if (!roomId || !username) return;
+    if (!normalizedRoomID || !username) return;
     if (!isHost) return;
     if (!targetUsername) return;
 
@@ -160,7 +164,7 @@ export default function WaitingRoomPage() {
       const res = await fetch("/api/remove-player", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: roomId, username, targetUsername }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, targetUsername }),
       });
 
       const data = await res.json().catch(() => null);
@@ -179,7 +183,7 @@ export default function WaitingRoomPage() {
   useEffect(() => {
     fetchRoomState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId]);
+  }, [normalizedRoomID]);
 
   useEffect(() => {
     // Presence handling
@@ -199,17 +203,17 @@ export default function WaitingRoomPage() {
       window.removeEventListener("pagehide", sendLeaveBeacon);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId, username]);
+  }, [normalizedRoomID, username]);
 
   useEffect(() => {
-    if (!roomId) return;
+    if (!normalizedRoomID) return;
 
     const ably = new Ably.Realtime({
-      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(roomId)}&username=${encodeURIComponent(username)}`,
+      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}`,
     });
     ablyRef.current = ably;
 
-    const channel = ably.channels.get(`room-${roomId}`);
+    const channel = ably.channels.get(`room-${normalizedRoomID}`);
     channelRef.current = channel;
 
     const refetch = () => {
@@ -247,7 +251,7 @@ export default function WaitingRoomPage() {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId]);
+  }, [normalizedRoomID, username]);
 
   return (
     <div className="waiting-room-page">
@@ -263,7 +267,7 @@ export default function WaitingRoomPage() {
         </button>
       </div>
 
-      <h2 className="waiting-room-title">Room: {roomId}</h2>
+      <h2 className="waiting-room-title">Room: {normalizedRoomID || roomId}</h2>
 
       {loading && <p>Loading...</p>}
       {error && <p className="error-message">{error}</p>}
