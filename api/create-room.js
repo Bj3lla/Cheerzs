@@ -6,7 +6,11 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+if (!process.env.ABLY_API_KEY) {
+  console.error("ABLY_API_KEY is missing!");
+  return res.status(500).json({ error: "Server misconfiguration" });
+}
+
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
