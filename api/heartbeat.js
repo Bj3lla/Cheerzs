@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { validateRoomId, validateUsername } from "./_lib/security.js";
 
 const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -31,22 +32,47 @@ export default async function handler(req, res) {
     }
 
     const { roomID, username } = body;
-    if (!roomID || !username) {
-      return res.status(400).json({ error: "Missing roomID or username", requestId });
+
+    const roomIdCheck = validateRoomId(roomID);
+    if (!roomIdCheck.ok) {
+      return res.status(400).json({ error: roomIdCheck.error, requestId });
     }
+
+    const usernameCheck = validateUsername(username);
+    if (!usernameCheck.ok) {
+      return res.status(400).json({ error: usernameCheck.error, requestId });
+    }
+
+    const normalizedRoomID = roomIdCheck.value;
+    const normalizedUsername = usernameCheck.value;
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
     );
 
+    // If room does not exist (or was deleted), return 404 instead of failing FK constraint.
+    const { data: room, error: roomError } = await supabase
+      .from("rooms")
+      .select("id")
+      .eq("id", normalizedRoomID)
+      .single();
+
+    if (roomError) {
+      if (roomError.code === "PGRST116") {
+        return res.status(404).json({ error: "Room not found", requestId });
+      }
+      console.error("[heartbeat] room check failed", { requestId, roomError });
+      return res.status(500).json({ error: roomError.message, requestId });
+    }
+
     const now = new Date().toISOString();
 
     const { data: updated, error: updateError } = await supabase
       .from("players")
       .update({ joined_at: now })
-      .eq("room_id", roomID)
-      .eq("username", username)
+      .eq("room_id", normalizedRoomID)
+      .eq("username", normalizedUsername)
       .select("id");
 
     if (updateError) {
@@ -57,7 +83,7 @@ export default async function handler(req, res) {
     if (!updated || updated.length === 0) {
       const { error: insertError } = await supabase
         .from("players")
-        .insert({ room_id: roomID, username, joined_at: now });
+        .insert({ room_id: normalizedRoomID, username: normalizedUsername, joined_at: now });
 
       if (insertError) {
         console.error("[heartbeat] insert failed", { requestId, insertError });
