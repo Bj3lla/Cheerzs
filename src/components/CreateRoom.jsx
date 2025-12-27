@@ -1,55 +1,47 @@
 import { useState } from "react";
 import Button from "./Button";
+import AddPlayer from "./AddPlayer";
 import { translations } from "../locales/translations";
 import "../index.css";
-
-// Map error codes to translation keys
-const getErrorMessage = (errorCode, i18n) => {
-  const errorMap = {
-    emptyRoomID: i18n.ui.pleaseEnterRoomID || "Please enter a room ID",
-    createFailed: i18n.ui.failedToCreateRoom || "Failed to create room",
-    networkError: i18n.ui.networkError || "Network error",
-  };
-  return errorMap[errorCode] || null;
-};
 
 export default function CreateRoom({ onRoomCreated, language = "en" }) {
   const [roomID, setRoomID] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorCode, setErrorCode] = useState(null);
+  const [error, setError] = useState("");
   const [createdRoomID, setCreatedRoomID] = useState("");
   const [copied, setCopied] = useState(false);
   const i18n = translations[language];
 
-  const errorMessage = getErrorMessage(errorCode, i18n);
-
-  const handleCreate = async () => {
+  const handleCreate = async (username) => {
     if (!roomID.trim()) {
-      setErrorCode("emptyRoomID");
+      setError(i18n.ui.pleaseEnterRoomID || "Please enter a room ID");
       return;
     }
 
     setLoading(true);
-    setErrorCode(null);
+    setError("");
     setCopied(false);
 
     try {
       const res = await fetch("/api/create-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: roomID.trim() }),
+        body: JSON.stringify({ roomID: roomID.trim(), username }),
       });
+
       const data = await res.json();
 
       if (res.ok) {
-        setCreatedRoomID(roomID);
-        onRoomCreated(roomID);
+        setCreatedRoomID(roomID.trim());
+        onRoomCreated({ roomID: roomID.trim(), username });
+      } else if (res.status === 409) {
+        setError(i18n.ui.failedToCreateRoom || "Failed to create room");
       } else {
-        setErrorCode("createFailed");
+        setError(i18n.ui.networkError || "Network error");
       }
     } catch (err) {
       console.error(err);
-      setErrorCode("networkError");
+      setError(i18n.ui.networkError || "Network error");
     } finally {
       setLoading(false);
     }
@@ -65,33 +57,25 @@ export default function CreateRoom({ onRoomCreated, language = "en" }) {
       <h2>{i18n.ui.createRoom}</h2>
       {!createdRoomID ? (
         <>
-        <div className="friend-input"> 
-          <input
-            type="text"
-            placeholder= {i18n.ui.placeholderRoomID}
-            value={roomID}
-            onChange={(e) => setRoomID(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && !loading && handleCreate()}
-            disabled={loading}
-            className={errorMessage ? "error" : ""} 
-          />
-        </div>
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <div className="create-room-button">
-            <Button
-              label={loading ? i18n.ui.joiningRoom : i18n.ui.joinRoom}
-              color="accent"
-              onClick={handleCreate}
-              disabled={loading || !roomID.trim()}
-              size="medium"
+          <div className="friend-input">
+            <input
+              type="text"
+              placeholder={i18n.ui.placeholderRoomID || "Enter room ID"}
+              value={roomID}
+              onChange={(e) => setRoomID(e.target.value)}
+              disabled={loading}
             />
           </div>
+          <AddPlayer
+            language={language}
+            onPlayerAdded={handleCreate}
+            isLoading={loading}
+          />
+          {error && <p className="error-message">{error}</p>}
         </>
       ) : (
         <div className="room-created">
-          <p>
-            {i18n.ui.roomCreated} <strong>{createdRoomID}</strong>
-          </p>
+          <p>{i18n.ui.roomCreated || "Room created"} <strong>{createdRoomID}</strong></p>
           <Button
             label={copied ? "Copied!" : "Copy Room ID"}
             color="accent"
