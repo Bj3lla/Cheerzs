@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Check if ABLY_API_KEY is configured
+  // Check that the Ably API key exists
   if (!process.env.ABLY_API_KEY) {
     console.error("❌ ABLY_API_KEY is missing");
     return res.status(500).json({ error: "Ably API key not configured" });
