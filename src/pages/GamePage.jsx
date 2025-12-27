@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Ably from "ably";
 import Button from "../components/Button";
 import Card from "../components/Card";
@@ -20,7 +21,11 @@ export default function GamePage({ language }) {
     setShowActiveRules,
     roomId,
     setRoomSession,
+    clearRoomSession,
+    setGameStarted,
   } = useGame();
+
+  const navigate = useNavigate();
 
   const username = useMemo(() => {
     return localStorage.getItem("playerName") || "";
@@ -44,6 +49,12 @@ export default function GamePage({ language }) {
     try {
       const res = await fetch(`/api/room-state?roomID=${encodeURIComponent(roomId)}`);
       const data = await res.json().catch(() => null);
+      if (res.status === 404) {
+        clearRoomSession();
+        setGameStarted(false);
+        navigate("/");
+        return;
+      }
       if (!res.ok) return;
 
       const nextPlayers = Array.isArray(data?.players) ? data.players : [];
@@ -118,6 +129,12 @@ export default function GamePage({ language }) {
     channel.subscribe("player-joined", refetch);
     channel.subscribe("player-left", refetch);
     channel.subscribe("player-removed", refetch);
+
+    channel.subscribe("room-deleted", () => {
+      clearRoomSession();
+      setGameStarted(false);
+      navigate("/");
+    });
 
     return () => {
       channel.unsubscribe();
