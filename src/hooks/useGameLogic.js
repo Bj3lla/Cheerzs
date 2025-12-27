@@ -4,6 +4,10 @@ import { translations } from "../locales/translations";
 import useQuestionState from "./useQuestionState";
 import useFriendManagement from "./useFriendManagement";
 import useRuleManagement from "./useRuleManagement";
+import { truthOrDare } from "../data/truthOrDare";
+import { neverHaveIEver } from "../data/neverHaveIEver";
+import { pointAtSomeone } from "../data/pointAtSomeone";
+import { newRules } from "../data/newRule";
 
 export default function useGameLogic(language) {
   const { unread, read, pickQuestion } = useQuestionState();
@@ -26,12 +30,17 @@ export default function useGameLogic(language) {
     updateActiveRules,
     addRule,
     clearRepel,
+    replaceActiveRules,
   } = useRuleManagement(language);
 
   const [gameStarted, setGameStarted] = useState(false);
   const [category, setCategory] = useState(null);
   const [prompt, setPrompt] = useState("");
   const [showActiveRules, setShowActiveRules] = useState(true);
+
+  // A serializable descriptor of what is currently shown.
+  // Used for multiplayer sync (host broadcasts; clients apply).
+  const [currentCard, setCurrentCard] = useState(null);
 
   const [roomId, setRoomId] = useState(null);
   const [roomPlayers, setRoomPlayers] = useState([]);
@@ -61,8 +70,12 @@ export default function useGameLogic(language) {
       // Continue to generate the next prompt instead of returning
     }
 
-    const expired = updateActiveRules();
-    if (expired) return;
+    const expiredRule = updateActiveRules();
+    if (expiredRule) {
+      const nextCard = { kind: "repeal", ruleId: expiredRule.id };
+      setCurrentCard(nextCard);
+      return nextCard;
+    }
 
     const cat = getRandomCategory();
     setCategory(cat);
@@ -74,13 +87,17 @@ export default function useGameLogic(language) {
 
       if (remainingRules.length === 0) {
         setPrompt(translations[language].ui.noMoreRules);
-        return;
+        const nextCard = { kind: "info", messageKey: "noMoreRules" };
+        setCurrentCard(nextCard);
+        return nextCard;
       }
 
       const picked = getRandomItem(remainingRules);
       addRule(picked);
       setPrompt(picked[language]);
-      return;
+      const nextCard = { kind: "rule", ruleId: picked.id };
+      setCurrentCard(nextCard);
+      return nextCard;
     }
 
     const questionObj = pickQuestion(cat);
@@ -89,16 +106,36 @@ export default function useGameLogic(language) {
     if (cat === "truth" || cat === "dare") {
       if (playersForPrompts.length === 0) {
         newPrompt = questionObj[language];
+        const nextCard = {
+          kind: "question",
+          category: cat,
+          questionId: questionObj.id,
+          selectedPlayer: null,
+        };
+        setCurrentCard(nextCard);
+        setPrompt(newPrompt);
+        return nextCard;
       } else {
         const selectedPlayer = getRandomItem(playersForPrompts);
         setPlayer(selectedPlayer);
         newPrompt = `${selectedPlayer}, ${questionObj[language]}`;
+        const nextCard = {
+          kind: "question",
+          category: cat,
+          questionId: questionObj.id,
+          selectedPlayer,
+        };
+        setCurrentCard(nextCard);
+        setPrompt(newPrompt);
+        return nextCard;
       }
     } else {
       newPrompt = questionObj[language];
+      const nextCard = { kind: "question", category: cat, questionId: questionObj.id };
+      setCurrentCard(nextCard);
+      setPrompt(newPrompt);
+      return nextCard;
     }
-
-    setPrompt(newPrompt);
   };
 
   useEffect(() => {
@@ -128,6 +165,79 @@ export default function useGameLogic(language) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
+  const getRoomBroadcastState = () => {
+    return { card: currentCard };
+  };
+
+  const applyRoomBroadcastState = (state, nextLanguage = language) => {
+    if (!state || typeof state !== "object") return;
+
+    const nextCard = state.card;
+
+    if (!nextCard || typeof nextCard !== "object") return;
+
+    setCurrentCard(nextCard);
+
+    if (nextCard.kind === "repeal") {
+      const rule = newRules.find((r) => r.id === nextCard.ruleId);
+      if (rule) {
+        setPrompt(nextLanguage === "en" ? rule.repelEn : rule.repelNo);
+      } else {
+        setPrompt(translations[nextLanguage].ui.pressNext);
+      }
+      setPlayer("");
+      setCategory("repeal");
+      return;
+    }
+
+    if (nextCard.kind === "rule") {
+      const rule = newRules.find((r) => r.id === nextCard.ruleId);
+      if (rule) setPrompt(rule[nextLanguage]);
+      setPlayer("");
+      setCategory("rule");
+      return;
+    }
+
+    if (nextCard.kind === "info") {
+      if (nextCard.messageKey && translations[nextLanguage]?.ui?.[nextCard.messageKey]) {
+        setPrompt(translations[nextLanguage].ui[nextCard.messageKey]);
+      } else {
+        setPrompt(translations[nextLanguage].ui.pressNext);
+      }
+      setPlayer("");
+      setCategory(null);
+      return;
+    }
+
+    if (nextCard.kind === "question") {
+      const { category: cat, questionId, selectedPlayer } = nextCard;
+      setCategory(cat);
+      setPlayer(selectedPlayer || "");
+
+      const question = (() => {
+        if (cat === "truth") return truthOrDare.truth.find((q) => q.id === questionId);
+        if (cat === "dare") return truthOrDare.dare.find((q) => q.id === questionId);
+        if (cat === "never") return neverHaveIEver.find((q) => q.id === questionId);
+        if (cat === "point") return pointAtSomeone.find((q) => q.id === questionId);
+        return null;
+      })();
+
+      if (!question) {
+        setPrompt(translations[nextLanguage].ui.pressNext);
+        return;
+      }
+
+      const text = question[nextLanguage];
+      if ((cat === "truth" || cat === "dare") && selectedPlayer) {
+        setPrompt(`${selectedPlayer}, ${text}`);
+      } else {
+        setPrompt(text);
+      }
+
+      return;
+    }
+  };
+
   return {
     friends,
     replaceFriends,
@@ -147,6 +257,9 @@ export default function useGameLogic(language) {
     category,
     prompt,
     generatePrompt,
+    currentCard,
+    getRoomBroadcastState,
+    applyRoomBroadcastState,
     availableRules,
     activeRules,
     repelMessage,

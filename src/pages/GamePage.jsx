@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Ably from "ably";
 import Button from "../components/Button";
@@ -14,6 +14,9 @@ export default function GamePage({ language }) {
     category,
     prompt,
     generatePrompt,
+    currentCard,
+    getRoomBroadcastState,
+    applyRoomBroadcastState,
     activeRules,
     repelMessage,
     repelActive,
@@ -31,6 +34,10 @@ export default function GamePage({ language }) {
     return localStorage.getItem("playerName") || "";
   }, []);
 
+  const [roomHost, setRoomHost] = useState("");
+  const isRoomGame = Boolean(roomId);
+  const isHost = Boolean(isRoomGame && username && roomHost && username === roomHost);
+
   const ablyRef = useRef(null);
   const channelRef = useRef(null);
 
@@ -38,10 +45,58 @@ export default function GamePage({ language }) {
   const i18n = translations[language];
 
   useEffect(() => {
+    if (isRoomGame) return;
     if (gameStarted && !prompt) {
       generatePrompt();
     }
-  }, [gameStarted, prompt, generatePrompt]);
+  }, [isRoomGame, gameStarted, prompt, generatePrompt]);
+
+  const fetchGameState = async () => {
+    if (!roomId) return;
+
+    try {
+      const res = await fetch(`/api/game-state?roomID=${encodeURIComponent(roomId)}`);
+      const data = await res.json().catch(() => null);
+
+      if (res.status === 404) {
+        clearRoomSession();
+        setGameStarted(false);
+        navigate("/");
+        return;
+      }
+
+      if (!res.ok) return;
+
+      setRoomHost(data?.host || "");
+
+      if (data?.state) {
+        applyRoomBroadcastState(data.state, language);
+      }
+    } catch {
+      // ignore
+    }
+  };
+
+  const publishCurrentCard = async (card) => {
+    if (!roomId || !username) return;
+    if (!card) return;
+
+    try {
+      await fetch("/api/draw-card", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomID: roomId, username, state: { card } }),
+      });
+    } catch {
+      // ignore
+    }
+  };
+
+  const hostNext = async () => {
+    if (!isHost) return;
+    const card = generatePrompt();
+    await publishCurrentCard(card);
+  };
 
   const fetchRoomState = async () => {
     if (!roomId) return;
@@ -94,7 +149,8 @@ export default function GamePage({ language }) {
   useEffect(() => {
     if (!roomId) return;
 
-    fetchRoomState();
+    // Load existing current card (supports reconnect / late join)
+    fetchGameState();
     heartbeat();
 
     const intervalId = window.setInterval(heartbeat, 5 * 60 * 1000);
@@ -126,9 +182,10 @@ export default function GamePage({ language }) {
       fetchRoomState();
     };
 
-    channel.subscribe("player-joined", refetch);
-    channel.subscribe("player-left", refetch);
-    channel.subscribe("player-removed", refetch);
+    channel.subscribe("card-updated", (msg) => {
+      const nextState = msg?.data?.state;
+      if (nextState) applyRoomBroadcastState(nextState, language);
+    });
 
     channel.subscribe("room-deleted", () => {
       clearRoomSession();
@@ -150,7 +207,24 @@ export default function GamePage({ language }) {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId]);
+  }, [roomId, language]);
+
+  useEffect(() => {
+    // Host: if game starts and there is no current card stored yet, draw the first card and publish it.
+    if (!isRoomGame) return;
+    if (!gameStarted) return;
+    if (!isHost) return;
+    if (currentCard) return;
+
+    (async () => {
+      // Ensure we have host info (from DB) before drawing.
+      await fetchGameState();
+      if (roomHost && username !== roomHost) return;
+      const card = generatePrompt();
+      await publishCurrentCard(card);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRoomGame, gameStarted, isHost]);
 
   return (
     <div className="game-screen">
@@ -176,8 +250,9 @@ export default function GamePage({ language }) {
       <Button
         label={i18n.ui.next}
         color="primary"
-        onClick={generatePrompt}
+        onClick={isRoomGame ? hostNext : generatePrompt}
         size="large"
+        disabled={isRoomGame && !isHost}
       />
 
       {activeRules.length > 0 && (
