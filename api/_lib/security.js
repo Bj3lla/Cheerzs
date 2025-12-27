@@ -36,7 +36,7 @@ export const rateLimit = ({ key, limit, windowMs }) => {
 
 export const validateRoomId = (roomID) => {
   if (typeof roomID !== "string") return { ok: false, error: "Invalid roomID" };
-  const trimmed = roomID.trim();
+  const trimmed = roomID.trim().toUpperCase();
   // Keep room IDs small and predictable to reduce abuse surface.
   // Adjust length if your UI allows longer.
   if (!/^[A-Z0-9]{4,8}$/.test(trimmed)) {

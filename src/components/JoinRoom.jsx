@@ -9,6 +9,11 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
   const i18n = translations[language];
 
   const handleJoin = async () => {
+    if (!username || typeof username !== "string" || !username.trim()) {
+      setError(i18n.ui.pleaseEnterPlayerName || "Please enter a name first");
+      return;
+    }
+
     if (!roomID.trim()) {
       setError(i18n.ui.pleaseEnterRoomID || "Please enter a room ID");
       return;
@@ -18,7 +23,7 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
     setError("");
 
     try {
-      const payload = { roomID: roomID.trim(), username };
+      const payload = { roomID: roomID.trim().toUpperCase(), username: username.trim() };
       console.groupCollapsed("[JoinRoom] POST /api/join-room");
       console.log("payload", payload);
 
@@ -41,7 +46,7 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
       console.groupEnd();
 
       if (res.ok) {
-        onRoomJoined({ roomID: roomID.trim(), username });
+        onRoomJoined({ roomID: roomID.trim().toUpperCase(), username: username.trim() });
       } else {
         setError((data && data.error) || i18n.ui.networkError || "Network error");
       }
@@ -62,7 +67,7 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
           type="text"
           placeholder={i18n.ui.placeholderRoomID}
           value={roomID}
-          onChange={(e) => setRoomID(e.target.value)}
+          onChange={(e) => setRoomID(e.target.value.toUpperCase())}
           onKeyDown={(e) => e.key === "Enter" && !loading && handleJoin()}
           disabled={loading}
           className={error ? "error" : ""}
