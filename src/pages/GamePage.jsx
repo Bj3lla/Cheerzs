@@ -38,12 +38,24 @@ export default function GamePage({ language }) {
   const isRoomGame = Boolean(roomId);
   const isHost = Boolean(isRoomGame && username && roomHost && username === roomHost);
 
+  const normalizedRoomID = useMemo(() => {
+    return typeof roomId === "string" ? roomId.trim().toUpperCase() : "";
+  }, [roomId]);
+
+  const isSyncing = Boolean(isRoomGame && gameStarted && !currentCard);
+
   const ablyRef = useRef(null);
   const channelRef = useRef(null);
 
 
   const i18n = translations[language];
   const isRepealCard = Boolean(repelActive || category === "repeal");
+
+  const cardPrompt = isSyncing
+    ? i18n.ui.loading || "Loading..."
+    : isRepealCard
+      ? repelMessage || prompt
+      : prompt || i18n.ui.pressNext;
 
   useEffect(() => {
     if (isRoomGame) return;
@@ -53,10 +65,10 @@ export default function GamePage({ language }) {
   }, [isRoomGame, gameStarted, prompt, generatePrompt]);
 
   const fetchGameState = async () => {
-    if (!roomId) return;
+    if (!normalizedRoomID) return;
 
     try {
-      const res = await fetch(`/api/game-state?roomID=${encodeURIComponent(roomId)}`);
+      const res = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
       const data = await res.json().catch(() => null);
 
       if (res.status === 404) {
@@ -79,7 +91,7 @@ export default function GamePage({ language }) {
   };
 
   const publishCurrentRoomState = async () => {
-    if (!roomId || !username) return;
+    if (!normalizedRoomID || !username) return;
 
     const state = getRoomBroadcastState();
     if (!state || typeof state !== "object") return;
@@ -89,7 +101,7 @@ export default function GamePage({ language }) {
       await fetch("/api/draw-card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: roomId, username, state }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, state }),
       });
     } catch {
       // ignore
@@ -103,10 +115,10 @@ export default function GamePage({ language }) {
   };
 
   const fetchRoomState = async () => {
-    if (!roomId) return;
+    if (!normalizedRoomID) return;
 
     try {
-      const res = await fetch(`/api/room-state?roomID=${encodeURIComponent(roomId)}`);
+      const res = await fetch(`/api/room-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
       const data = await res.json().catch(() => null);
       if (res.status === 404) {
         clearRoomSession();
@@ -117,20 +129,20 @@ export default function GamePage({ language }) {
       if (!res.ok) return;
 
       const nextPlayers = Array.isArray(data?.players) ? data.players : [];
-      setRoomSession({ roomID: roomId, players: nextPlayers });
+      setRoomSession({ roomID: data?.roomID || normalizedRoomID, players: nextPlayers });
     } catch {
       // ignore (room sync is best-effort)
     }
   };
 
   const heartbeat = async () => {
-    if (!roomId || !username) return;
+    if (!normalizedRoomID || !username) return;
 
     try {
       await fetch("/api/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: roomId, username }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username }),
       });
     } catch {
       // ignore
@@ -138,10 +150,10 @@ export default function GamePage({ language }) {
   };
 
   const sendLeaveBeacon = () => {
-    if (!roomId || !username) return;
+    if (!normalizedRoomID || !username) return;
 
     try {
-      const blob = new Blob([JSON.stringify({ roomID: roomId, username })], {
+      const blob = new Blob([JSON.stringify({ roomID: normalizedRoomID, username })], {
         type: "application/json",
       });
       navigator.sendBeacon("/api/leave-room", blob);
@@ -151,7 +163,7 @@ export default function GamePage({ language }) {
   };
 
   useEffect(() => {
-    if (!roomId) return;
+    if (!normalizedRoomID) return;
 
     // Load existing current card (supports reconnect / late join)
     fetchGameState();
@@ -171,17 +183,17 @@ export default function GamePage({ language }) {
       window.removeEventListener("pagehide", sendLeaveBeacon);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId, username]);
+  }, [normalizedRoomID, username]);
 
   useEffect(() => {
-    if (!roomId) return;
+    if (!normalizedRoomID) return;
 
     const ably = new Ably.Realtime({
-      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(roomId)}&username=${encodeURIComponent(username)}`,
+      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}`,
     });
     ablyRef.current = ably;
 
-    const channel = ably.channels.get(`room-${roomId}`);
+    const channel = ably.channels.get(`room-${normalizedRoomID}`);
     channelRef.current = channel;
 
     const refetch = () => {
@@ -213,7 +225,7 @@ export default function GamePage({ language }) {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId, language]);
+  }, [normalizedRoomID, username, language]);
 
   useEffect(() => {
     if (!isRoomGame) return;
@@ -258,10 +270,16 @@ export default function GamePage({ language }) {
           : i18n.categories[category] || ""}
       </h2>
 
-        <Card
-          prompt={isRepealCard ? repelMessage || prompt : prompt || i18n.ui.pressNext}
-          category={isRepealCard ? "repeal" : category}
-        />
+      {isSyncing && (
+        <div className="sync-loading" aria-label="Syncing game state">
+          <div className="sync-loading-bar" />
+        </div>
+      )}
+
+      <Card
+        prompt={cardPrompt}
+        category={isRepealCard ? "repeal" : category}
+      />
 
       {(!isRoomGame || isHost) && (
         <Button

@@ -171,6 +171,38 @@ span.manual-link, .link {
   outline: none; /* removes the browser’s default blue outline */
 }
 
+/* Force room codes to display as uppercase (useful on mobile keyboards) */
+.friend-input input.room-code-input {
+  text-transform: uppercase;
+}
+
+/* Room game syncing indicator */
+.sync-loading {
+  width: min(520px, 90vw);
+  height: 10px;
+  background: var(--pale-yellow);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 1rem auto;
+}
+
+.sync-loading-bar {
+  height: 100%;
+  width: 40%;
+  background: var(--pink);
+  border-radius: 999px;
+  animation: sync-loading-slide 1.1s ease-in-out infinite;
+}
+
+@keyframes sync-loading-slide {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(280%);
+  }
+}
+
 .friends-list {
   margin: 1.5rem 0;
 }

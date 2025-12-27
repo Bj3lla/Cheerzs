@@ -74,7 +74,7 @@ export default function useGameLogic(language) {
     }
 
     const tick = updateActiveRules(activeRules);
-    const activeAfterTick = tick?.activeRules ?? Array.isArray(activeRules) ? activeRules : [];
+    const activeAfterTick = tick?.activeRules ?? (Array.isArray(activeRules) ? activeRules : []);
 
     if (tick?.expiredRule) {
       const nextCard = { kind: "repeal", ruleId: tick.expiredRule.id };
