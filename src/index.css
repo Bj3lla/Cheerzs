@@ -84,8 +84,16 @@ p.error-message {
 .room-buttons {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   padding-bottom: 7rem;
+}
+
+.join-room-button {
+  margin-top: 1.5rem;
+}
+
+.create-room-button {
+  margin-top: 1.5rem;
 }
 
 span.manual-link, .link {

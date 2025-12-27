@@ -77,13 +77,15 @@ export default function CreateRoom({ onRoomCreated, language = "en" }) {
           />
         </div>
           {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <Button
-            label={loading ? i18n.ui.joiningRoom : i18n.ui.joinRoom}
-            color="accent"
-            onClick={handleCreate}
-            disabled={loading || !roomID.trim()}
-            size="medium"
-          />
+          <div className="create-room-button">
+            <Button
+              label={loading ? i18n.ui.joiningRoom : i18n.ui.joinRoom}
+              color="accent"
+              onClick={handleCreate}
+              disabled={loading || !roomID.trim()}
+              size="medium"
+            />
+          </div>
         </>
       ) : (
         <div className="room-created">
