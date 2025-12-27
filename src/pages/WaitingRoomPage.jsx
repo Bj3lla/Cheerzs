@@ -55,7 +55,10 @@ export default function WaitingRoomPage({ language = "en" }) {
         return;
       }
 
-      setHost(data.host || "");
+      const nextHost = data.host || "";
+      const nextIsHost = Boolean(username) && Boolean(nextHost) && username === nextHost;
+
+      setHost(nextHost);
       const nextPlayers = Array.isArray(data.players) ? data.players : [];
       setPlayers(nextPlayers);
       setRoomSession({ roomID: data?.roomID || normalizedRoomID, players: nextPlayers });
@@ -66,7 +69,9 @@ export default function WaitingRoomPage({ language = "en" }) {
         const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
         const gsData = await gsRes.json().catch(() => null);
         const started = Boolean(gsData?.state?.started);
-        if (gsRes.ok && started) {
+        // If someone opens the waiting room after the host already started the game,
+        // only non-hosts should be forced into the game.
+        if (gsRes.ok && started && !nextIsHost) {
           setGameStarted(true);
           navigate("/game");
           return;
@@ -249,7 +254,7 @@ export default function WaitingRoomPage({ language = "en" }) {
         const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
         const gsData = await gsRes.json().catch(() => null);
         const started = Boolean(gsData?.state?.started);
-        if (gsRes.ok && started) {
+        if (gsRes.ok && started && !isHost) {
           setGameStarted(true);
           navigate("/game");
         }
