@@ -437,6 +437,10 @@ export default function GamePage({ language }) {
         >
           {i18n.ui.leaveGame}
         </button>
+
+        {isRoomGame && normalizedRoomID && (
+          <p className="room-id-header">{i18n.ui.roomID}{normalizedRoomID}</p>
+        )}
       </div>
       <h2
         className="category-header"

@@ -1,8 +1,7 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import useLanguage from "./hooks/useLanguage";
 import { GameProvider } from "./context/GameContext";
-import { useGame } from "./context/GameContext";
 import LanguageSelector from "./components/LanguageSelector";
 import HomePage from "./pages/HomePage";
 import GamePage from "./pages/GamePage";
@@ -10,22 +9,10 @@ import CreateRoomPage from "./pages/CreateRoomPage";
 import JoinRoomPage from "./pages/JoinRoomPage";
 import AddPlayersManuallyPage from "./pages/AddPlayersManuallyPage";
 import WaitingRoomPage from "./pages/WaitingRoomPage";
-import { translations } from "./locales/translations";
 
 function InnerApp({ language, setLanguage }) {
-  const location = useLocation();
-  const { roomId } = useGame();
-  const i18n = translations[language] || translations.en;
-
-  const normalizedRoomID = typeof roomId === "string" ? roomId.trim().toUpperCase() : "";
-  const showRoomHeader = location.pathname === "/game" && Boolean(normalizedRoomID);
-
   return (
     <>
-      {showRoomHeader && (
-        <p className="room-id-header">{i18n.ui.roomID}{normalizedRoomID}</p>
-      )}
-
       <div className="app">
         <LanguageSelector language={language} onLanguageChange={setLanguage} />
 
