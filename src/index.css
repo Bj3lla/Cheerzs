@@ -55,6 +55,7 @@ p {
   margin: 0;
   font-size: 1.05rem;
   font-weight: 600;
+  padding-right: 2rem;
 }
 p.error-message {
   color: var(--pink);
@@ -621,7 +622,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   .top-bar { padding: 0.8rem 1rem; }
 
   /* Waiting room sits slightly lower on mobile */
-  /*.waiting-room-page { padding-top: 2rem; }*/
+  .waiting-room-page { padding-top: 5rem; }
 
   .card-wrapper { width: 90%; gap: 1rem; }
 

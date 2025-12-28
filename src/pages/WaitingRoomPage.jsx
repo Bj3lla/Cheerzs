@@ -250,7 +250,21 @@ export default function WaitingRoomPage({ language = "en" }) {
 
     channel.subscribe("player-joined", refetch);
     channel.subscribe("player-left", refetch);
-    channel.subscribe("player-removed", refetch);
+    channel.subscribe("player-removed", (msg) => {
+      const removedUsername = msg?.data?.removedUsername;
+
+      // If you were removed by the host, force you out of the room immediately.
+      if (removedUsername && removedUsername === username) {
+        clearRoomSession();
+        setGameStarted(false);
+        localStorage.removeItem("playerId");
+        localStorage.removeItem("playerRoomId");
+        navigate("/join-room", { replace: true });
+        return;
+      }
+
+      refetch();
+    });
     channel.subscribe("room-created", refetch);
 
     channel.subscribe("card-updated", async (msg) => {
