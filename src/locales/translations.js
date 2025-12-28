@@ -47,6 +47,11 @@ export const translations = {
       chosenOne: "Chosen one",
       you: "You",
       i: "I",
+      penalty3: "drink 3 sips",
+      penalty5: "drink 5 sips",
+      penalty7: "drink 7 sips",
+      penaltyShot: "take a shot",
+      lateJoinPenaltyMessage: "Ops! You're late to the party, so unfortunatly, you have to {penalty}",
     },
     categories: {
       truth: "Truth",
@@ -102,6 +107,11 @@ export const translations = {
       chosenOne: "Den utvalgte",
       you: "Du",
       i: "jeg",
+      penalty3: "drikk 3 slurker",
+      penalty5: "drikk 5 slurker",
+      penalty7: "drikk 7 slurker",
+      penaltyShot: "ta en shot",
+      lateJoinPenaltyMessage: "Oops! Du er sen til festen, så dessverre må du {penalty}",
     },
     categories: {
       truth: "Sannhet",

@@ -75,13 +75,14 @@ export default async function handler(req, res) {
 
     // Mark game as started and reset any previous state.
     // This also enables mid-game joiners to skip the waiting room.
+    const startedAt = new Date().toISOString();
     const { error: upsertError } = await supabase
       .from("room_game_state")
       .upsert(
         {
           room_id: normalizedRoomID,
           seq: 0,
-          state: { started: true, card: null, activeRules: [] },
+          state: { started: true, startedAt, card: null, activeRules: [] },
           updated_at: new Date().toISOString(),
         },
         { onConflict: "room_id" }
