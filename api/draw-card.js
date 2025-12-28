@@ -100,6 +100,8 @@ export default async function handler(req, res) {
       started: true,
     };
 
+    const updatedAt = new Date().toISOString();
+
     const { error: upsertError } = await supabase
       .from("room_game_state")
       .upsert(
@@ -107,7 +109,7 @@ export default async function handler(req, res) {
           room_id: normalizedRoomID,
           seq: nextSeq,
           state: mergedState,
-          updated_at: new Date().toISOString(),
+          updated_at: updatedAt,
         },
         { onConflict: "room_id" }
       );
@@ -123,6 +125,8 @@ export default async function handler(req, res) {
         .publish("card-updated", {
           roomID: normalizedRoomID,
           seq: nextSeq,
+          state: mergedState,
+          updatedAt,
           requestId,
           updatedBy: normalizedUsername,
         });
@@ -130,7 +134,7 @@ export default async function handler(req, res) {
       console.error("[draw-card] ably publish failed", { requestId, ablyError });
     }
 
-    return res.status(200).json({ ok: true, roomID: normalizedRoomID, seq: nextSeq, requestId });
+    return res.status(200).json({ ok: true, roomID: normalizedRoomID, seq: nextSeq, updatedAt, requestId });
   } catch (err) {
     console.error("[draw-card] crashed", { requestId, err });
     return res.status(500).json({ error: "Internal Server Error", requestId });
