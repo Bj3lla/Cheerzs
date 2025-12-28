@@ -23,8 +23,8 @@ export const categoryColors = {
   never: "#007f96",
   rule: "#b42a82",
   repeal: "#b42a82",
-  drinkingbuddy: "#b42a82",
-  wildcard: "#b42a82",
+  drinkingbuddy: "#ff5757",
+  wildcard: "#ff9800",
 };
 
 // Unused so far because not referenced in the project
