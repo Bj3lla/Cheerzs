@@ -312,6 +312,13 @@ span.manual-link, .link {
   width: 90%;
   max-width: 300px;
 }
+
+.waiting-for-host-message {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
 /* -------------------------------
    🃏 Create and Join rooms
 --------------------------------*/
@@ -598,6 +605,9 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   }
 
   .top-bar { padding: 0.8rem 1rem; }
+
+  /* Waiting room sits slightly lower on mobile */
+  .waiting-room-page { padding-top: 6rem; }
 
   .card-wrapper { width: 90%; gap: 1rem; }
 
