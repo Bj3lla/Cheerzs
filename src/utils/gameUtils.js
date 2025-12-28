@@ -7,12 +7,12 @@ export const getRandomRounds = (min = 10, max = 20) =>
 
 export const getRandomCategory = () => {
   const random = Math.random() * 100;
-  if (random < 3) return "drinkingbuddy";
-  if (random < 6) return "wildcard";
-  if (random < 16) return "rule";
-  if (random < 40) return "point";
-  if (random < 64) return "never";
-  if (random < 82) return "truth";
+  if (random < 2) return "drinkingbuddy";
+  if (random < 4) return "wildcard";
+  if (random < 10) return "rule";
+  if (random < 36) return "point";
+  if (random < 62) return "never";
+  if (random < 81) return "truth";
   return "dare";
 };
 

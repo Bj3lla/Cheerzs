@@ -6,7 +6,7 @@ export const drinkingBuddy = [
     },
     {
         id: 2,
-        en: "makes a toast! Cheerzs!!",
+        en: "make a toast! Cheerzs!!",
         no: "tar en skål! Cheerzs!!",
     }
 ]

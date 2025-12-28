@@ -125,7 +125,7 @@ export default function useGameLogic(language) {
 
       const newPrompt = p1 && p2
         ? `${p1}${translations[language].ui.and}${p2} ${suffix}`
-        : suffix;
+        : `${translations[language].ui.you}${translations[language].ui.and}${translations[language].ui.i} ${suffix}`;
 
       const nextCard = {
         kind: "question",
@@ -347,7 +347,7 @@ export default function useGameLogic(language) {
         if (p1 && p2) {
           setPrompt(`${p1}${translations[nextLanguage].ui.and}${p2} ${text}`);
         } else {
-          setPrompt(text);
+          setPrompt(`${translations[nextLanguage].ui.you}${translations[nextLanguage].ui.and}${translations[nextLanguage].ui.i} ${text}`);
         }
         return;
       }

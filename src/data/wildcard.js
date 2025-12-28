@@ -31,5 +31,4 @@ export const wildcard = {
         no: "Alle drikker 2 slurker!",
         },
     ]
-
 }
