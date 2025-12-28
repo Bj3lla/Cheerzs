@@ -57,7 +57,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid JSON body", requestId });
     }
 
-    const { roomID, username } = body;
+    const { roomID, username, playerCreatedAt: rawPlayerCreatedAt } = body;
 
     const roomIdCheck = validateRoomId(roomID);
     if (!roomIdCheck.ok) {
@@ -71,6 +71,11 @@ export default async function handler(req, res) {
 
     const normalizedRoomID = roomIdCheck.value;
     const normalizedUsername = usernameCheck.value;
+
+    const playerCreatedAt =
+      typeof rawPlayerCreatedAt === "string" && !Number.isNaN(Date.parse(rawPlayerCreatedAt))
+        ? rawPlayerCreatedAt
+        : "";
 
     console.log("[join-room] payload", {
       requestId,
@@ -123,7 +128,7 @@ export default async function handler(req, res) {
     // Idempotent join: if already in the room, do not insert a duplicate.
     const { data: existingPlayer, error: existingPlayerError } = await supabase
       .from("players")
-      .select("id")
+      .select("id, created_at")
       .eq("room_id", normalizedRoomID)
       .eq("username", normalizedUsername)
       .maybeSingle();
@@ -134,6 +139,21 @@ export default async function handler(req, res) {
     }
 
     if (existingPlayer?.id) {
+      // If username is already present in the room, only allow if it is the same player
+      // (identified by username + created_at).
+      const samePlayer =
+        Boolean(playerCreatedAt) &&
+        !Number.isNaN(Date.parse(existingPlayer?.created_at)) &&
+        Date.parse(existingPlayer.created_at) === Date.parse(playerCreatedAt);
+
+      if (!samePlayer) {
+        return res.status(409).json({
+          error: "The username is already taken",
+          code: "USERNAME_TAKEN",
+          requestId,
+        });
+      }
+
       const { data: gameState } = await supabase
         .from("room_game_state")
         .select("state")
@@ -141,13 +161,22 @@ export default async function handler(req, res) {
         .maybeSingle();
 
       const gameStarted = Boolean(gameState?.state?.started);
-      return res.status(200).json({ success: true, roomID: normalizedRoomID, username: normalizedUsername, gameStarted, requestId });
+      return res.status(200).json({
+        success: true,
+        roomID: normalizedRoomID,
+        username: normalizedUsername,
+        playerCreatedAt: existingPlayer?.created_at || playerCreatedAt,
+        gameStarted,
+        requestId,
+      });
     }
 
     // Add player
-    const { error: playerError } = await supabase
+    const { data: insertedPlayer, error: playerError } = await supabase
       .from("players")
-      .insert({ room_id: normalizedRoomID, username: normalizedUsername });
+      .insert({ room_id: normalizedRoomID, username: normalizedUsername })
+      .select("created_at")
+      .single();
 
     if (playerError) {
       console.error("[join-room] supabase player insert error", { requestId, playerError });
@@ -173,7 +202,14 @@ export default async function handler(req, res) {
       .maybeSingle();
 
     const gameStarted = Boolean(gameState?.state?.started);
-    return res.status(200).json({ success: true, roomID: normalizedRoomID, username: normalizedUsername, gameStarted, requestId });
+    return res.status(200).json({
+      success: true,
+      roomID: normalizedRoomID,
+      username: normalizedUsername,
+      playerCreatedAt: insertedPlayer?.created_at || "",
+      gameStarted,
+      requestId,
+    });
   } catch (err) {
     console.error("[join-room] crashed", { requestId, err });
     return res.status(500).json({ error: "Internal Server Error", requestId });

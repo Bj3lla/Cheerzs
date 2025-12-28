@@ -135,9 +135,11 @@ export default async function handler(req, res) {
     }
 
     // Add host as first player
-    const { error: playerError } = await supabase
+    const { data: insertedPlayer, error: playerError } = await supabase
       .from("players")
-      .insert({ room_id: normalizedRoomID, username: normalizedUsername });
+      .insert({ room_id: normalizedRoomID, username: normalizedUsername })
+      .select("created_at")
+      .single();
 
     if (playerError) {
       console.error("[create-room] supabase player insert error", { requestId, playerError });
@@ -155,7 +157,12 @@ export default async function handler(req, res) {
     }
 
     console.log("[create-room] success", { requestId, roomID: normalizedRoomID, username: normalizedUsername });
-    return res.status(200).json({ roomID: normalizedRoomID, username: normalizedUsername, requestId });
+    return res.status(200).json({
+      roomID: normalizedRoomID,
+      username: normalizedUsername,
+      playerCreatedAt: insertedPlayer?.created_at || "",
+      requestId,
+    });
   } catch (err) {
     console.error("[create-room] crashed", { requestId, err });
     return res.status(500).json({ error: "Internal Server Error", requestId });
