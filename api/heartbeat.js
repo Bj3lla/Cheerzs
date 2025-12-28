@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid JSON body", requestId });
     }
 
-    const { roomID, username, playerCreatedAt: rawPlayerCreatedAt } = body;
+    const { roomID, username, playerId: rawPlayerId } = body;
 
     const roomIdCheck = validateRoomId(roomID);
     if (!roomIdCheck.ok) {
@@ -46,10 +46,7 @@ export default async function handler(req, res) {
     const normalizedRoomID = roomIdCheck.value;
     const normalizedUsername = usernameCheck.value;
 
-    const playerCreatedAt =
-      typeof rawPlayerCreatedAt === "string" && !Number.isNaN(Date.parse(rawPlayerCreatedAt))
-        ? rawPlayerCreatedAt
-        : "";
+    const playerId = typeof rawPlayerId === "string" ? rawPlayerId.trim() : "";
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -79,8 +76,8 @@ export default async function handler(req, res) {
       .eq("room_id", normalizedRoomID)
       .eq("username", normalizedUsername);
 
-    if (playerCreatedAt) {
-      updateQuery = updateQuery.eq("created_at", playerCreatedAt);
+    if (playerId) {
+      updateQuery = updateQuery.eq("id", playerId);
     }
 
     const { data: updated, error: updateError } = await updateQuery.select("id");
@@ -91,9 +88,9 @@ export default async function handler(req, res) {
     }
 
     if (!updated || updated.length === 0) {
-      // If the client provided a created_at but we couldn't update, do NOT insert a new row.
+      // If the client provided an id but we couldn't update, do NOT insert a new row.
       // This prevents accidentally creating duplicates or bypassing "username taken".
-      if (playerCreatedAt) {
+      if (playerId) {
         return res.status(404).json({ error: "Player not found", requestId });
       }
 

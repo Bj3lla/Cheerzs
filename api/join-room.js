@@ -57,7 +57,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid JSON body", requestId });
     }
 
-    const { roomID, username, playerCreatedAt: rawPlayerCreatedAt } = body;
+    const { roomID, username, playerId: rawPlayerId } = body;
 
     const roomIdCheck = validateRoomId(roomID);
     if (!roomIdCheck.ok) {
@@ -72,10 +72,7 @@ export default async function handler(req, res) {
     const normalizedRoomID = roomIdCheck.value;
     const normalizedUsername = usernameCheck.value;
 
-    const playerCreatedAt =
-      typeof rawPlayerCreatedAt === "string" && !Number.isNaN(Date.parse(rawPlayerCreatedAt))
-        ? rawPlayerCreatedAt
-        : "";
+    const playerId = typeof rawPlayerId === "string" ? rawPlayerId.trim() : "";
 
     console.log("[join-room] payload", {
       requestId,
@@ -128,7 +125,7 @@ export default async function handler(req, res) {
     // Idempotent join: if already in the room, do not insert a duplicate.
     const { data: existingPlayer, error: existingPlayerError } = await supabase
       .from("players")
-      .select("id, created_at")
+      .select("id")
       .eq("room_id", normalizedRoomID)
       .eq("username", normalizedUsername)
       .maybeSingle();
@@ -140,11 +137,8 @@ export default async function handler(req, res) {
 
     if (existingPlayer?.id) {
       // If username is already present in the room, only allow if it is the same player
-      // (identified by username + created_at).
-      const samePlayer =
-        Boolean(playerCreatedAt) &&
-        !Number.isNaN(Date.parse(existingPlayer?.created_at)) &&
-        Date.parse(existingPlayer.created_at) === Date.parse(playerCreatedAt);
+      // (identified by username + playerId).
+      const samePlayer = Boolean(playerId) && existingPlayer.id === playerId;
 
       if (!samePlayer) {
         return res.status(409).json({
@@ -165,7 +159,7 @@ export default async function handler(req, res) {
         success: true,
         roomID: normalizedRoomID,
         username: normalizedUsername,
-        playerCreatedAt: existingPlayer?.created_at || playerCreatedAt,
+        playerId: existingPlayer?.id || playerId,
         gameStarted,
         requestId,
       });
@@ -175,7 +169,7 @@ export default async function handler(req, res) {
     const { data: insertedPlayer, error: playerError } = await supabase
       .from("players")
       .insert({ room_id: normalizedRoomID, username: normalizedUsername })
-      .select("created_at")
+      .select("id")
       .single();
 
     if (playerError) {
@@ -206,7 +200,7 @@ export default async function handler(req, res) {
       success: true,
       roomID: normalizedRoomID,
       username: normalizedUsername,
-      playerCreatedAt: insertedPlayer?.created_at || "",
+      playerId: insertedPlayer?.id || "",
       gameStarted,
       requestId,
     });
