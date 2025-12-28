@@ -20,14 +20,26 @@ export default function JoinRoomPage({ language }) {
     }
   }, [navigate, playerName]);
 
-  const handleRoomJoined = ({ roomID, gameStarted }) => {
+  const handleRoomJoined = ({ roomID, gameStarted, startedAt }) => {
     if (gameStarted) {
+      // Late joiner (joined after host pressed Start Game)
+      try {
+        sessionStorage.removeItem("joinedBeforeStartRoomId");
+      } catch {
+        // ignore
+      }
       setRoomSession({ roomID, players: [] });
       setGameStarted(true);
-      navigate("/game");
+      navigate("/game", { state: { lateJoin: true, startedAt: startedAt || null } });
       return;
     }
 
+    // Joined before start (waiting room)
+    try {
+      sessionStorage.setItem("joinedBeforeStartRoomId", roomID);
+    } catch {
+      // ignore
+    }
     navigate(`/room/${roomID}`);
   };
 

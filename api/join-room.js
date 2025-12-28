@@ -171,6 +171,7 @@ export default async function handler(req, res) {
         username: normalizedUsername,
         playerId: existingPlayer?.id || playerId,
         gameStarted,
+        startedAt: gameState?.state?.startedAt || null,
         requestId,
       });
     }
@@ -212,6 +213,7 @@ export default async function handler(req, res) {
       username: normalizedUsername,
       playerId: insertedPlayer?.id || "",
       gameStarted,
+      startedAt: gameState?.state?.startedAt || null,
       requestId,
     });
   } catch (err) {

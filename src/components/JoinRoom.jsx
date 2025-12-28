@@ -81,6 +81,7 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
           roomID: normalizedRoomID,
           username: name,
           gameStarted: Boolean(data?.gameStarted),
+          startedAt: data?.startedAt || null,
         });
       } else {
         const code = data?.code;

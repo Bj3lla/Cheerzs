@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Ably from "ably";
 import Button from "../components/Button";
 import Card from "../components/Card";
+import LateJoinPopup from "../components/LateJoinPopup";
 import { useGame } from "../context/GameContext";
 import { categoryColors } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
@@ -28,6 +29,7 @@ export default function GamePage({ language }) {
   } = useGame();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const username = useMemo(() => {
     return localStorage.getItem("playerName") || "";
@@ -54,9 +56,13 @@ export default function GamePage({ language }) {
   const lastAppliedLanguageRef = useRef(language);
   const fetchGameStateInFlightRef = useRef(false);
   const initialLanguageRef = useRef(language);
+  const startedAtRef = useRef("");
+
+  const [lateJoinMessage, setLateJoinMessage] = useState("");
+  const [showLateJoinPopup, setShowLateJoinPopup] = useState(false);
 
 
-  const i18n = translations[language];
+  const i18n = translations[language] || translations.en;
   const isRepealCard = Boolean(repelActive || category === "repeal");
 
   const cardPrompt = isSyncing
@@ -121,6 +127,10 @@ export default function GamePage({ language }) {
       if ((isNewer || isSameButNewLanguage) && data?.state) {
         if (isNewer) lastSeqRef.current = nextSeq;
         lastAppliedLanguageRef.current = language;
+
+        const startedAt = typeof data.state?.startedAt === "string" ? data.state.startedAt : "";
+        if (startedAt) startedAtRef.current = startedAt;
+
         applyRoomBroadcastState(data.state, language);
       }
     } catch {
@@ -273,7 +283,7 @@ export default function GamePage({ language }) {
     if (!normalizedRoomID) return;
 
     const ably = new Ably.Realtime({
-      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}`,
+      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}&playerId=${encodeURIComponent(playerId)}`,
     });
     ablyRef.current = ably;
 
@@ -296,6 +306,11 @@ export default function GamePage({ language }) {
       if (hasNewerSeq && msg?.data?.state && typeof msg.data.state === "object") {
         lastSeqRef.current = nextSeq;
         lastAppliedLanguageRef.current = language;
+
+        if (typeof msg.data.state?.startedAt === "string") {
+          startedAtRef.current = msg.data.state.startedAt;
+        }
+
         applyRoomBroadcastState(msg.data.state, language);
         return;
       }
@@ -328,6 +343,56 @@ export default function GamePage({ language }) {
 
   useEffect(() => {
     if (!isRoomGame) return;
+    if (!normalizedRoomID) return;
+    if (!username) return;
+    if (isHost) return;
+
+    // Only show this for players who truly joined after the game started.
+    // Players that were already in the waiting room get marked as joined-before-start.
+    let joinedBeforeStartRoomId = "";
+    try {
+      joinedBeforeStartRoomId = sessionStorage.getItem("joinedBeforeStartRoomId") || "";
+    } catch {
+      joinedBeforeStartRoomId = "";
+    }
+    if (joinedBeforeStartRoomId === normalizedRoomID) return;
+
+    const lateJoinFromNav = Boolean(location?.state?.lateJoin);
+    if (!lateJoinFromNav) return;
+
+    const startedAtFromNav = typeof location?.state?.startedAt === "string" ? location.state.startedAt : "";
+    const startedAt = startedAtFromNav || startedAtRef.current;
+    const startedAtMs = startedAt ? Date.parse(startedAt) : NaN;
+    if (!Number.isFinite(startedAtMs)) return;
+
+    const minutesLate = Math.max(0, Math.floor((Date.now() - startedAtMs) / 60000));
+
+    const penalty =
+      minutesLate < 5
+        ? i18n.ui.penalty3 || "drink 3 sips"
+        : minutesLate < 7
+          ? i18n.ui.penalty5 || "drink 5 sips"
+          : minutesLate < 10
+            ? i18n.ui.penalty7 || "drink 7 sips"
+            : i18n.ui.penaltyShot || "take a shot";
+
+    const shownKey = `latePenaltyShown:${normalizedRoomID}:${username}`;
+    try {
+      if (sessionStorage.getItem(shownKey)) return;
+      sessionStorage.setItem(shownKey, "1");
+    } catch {
+      // ignore
+    }
+
+    setLateJoinMessage(
+      (i18n.ui.lateJoinPenaltyMessage || "Ops! You're late to the party, so unfortunatly, you have to {penalty}")
+        .replace("{penalty}", penalty)
+    );
+    setShowLateJoinPopup(true);
+  }, [isRoomGame, normalizedRoomID, username, isHost, location]);
+
+  useEffect(() => {
+    if (!isRoomGame) return;
     if (!gameStarted) return;
     if (isHost) return;
     if (prompt) return;
@@ -355,6 +420,13 @@ export default function GamePage({ language }) {
 
   return (
     <div className="game-screen">
+      {showLateJoinPopup && lateJoinMessage && (
+        <LateJoinPopup
+          message={lateJoinMessage}
+          onClose={() => setShowLateJoinPopup(false)}
+          language={language}
+        />
+      )}
       <div className="top-bar">
         <button
           type="button"

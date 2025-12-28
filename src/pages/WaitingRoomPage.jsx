@@ -128,6 +128,12 @@ export default function WaitingRoomPage({ language = "en" }) {
       clearRoomSession();
       setGameStarted(false);
 
+      try {
+        sessionStorage.removeItem("joinedBeforeStartRoomId");
+      } catch {
+        // ignore
+      }
+
       localStorage.removeItem("playerId");
       localStorage.removeItem("playerRoomId");
 
@@ -298,6 +304,11 @@ export default function WaitingRoomPage({ language = "en" }) {
     channel.subscribe("game-started", async () => {
       await fetchRoomState();
       setGameStarted(true);
+      try {
+        sessionStorage.setItem("joinedBeforeStartRoomId", normalizedRoomID);
+      } catch {
+        // ignore
+      }
       navigate("/game");
     });
 
