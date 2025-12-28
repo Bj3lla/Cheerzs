@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import useLanguage from "./hooks/useLanguage";
 import { GameProvider } from "./context/GameContext";
@@ -11,18 +11,14 @@ import AddPlayersManuallyPage from "./pages/AddPlayersManuallyPage";
 import WaitingRoomPage from "./pages/WaitingRoomPage";
 
 function InnerApp({ language, setLanguage }) {
-  const location = useLocation();
-
   return (
     <>
       <div className="app">
-        {location.pathname !== "/game" && (
-          <LanguageSelector language={language} onLanguageChange={setLanguage} />
-        )}
+        <LanguageSelector language={language} onLanguageChange={setLanguage} />
 
         <Routes>
           <Route path="/" element={<HomePage language={language} />} />
-          <Route path="/game" element={<GamePage language={language} setLanguage={setLanguage} />} />
+          <Route path="/game" element={<GamePage language={language} />} />
           <Route path="/create-room" element={<CreateRoomPage language={language} />} />
           <Route path="/join-room" element={<JoinRoomPage language={language} />} />
           <Route path="/add-players" element={<AddPlayersManuallyPage language={language} />} />

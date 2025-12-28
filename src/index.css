@@ -303,11 +303,8 @@ span.manual-link, .link {
   z-index: 1000;
 }
 
-.top-bar-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+.top-bar .room-id-header {
+  margin-left: 2rem;
 }
 
 .top-bar button {
@@ -509,13 +506,6 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   color: var(--dark);
   border-radius: 10px;
   transition: all 0.2s ease;
-}
-
-/* When LanguageSelector is rendered inside the top bar, it should participate in the flex layout. */
-.top-bar .language-btn {
-  position: static;
-  top: auto;
-  right: auto;
 }
 
 /* -------------------------------
