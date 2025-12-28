@@ -40,6 +40,7 @@ export const translations = {
       failedToRemovePlayer: "Failed to remove player",
       pleaseAddFriend: "Please enter a friend name",
       pleaseEnterPlayerName: "Please enter a name first",
+      and: " and ",
     },
     categories: {
       truth: "Truth",
@@ -48,6 +49,8 @@ export const translations = {
       point: "Point At Someone Who...",
       rule: "New Rule!",
       repeal: "Rule Repealed!",
+      drinkingbuddy: "Drinking Buddy",
+      wildcard: "Wildcard",
     },
   },
 
@@ -86,6 +89,7 @@ export const translations = {
       failedToLeaveRoom: "Kunne ikke forlate rommet",
       failedToStartGame: "Kunne ikke starte spillet",
       failedToRemovePlayer: "Kunne ikke fjerne spiller",
+      and: " og ",
     },
     categories: {
       truth: "Sannhet",
@@ -94,6 +98,8 @@ export const translations = {
       point: "Pekeleken!",
       rule: "Ny regel!",
       repeal: "Regel opphevet!",
+      drinkingbuddy: "Drikkekompis",
+      wildcard: "Wildcard",
     },
   },
 };

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { truthOrDare } from "../data/truthOrDare";
 import { neverHaveIEver } from "../data/neverHaveIEver";
 import { pointAtSomeone } from "../data/pointAtSomeone";
+import { drinkingBuddy } from "../data/drinkingBuddy";
+import { wildcard } from "../data/wildcard";
 import { getRandomItem } from "../utils/gameUtils";
 
 export default function useQuestionState() {
@@ -10,6 +12,9 @@ export default function useQuestionState() {
     dare: [...truthOrDare.dare],
     never: [...neverHaveIEver],
     point: [...pointAtSomeone],
+    drinkingbuddy: [...drinkingBuddy],
+    wildcardOne: [...wildcard.onePlayer],
+    wildcardAll: [...wildcard.allPlayers],
   });
 
   const [read, setRead] = useState({
@@ -17,6 +22,9 @@ export default function useQuestionState() {
     dare: [],
     never: [],
     point: [],
+    drinkingbuddy: [],
+    wildcardOne: [],
+    wildcardAll: [],
   });
 
   const pickQuestion = (categoryKey) => {

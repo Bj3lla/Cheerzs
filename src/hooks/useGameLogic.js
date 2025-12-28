@@ -8,6 +8,16 @@ import { truthOrDare } from "../data/truthOrDare";
 import { neverHaveIEver } from "../data/neverHaveIEver";
 import { pointAtSomeone } from "../data/pointAtSomeone";
 import { newRules } from "../data/newRule";
+import { drinkingBuddy } from "../data/drinkingBuddy";
+import { wildcard } from "../data/wildcard";
+
+const pickTwoDifferentPlayers = (players) => {
+  if (!Array.isArray(players) || players.length < 2) return { p1: null, p2: null };
+  const p1 = getRandomItem(players);
+  const remaining = players.filter((p) => p !== p1);
+  const p2 = remaining.length > 0 ? getRandomItem(remaining) : null;
+  return { p1, p2 };
+};
 
 export default function useGameLogic(language) {
   const { unread, read, pickQuestion } = useQuestionState();
@@ -104,6 +114,56 @@ export default function useGameLogic(language) {
       const nextCard = { kind: "rule", ruleId: picked.id };
       setCurrentCard(nextCard);
       broadcastStateRef.current = { card: nextCard, activeRules: nextActiveRules };
+      return nextCard;
+    }
+
+    if (cat === "drinkingbuddy") {
+      const questionObj = pickQuestion("drinkingbuddy");
+
+      const { p1, p2 } = pickTwoDifferentPlayers(playersForPrompts);
+      const suffix = questionObj?.[language] || "";
+
+      const newPrompt = p1 && p2
+        ? `${p1}${translations[language].ui.and}${p2} ${suffix}`
+        : suffix;
+
+      const nextCard = {
+        kind: "question",
+        category: "drinkingbuddy",
+        questionId: questionObj.id,
+        selectedPlayer: p1,
+        selectedPlayer2: p2,
+      };
+
+      setCurrentCard(nextCard);
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      setPrompt(newPrompt);
+      return nextCard;
+    }
+
+    if (cat === "wildcard") {
+      const wildcardType = Math.random() < 0.5 ? "onePlayer" : "allPlayers";
+      const deckKey = wildcardType === "onePlayer" ? "wildcardOne" : "wildcardAll";
+      const questionObj = pickQuestion(deckKey);
+
+      const selectedPlayer = wildcardType === "onePlayer" && playersForPrompts.length > 0
+        ? getRandomItem(playersForPrompts)
+        : null;
+
+      const text = questionObj?.[language] || "";
+      const newPrompt = selectedPlayer ? `${selectedPlayer}, ${text}` : text;
+
+      const nextCard = {
+        kind: "question",
+        category: "wildcard",
+        wildcardType,
+        questionId: questionObj.id,
+        selectedPlayer,
+      };
+
+      setCurrentCard(nextCard);
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      setPrompt(newPrompt);
       return nextCard;
     }
 
@@ -266,6 +326,12 @@ export default function useGameLogic(language) {
         if (cat === "dare") return truthOrDare.dare.find((q) => q.id === questionId);
         if (cat === "never") return neverHaveIEver.find((q) => q.id === questionId);
         if (cat === "point") return pointAtSomeone.find((q) => q.id === questionId);
+        if (cat === "drinkingbuddy") return drinkingBuddy.find((q) => q.id === questionId);
+        if (cat === "wildcard") {
+          const type = nextCard.wildcardType;
+          if (type === "allPlayers") return wildcard.allPlayers.find((q) => q.id === questionId);
+          return wildcard.onePlayer.find((q) => q.id === questionId);
+        }
         return null;
       })();
 
@@ -275,6 +341,27 @@ export default function useGameLogic(language) {
       }
 
       const text = question[nextLanguage];
+      if (cat === "drinkingbuddy") {
+        const p1 = nextCard.selectedPlayer;
+        const p2 = nextCard.selectedPlayer2;
+        if (p1 && p2) {
+          setPrompt(`${p1}${translations[nextLanguage].ui.and}${p2} ${text}`);
+        } else {
+          setPrompt(text);
+        }
+        return;
+      }
+
+      if (cat === "wildcard") {
+        const type = nextCard.wildcardType;
+        if (type === "onePlayer" && selectedPlayer) {
+          setPrompt(`${selectedPlayer}, ${text}`);
+        } else {
+          setPrompt(text);
+        }
+        return;
+      }
+
       if ((cat === "truth" || cat === "dare") && selectedPlayer) {
         setPrompt(`${selectedPlayer}, ${text}`);
       } else {
