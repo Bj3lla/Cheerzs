@@ -23,7 +23,7 @@ function InnerApp({ language, setLanguage }) {
   return (
     <>
       {showRoomHeader && (
-        <h3 className="room-id-header">{i18n.ui.roomID}{normalizedRoomID}</h3>
+        <p className="room-id-header">{i18n.ui.roomID}{normalizedRoomID}</p>
       )}
 
       <div className="app">

@@ -11,6 +11,9 @@
   --light-yellow: #fff7ad;
   --pale-yellow: #ffffcf;
   --rule: #b42a82; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* -------------------------------
@@ -47,6 +50,13 @@ p {
   line-height: 1.6;
   margin: 0.5em 0;
   font-family: "Montserrat", sans-serif;
+}
+
+/* Room ID header shown above the app during online games */
+.room-id-header {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
 }
 p.error-message {
   color: var(--pink);
