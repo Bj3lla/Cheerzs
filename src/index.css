@@ -498,7 +498,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 /* -------------------------------
    🌐 Language Popup
 --------------------------------*/
-.language-popup-overlay {
+.popup-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
@@ -510,7 +510,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   padding: 0 1rem; /* ✅ Adds breathing space from left & right edges */
 }
 
-.language-popup {
+.popup {
   position: relative;
   background: var(--pale-yellow);
   color: var(--dark);
@@ -627,11 +627,11 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
     padding: 0 0.8rem;
   }
 
-  .language-popup-overlay {
+  .popup-overlay {
     padding: 0 0.75rem;
   }
 
-  .language-popup {
+  .popup {
     padding: 1.8rem 1rem;
   }
 

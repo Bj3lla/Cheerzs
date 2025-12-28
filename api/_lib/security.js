@@ -39,8 +39,8 @@ export const validateRoomId = (roomID) => {
   const trimmed = roomID.trim().toUpperCase();
   // Keep room IDs small and predictable to reduce abuse surface.
   // Adjust length if your UI allows longer.
-  if (!/^[A-Z0-9]{4,12}$/.test(trimmed)) {
-    return { ok: false, error: "Room code must be 4-12 characters (A-Z, 0-9)" };
+  if (!/^[A-Z0-9]{4,16}$/.test(trimmed)) {
+    return { ok: false, error: "Room code must be 4-16 characters (A-Z, 0-9)" };
   }
   return { ok: true, value: trimmed };
 };
