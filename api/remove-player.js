@@ -83,15 +83,20 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Host cannot be removed", requestId });
     }
 
-    const { error: deleteError } = await supabase
+    const { data: deletedPlayers, error: deleteError } = await supabase
       .from("players")
       .delete()
       .eq("room_id", normalizedRoomID)
-      .eq("username", normalizedTargetUsername);
+      .eq("username", normalizedTargetUsername)
+      .select("id");
 
     if (deleteError) {
       console.error("[remove-player] delete failed", { requestId, deleteError });
       return res.status(500).json({ error: deleteError.message, requestId });
+    }
+
+    if (!deletedPlayers || deletedPlayers.length === 0) {
+      return res.status(404).json({ error: "Player not found in room", requestId });
     }
 
     const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
