@@ -55,6 +55,13 @@ export default function useRuleManagement(language) {
     setRepelMessage("");
   };
 
+  const resetRules = () => {
+    setAvailableRules([...newRules]);
+    setActiveRules([]);
+    setRepelMessage("");
+    setRepelActive(false);
+  };
+
   return {
     availableRules,
     activeRules,
@@ -64,5 +71,6 @@ export default function useRuleManagement(language) {
     addRule,
     clearRepel,
     replaceActiveRules,
+    resetRules,
   };
 }

@@ -7,7 +7,7 @@ import { wildcard } from "../data/wildcard";
 import { getRandomItem } from "../utils/gameUtils";
 
 export default function useQuestionState() {
-  const [unread, setUnread] = useState({
+  const makeInitialUnread = () => ({
     truth: [...truthOrDare.truth],
     dare: [...truthOrDare.dare],
     never: [...neverHaveIEver],
@@ -17,7 +17,7 @@ export default function useQuestionState() {
     wildcardAll: [...wildcard.allPlayers],
   });
 
-  const [read, setRead] = useState({
+  const makeInitialRead = () => ({
     truth: [],
     dare: [],
     never: [],
@@ -26,6 +26,9 @@ export default function useQuestionState() {
     wildcardOne: [],
     wildcardAll: [],
   });
+
+  const [unread, setUnread] = useState(makeInitialUnread);
+  const [read, setRead] = useState(makeInitialRead);
 
   const pickQuestion = (categoryKey) => {
     let categoryUnread = [...unread[categoryKey]];
@@ -54,9 +57,15 @@ export default function useQuestionState() {
     return questionObj;
   };
 
+  const resetAllQuestions = () => {
+    setUnread(makeInitialUnread());
+    setRead(makeInitialRead());
+  };
+
   return {
     unread,
     read,
     pickQuestion,
+    resetAllQuestions,
   };
 }
