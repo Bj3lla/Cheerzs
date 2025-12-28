@@ -19,14 +19,26 @@ export default function LanguageSelector({ language, onLanguageChange }) {
         onClick={() => setIsOpen(true)}
         title="Change language"
         size ={26}
+        role="button"
+        tabIndex={0}
+        aria-label={i18n.ui.selectLanguage}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") setIsOpen(true);
+        }}
       />
 
       {isOpen && (
-        <div className="language-popup-overlay">
-          <div className="language-popup">
+        <div className="popup-overlay" role="dialog" aria-modal="true">
+          <div className="popup">
             <IoClose
               className="popup-close-btn"
               onClick={() => setIsOpen(false)}
+              role="button"
+              tabIndex={0}
+              aria-label="Close"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") setIsOpen(false);
+              }}
             />
             <h3>{i18n.ui.selectLanguage}</h3>
             <div className="language-options">
