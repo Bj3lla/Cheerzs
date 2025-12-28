@@ -50,6 +50,11 @@ export default function GamePage({ language }) {
   const ablyRef = useRef(null);
   const channelRef = useRef(null);
 
+  const lastSeqRef = useRef(0);
+  const lastAppliedLanguageRef = useRef(language);
+  const fetchGameStateInFlightRef = useRef(false);
+  const initialLanguageRef = useRef(language);
+
 
   const i18n = translations[language];
   const isRepealCard = Boolean(repelActive || category === "repeal");
@@ -88,6 +93,9 @@ export default function GamePage({ language }) {
   const fetchGameState = async () => {
     if (!normalizedRoomID) return;
 
+    if (fetchGameStateInFlightRef.current) return;
+    fetchGameStateInFlightRef.current = true;
+
     try {
       const res = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
       const data = await res.json().catch(() => null);
@@ -103,13 +111,35 @@ export default function GamePage({ language }) {
 
       setRoomHost(data?.host || "");
 
-      if (data?.state) {
+      const nextSeq = Number(data?.seq || 0);
+      const isNewer = Number.isFinite(nextSeq) && nextSeq > lastSeqRef.current;
+      const isSameButNewLanguage =
+        Number.isFinite(nextSeq) &&
+        nextSeq === lastSeqRef.current &&
+        language !== lastAppliedLanguageRef.current;
+
+      if ((isNewer || isSameButNewLanguage) && data?.state) {
+        if (isNewer) lastSeqRef.current = nextSeq;
+        lastAppliedLanguageRef.current = language;
         applyRoomBroadcastState(data.state, language);
       }
     } catch {
       // ignore
+    } finally {
+      fetchGameStateInFlightRef.current = false;
     }
   };
+
+  useEffect(() => {
+    if (!isRoomGame) return;
+    if (!normalizedRoomID) return;
+
+    // When language changes mid-game, re-apply current state (same seq is OK).
+    if (language === initialLanguageRef.current) return;
+    initialLanguageRef.current = language;
+    void fetchGameState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language, isRoomGame, normalizedRoomID]);
 
   const publishCurrentRoomState = async () => {
     if (!normalizedRoomID || !username) return;
@@ -259,7 +289,18 @@ export default function GamePage({ language }) {
     channel.subscribe("player-removed", refetch);
 
     channel.subscribe("card-updated", (msg) => {
-      // DB is the source of truth; Ably is only used to notify clients to refetch.
+      const nextSeq = Number(msg?.data?.seq || 0);
+      const hasNewerSeq = Number.isFinite(nextSeq) && nextSeq > lastSeqRef.current;
+
+      // Fast path: apply the authoritative server-published state immediately.
+      if (hasNewerSeq && msg?.data?.state && typeof msg.data.state === "object") {
+        lastSeqRef.current = nextSeq;
+        lastAppliedLanguageRef.current = language;
+        applyRoomBroadcastState(msg.data.state, language);
+        return;
+      }
+
+      // Fallback: DB is still the source of truth.
       void fetchGameState();
     });
 

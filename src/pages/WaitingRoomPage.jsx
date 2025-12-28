@@ -31,6 +31,7 @@ export default function WaitingRoomPage({ language = "en" }) {
 
   const ablyRef = useRef(null);
   const channelRef = useRef(null);
+  const gameStateFetchInFlightRef = useRef(false);
 
   const isHost = Boolean(username) && Boolean(host) && username === host;
 
@@ -261,8 +262,18 @@ export default function WaitingRoomPage({ language = "en" }) {
     channel.subscribe("player-removed", refetch);
     channel.subscribe("room-created", refetch);
 
-    channel.subscribe("card-updated", async () => {
-      // If the host is already in-game, pull game-state and redirect.
+    channel.subscribe("card-updated", async (msg) => {
+      // If the host is already in-game, redirect non-hosts.
+      const startedFromEvent = Boolean(msg?.data?.state?.started);
+      if (startedFromEvent && !isHost) {
+        setGameStarted(true);
+        navigate("/game");
+        return;
+      }
+
+      // Fallback for older events that don't include state.
+      if (gameStateFetchInFlightRef.current) return;
+      gameStateFetchInFlightRef.current = true;
       try {
         const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
         const gsData = await gsRes.json().catch(() => null);
@@ -273,6 +284,8 @@ export default function WaitingRoomPage({ language = "en" }) {
         }
       } catch {
         // ignore
+      } finally {
+        gameStateFetchInFlightRef.current = false;
       }
     });
 
