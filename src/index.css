@@ -296,11 +296,18 @@ span.manual-link, .link {
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: 1rem 1rem;
   background: transparent;
   z-index: 1000;
+}
+
+.top-bar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .top-bar button {
@@ -320,7 +327,7 @@ span.manual-link, .link {
   max-width: 300px;
 }
 
-.waiting-for-host-message {
+p.waiting-for-host-message {
   font-family: "Montserrat", sans-serif;
   color: var(--dark);
   margin: 0;
@@ -502,6 +509,13 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   color: var(--dark);
   border-radius: 10px;
   transition: all 0.2s ease;
+}
+
+/* When LanguageSelector is rendered inside the top bar, it should participate in the flex layout. */
+.top-bar .language-btn {
+  position: static;
+  top: auto;
+  right: auto;
 }
 
 /* -------------------------------

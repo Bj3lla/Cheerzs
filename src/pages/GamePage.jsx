@@ -3,12 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Ably from "ably";
 import Button from "../components/Button";
 import Card from "../components/Card";
+import LanguageSelector from "../components/LanguageSelector";
 import LateJoinPopup from "../components/LateJoinPopup";
 import { useGame } from "../context/GameContext";
 import { categoryColors } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 
-export default function GamePage({ language }) {
+export default function GamePage({ language, setLanguage }) {
   const {
     gameStarted,
     category,
@@ -428,19 +429,25 @@ export default function GamePage({ language }) {
         />
       )}
       <div className="top-bar">
-        <button
-          type="button"
-          className="dark-border small"
-          onClick={leaveFromGamePage}
-          aria-label={i18n.ui.leaveGame}
-          title={i18n.ui.leaveGame}
-        >
-          {i18n.ui.leaveGame}
-        </button>
+        <div className="top-bar-right">
+          {typeof setLanguage === "function" && (
+            <LanguageSelector language={language} onLanguageChange={setLanguage} />
+          )}
 
-        {isRoomGame && normalizedRoomID && (
-          <p className="room-id-header">{i18n.ui.roomID}{normalizedRoomID}</p>
-        )}
+          {isRoomGame && normalizedRoomID && (
+            <p className="room-id-header">{i18n.ui.roomID}{normalizedRoomID}</p>
+          )}
+
+          <button
+            type="button"
+            className="dark-border small"
+            onClick={leaveFromGamePage}
+            aria-label={i18n.ui.leaveGame}
+            title={i18n.ui.leaveGame}
+          >
+            {i18n.ui.leaveGame}
+          </button>
+        </div>
       </div>
       <h2
         className="category-header"

@@ -158,19 +158,6 @@ export default function WaitingRoomPage({ language = "en" }) {
     }
   };
 
-  const sendLeaveBeacon = () => {
-    if (!normalizedRoomID || !username) return;
-
-    try {
-      const blob = new Blob([
-        JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      ], { type: "application/json" });
-      navigator.sendBeacon("/api/leave-room", blob);
-    } catch (err) {
-      // ignore
-    }
-  };
-
   const startGame = async () => {
     if (!normalizedRoomID || !username) return;
 
@@ -238,12 +225,10 @@ export default function WaitingRoomPage({ language = "en" }) {
     };
 
     document.addEventListener("visibilitychange", onVisibilityChange);
-    window.addEventListener("pagehide", sendLeaveBeacon);
 
     return () => {
       window.clearInterval(intervalId);
       document.removeEventListener("visibilitychange", onVisibilityChange);
-      window.removeEventListener("pagehide", sendLeaveBeacon);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [normalizedRoomID, username]);
