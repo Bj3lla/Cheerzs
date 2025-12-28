@@ -11,6 +11,7 @@
   --light-yellow: #fff7ad;
   --pale-yellow: #ffffcf;
   --rule: #b42a82; 
+  padding-top: 4rem;
 }
 
 /* -------------------------------
@@ -117,7 +118,7 @@ p.error-message {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 5rem;
+  padding-top: 2rem;
   padding-bottom: 2rem;
   width: 100%;
   min-height: 100vh;
@@ -614,13 +615,13 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 
   #root {
     align-items: flex-start;
-    padding-top: 2rem;
+    padding-top: 3rem;
   }
 
   .top-bar { padding: 0.8rem 1rem; }
 
   /* Waiting room sits slightly lower on mobile */
-  .waiting-room-page { padding-top: 2rem; }
+  /*.waiting-room-page { padding-top: 2rem; }*/
 
   .card-wrapper { width: 90%; gap: 1rem; }
 
