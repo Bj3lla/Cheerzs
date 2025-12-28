@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../context/GameContext";
 import Button from "../components/Button";
@@ -17,7 +17,19 @@ export default function AddPlayersManuallyPage({ language }) {
     generatePrompt,
     addFriend: addFriendToGame,
     removeFriend: removeFriendFromGame,
+    clearRoomSession,
   } = useGame();
+
+  useEffect(() => {
+    // Local/single-mode should be fully local and not tied to any room.
+    clearRoomSession();
+    localStorage.removeItem("playerId");
+    localStorage.removeItem("playerRoomId");
+    setFriendInput("");
+    setFriends([]);
+    setFriendErrorCode(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const addFriend = () => {
     const name = friendInput.trim();
@@ -41,6 +53,11 @@ export default function AddPlayersManuallyPage({ language }) {
   };
 
   const startGame = () => {
+    // Guarantee a completely fresh local-only game (no room linkage).
+    clearRoomSession();
+    localStorage.removeItem("playerId");
+    localStorage.removeItem("playerRoomId");
+
     const storedName = (localStorage.getItem("playerName") || "").trim();
     const selfName = storedName || i18n?.ui?.chosenOne || "Chosen one";
 
@@ -51,9 +68,9 @@ export default function AddPlayersManuallyPage({ language }) {
       addFriendToGame(selfName);
     }
 
+    const nextFriends = friends.includes(selfName) ? friends : [...friends, selfName];
     setGameStarted(true);
     generatePrompt();
-    const nextFriends = friends.includes(selfName) ? friends : [...friends, selfName];
     navigate("/game", { state: { friends: nextFriends } });
   };
 

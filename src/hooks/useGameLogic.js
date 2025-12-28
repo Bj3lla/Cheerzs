@@ -68,6 +68,10 @@ export default function useGameLogic(language) {
     setPlayer("");
     setShowActiveRules(true);
 
+    // Local mode state should never leak between rooms or sessions.
+    replaceFriends([]);
+    setFriendInput("");
+
     // Reset decks/rules so a new room is always a fresh game.
     resetAllQuestions();
     resetRules();
