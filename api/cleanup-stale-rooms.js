@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Server misconfiguration", requestId });
     }
 
-    const cutoffMs = 3 * 60 * 60 * 1000;
+    const cutoffMs = 2 * 60 * 60 * 1000;
     const cutoffIso = new Date(Date.now() - cutoffMs).toISOString();
 
     const supabase = createClient(
@@ -53,8 +53,30 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: staleError.message, requestId });
     }
 
-    const roomIDs = (Array.isArray(staleRows) ? staleRows : [])
+    const candidateRoomIDs = (Array.isArray(staleRows) ? staleRows : [])
       .map((r) => r?.room_id)
+      .filter((id) => typeof id === "string" && id.trim().length > 0);
+
+    const uniqueCandidateRoomIDs = Array.from(new Set(candidateRoomIDs));
+
+    if (uniqueCandidateRoomIDs.length === 0) {
+      return res.status(200).json({ ok: true, requestId, deletedRooms: 0 });
+    }
+
+    // Only delete rooms that were created more than 2 hours ago as well.
+    const { data: oldRooms, error: roomsFetchError } = await supabase
+      .from("rooms")
+      .select("id, created_at")
+      .in("id", uniqueCandidateRoomIDs)
+      .lt("created_at", cutoffIso)
+      .limit(1000);
+
+    if (roomsFetchError) {
+      return res.status(500).json({ error: roomsFetchError.message, requestId });
+    }
+
+    const roomIDs = (Array.isArray(oldRooms) ? oldRooms : [])
+      .map((r) => r?.id)
       .filter((id) => typeof id === "string" && id.trim().length > 0);
 
     if (roomIDs.length === 0) {
