@@ -33,8 +33,8 @@ export default function GamePage({ language }) {
     return localStorage.getItem("playerName") || "";
   }, []);
 
-  const playerCreatedAt = useMemo(() => {
-    return localStorage.getItem("playerCreatedAt") || "";
+  const playerId = useMemo(() => {
+    return localStorage.getItem("playerId") || "";
   }, []);
 
   const [roomHost, setRoomHost] = useState("");
@@ -175,13 +175,15 @@ export default function GamePage({ language }) {
       await fetch("/api/leave-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerCreatedAt }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
       });
     } catch {
       // ignore
     } finally {
       clearRoomSession();
       setGameStarted(false);
+      localStorage.removeItem("playerId");
+      localStorage.removeItem("playerRoomId");
       navigate("/join-room");
     }
   };
@@ -193,7 +195,7 @@ export default function GamePage({ language }) {
       await fetch("/api/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerCreatedAt }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
       });
     } catch {
       // ignore
@@ -204,7 +206,7 @@ export default function GamePage({ language }) {
     if (!normalizedRoomID || !username) return;
 
     try {
-      const blob = new Blob([JSON.stringify({ roomID: normalizedRoomID, username })], {
+      const blob = new Blob([JSON.stringify({ roomID: normalizedRoomID, username, playerId })], {
         type: "application/json",
       });
       navigator.sendBeacon("/api/leave-room", blob);

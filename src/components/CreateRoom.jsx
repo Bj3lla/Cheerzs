@@ -49,8 +49,9 @@ export default function CreateRoom({ onRoomCreated, language = "en", username })
       console.groupEnd();
 
       if (res.ok) {
-        if (data?.playerCreatedAt) {
-          localStorage.setItem("playerCreatedAt", String(data.playerCreatedAt));
+        if (data?.playerId) {
+          localStorage.setItem("playerId", String(data.playerId));
+          localStorage.setItem("playerRoomId", roomID.trim().toUpperCase());
         }
         setCreatedRoomID(roomID.trim().toUpperCase());
         onRoomCreated({ roomID: roomID.trim().toUpperCase(), username: username.trim() });

@@ -14,8 +14,12 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
     setLocalUsername(username || "");
   }, [username]);
 
-  const storedPlayerCreatedAt = useMemo(() => {
-    return localStorage.getItem("playerCreatedAt") || "";
+  const storedPlayerId = useMemo(() => {
+    return localStorage.getItem("playerId") || "";
+  }, []);
+
+  const storedPlayerRoomId = useMemo(() => {
+    return localStorage.getItem("playerRoomId") || "";
   }, []);
 
   const handleJoin = async () => {
@@ -34,12 +38,18 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
     setError("");
 
     try {
-      const payload = {
-        roomID: roomID.trim().toUpperCase(),
-        username: name,
-        // Used to disambiguate players in the same room when reconnecting.
-        playerCreatedAt: storedPlayerCreatedAt,
-      };
+      const normalizedRoomID = roomID.trim().toUpperCase();
+      const payload = { roomID: normalizedRoomID, username: name };
+
+      // Only send playerId when re-joining the same room with the same username.
+      if (
+        storedPlayerId &&
+        storedPlayerRoomId &&
+        storedPlayerRoomId === normalizedRoomID &&
+        (localStorage.getItem("playerName") || "").trim() === name
+      ) {
+        payload.playerId = storedPlayerId;
+      }
       console.groupCollapsed("[JoinRoom] POST /api/join-room");
       console.log("payload", payload);
 
@@ -62,12 +72,13 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
       console.groupEnd();
 
       if (res.ok) {
-        if (data?.playerCreatedAt) {
-          localStorage.setItem("playerCreatedAt", String(data.playerCreatedAt));
+        if (data?.playerId) {
+          localStorage.setItem("playerId", String(data.playerId));
+          localStorage.setItem("playerRoomId", normalizedRoomID);
         }
         localStorage.setItem("playerName", name);
         onRoomJoined({
-          roomID: roomID.trim().toUpperCase(),
+          roomID: normalizedRoomID,
           username: name,
           gameStarted: Boolean(data?.gameStarted),
         });

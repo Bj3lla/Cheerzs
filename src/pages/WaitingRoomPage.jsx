@@ -20,8 +20,8 @@ export default function WaitingRoomPage({ language = "en" }) {
     return localStorage.getItem("playerName") || "";
   }, []);
 
-  const playerCreatedAt = useMemo(() => {
-    return localStorage.getItem("playerCreatedAt") || "";
+  const playerId = useMemo(() => {
+    return localStorage.getItem("playerId") || "";
   }, []);
 
   const [host, setHost] = useState("");
@@ -127,6 +127,9 @@ export default function WaitingRoomPage({ language = "en" }) {
       clearRoomSession();
       setGameStarted(false);
 
+      localStorage.removeItem("playerId");
+      localStorage.removeItem("playerRoomId");
+
       navigate(destination);
     } catch (err) {
       console.error("[WaitingRoom] leave-room failed", err);
@@ -141,7 +144,7 @@ export default function WaitingRoomPage({ language = "en" }) {
       await fetch("/api/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerCreatedAt }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
       });
     } catch (err) {
       console.warn("[WaitingRoom] heartbeat failed", err);
@@ -153,7 +156,7 @@ export default function WaitingRoomPage({ language = "en" }) {
 
     try {
       const blob = new Blob([
-        JSON.stringify({ roomID: normalizedRoomID, username }),
+        JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
       ], { type: "application/json" });
       navigator.sendBeacon("/api/leave-room", blob);
     } catch (err) {
@@ -242,7 +245,7 @@ export default function WaitingRoomPage({ language = "en" }) {
     if (!normalizedRoomID) return;
 
     const ably = new Ably.Realtime({
-      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}&playerCreatedAt=${encodeURIComponent(playerCreatedAt)}`,
+      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}&playerId=${encodeURIComponent(playerId)}`,
     });
     ablyRef.current = ably;
 

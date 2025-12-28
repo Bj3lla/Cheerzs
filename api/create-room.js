@@ -138,7 +138,7 @@ export default async function handler(req, res) {
     const { data: insertedPlayer, error: playerError } = await supabase
       .from("players")
       .insert({ room_id: normalizedRoomID, username: normalizedUsername })
-      .select("created_at")
+      .select("id")
       .single();
 
     if (playerError) {
@@ -160,7 +160,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       roomID: normalizedRoomID,
       username: normalizedUsername,
-      playerCreatedAt: insertedPlayer?.created_at || "",
+      playerId: insertedPlayer?.id || "",
       requestId,
     });
   } catch (err) {

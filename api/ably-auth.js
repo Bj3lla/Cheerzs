@@ -35,14 +35,11 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: usernameCheck.error });
   }
 
-  const rawPlayerCreatedAt = req.query?.playerCreatedAt;
-  const playerCreatedAt =
-    typeof rawPlayerCreatedAt === "string" && !Number.isNaN(Date.parse(rawPlayerCreatedAt))
-      ? rawPlayerCreatedAt
-      : "";
+  const rawPlayerId = req.query?.playerId;
+  const playerId = typeof rawPlayerId === "string" ? rawPlayerId.trim() : "";
 
-  if (!playerCreatedAt) {
-    return res.status(400).json({ error: "Missing playerCreatedAt" });
+  if (!playerId) {
+    return res.status(400).json({ error: "Missing playerId" });
   }
 
   const roomID = roomIdCheck.value;
@@ -74,7 +71,7 @@ export default async function handler(req, res) {
       .select("id")
       .eq("room_id", roomID)
       .eq("username", username)
-      .eq("created_at", playerCreatedAt)
+      .eq("id", playerId)
       .maybeSingle();
 
     if (playerError) {
@@ -90,7 +87,7 @@ export default async function handler(req, res) {
 
     // Generate a token request for client-side authentication
     const tokenRequestData = await client.auth.createTokenRequest({
-      clientId: `room:${roomID}:${username}:${Date.parse(playerCreatedAt)}`,
+      clientId: `room:${roomID}:${username}:${playerId}`,
       // Subscribe-only to the specific room channel.
       capability: {
         [`room-${roomID}`]: ["subscribe"],
