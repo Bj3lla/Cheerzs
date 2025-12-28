@@ -395,7 +395,7 @@ export const truthOrDare = {
     },
     {
       id: 32,
-      en: "do your best slow-motion action scene - on the mission to get a glass of water.",
+      en: "do your best slow-motion action scene while getting a glass of water.",
       no: "gjør din beste slow-motion action-scene mens du henter et glass vann."
     },
     {

@@ -205,11 +205,6 @@ export const neverHaveIEver = [
     no: "sett en hel serie i stedet for å gjøre noe jeg hadde planlagt å gjøre.",
   },
   {
-    id: 46,
-    en: "kept a habit streak for at least a month this year.",
-    no: "holdt en vane-streak i minst en måned i år.",
-  },
-  {
     id: 47,
     en: "written a ‘this year I’m going to…’ list and forgotten it by February.",
     no: "skrevet en «i år skal jeg…»-liste og glemt den innen februar.",

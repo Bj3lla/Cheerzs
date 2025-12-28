@@ -69,7 +69,7 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
       <div className="friend-input">
         <input
           type="text"
-          placeholder={i18n.ui.placeholderRoomID}
+          placeholder={i18n.ui.placeholderEnterRoomID || "enter a room ID..."}
           value={roomID}
           onChange={(e) => setRoomID(e.target.value.toUpperCase())}
           onKeyDown={(e) => e.key === "Enter" && !loading && handleJoin()}

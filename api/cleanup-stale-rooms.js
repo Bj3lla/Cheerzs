@@ -35,8 +35,14 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Server misconfiguration", requestId });
     }
 
-    const cutoffMs = 3 * 60 * 60 * 1000;
-    const cutoffIso = new Date(Date.now() - cutoffMs).toISOString();
+    // Delete ONLY when BOTH are true:
+    // 1) rooms.created_at is older than 1 hour
+    // 2) room_game_state.updated_at is older than 1 hour
+    const nowMs = Date.now();
+    const staleUpdatedCutoffMs = 1 * 60 * 60 * 1000;
+    const oldRoomCreatedCutoffMs = 1 * 60 * 60 * 1000;
+    const staleUpdatedCutoffIso = new Date(nowMs - staleUpdatedCutoffMs).toISOString();
+    const oldRoomCreatedCutoffIso = new Date(nowMs - oldRoomCreatedCutoffMs).toISOString();
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -46,15 +52,37 @@ export default async function handler(req, res) {
     const { data: staleRows, error: staleError } = await supabase
       .from("room_game_state")
       .select("room_id, updated_at")
-      .lt("updated_at", cutoffIso)
+      .lt("updated_at", staleUpdatedCutoffIso)
       .limit(1000);
 
     if (staleError) {
       return res.status(500).json({ error: staleError.message, requestId });
     }
 
-    const roomIDs = (Array.isArray(staleRows) ? staleRows : [])
+    const candidateRoomIDs = (Array.isArray(staleRows) ? staleRows : [])
       .map((r) => r?.room_id)
+      .filter((id) => typeof id === "string" && id.trim().length > 0);
+
+    const uniqueCandidateRoomIDs = Array.from(new Set(candidateRoomIDs));
+
+    if (uniqueCandidateRoomIDs.length === 0) {
+      return res.status(200).json({ ok: true, requestId, deletedRooms: 0 });
+    }
+
+    // Filter candidates down to rooms that are ALSO older than 1 hour.
+    const { data: oldRooms, error: roomsFetchError } = await supabase
+      .from("rooms")
+      .select("id, created_at")
+      .in("id", uniqueCandidateRoomIDs)
+      .lt("created_at", oldRoomCreatedCutoffIso)
+      .limit(1000);
+
+    if (roomsFetchError) {
+      return res.status(500).json({ error: roomsFetchError.message, requestId });
+    }
+
+    const roomIDs = (Array.isArray(oldRooms) ? oldRooms : [])
+      .map((r) => r?.id)
       .filter((id) => typeof id === "string" && id.trim().length > 0);
 
     if (roomIDs.length === 0) {

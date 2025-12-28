@@ -337,13 +337,18 @@ export default function WaitingRoomPage({ language = "en" }) {
           </div>
 
           <div className="start-game-btn">
-            <Button
-              label={i18n.ui.startGame}
-              color="primary"
-              onClick={startGame}
-              size="large"
-              disabled={!isHost}
-            />
+            {isHost ? (
+              <Button
+                label={i18n.ui.startGame}
+                color="primary"
+                onClick={startGame}
+                size="large"
+              />
+            ) : (
+              <p className="waiting-for-host-message">
+                {i18n.ui.waitingForHostToStart || "Waiting for the host to start the game."}
+              </p>
+            )}
           </div>
         </>
       )}
