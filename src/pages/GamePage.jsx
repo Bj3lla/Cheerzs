@@ -33,6 +33,10 @@ export default function GamePage({ language }) {
     return localStorage.getItem("playerName") || "";
   }, []);
 
+  const playerCreatedAt = useMemo(() => {
+    return localStorage.getItem("playerCreatedAt") || "";
+  }, []);
+
   const [roomHost, setRoomHost] = useState("");
   const isRoomGame = Boolean(roomId);
   const isHost = Boolean(isRoomGame && username && roomHost && username === roomHost);
@@ -171,7 +175,7 @@ export default function GamePage({ language }) {
       await fetch("/api/leave-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, playerCreatedAt }),
       });
     } catch {
       // ignore
@@ -189,7 +193,7 @@ export default function GamePage({ language }) {
       await fetch("/api/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, playerCreatedAt }),
       });
     } catch {
       // ignore

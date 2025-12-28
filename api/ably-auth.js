@@ -35,6 +35,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: usernameCheck.error });
   }
 
+  const rawPlayerCreatedAt = req.query?.playerCreatedAt;
+  const playerCreatedAt =
+    typeof rawPlayerCreatedAt === "string" && !Number.isNaN(Date.parse(rawPlayerCreatedAt))
+      ? rawPlayerCreatedAt
+      : "";
+
+  if (!playerCreatedAt) {
+    return res.status(400).json({ error: "Missing playerCreatedAt" });
+  }
+
   const roomID = roomIdCheck.value;
   const username = usernameCheck.value;
 
@@ -64,6 +74,7 @@ export default async function handler(req, res) {
       .select("id")
       .eq("room_id", roomID)
       .eq("username", username)
+      .eq("created_at", playerCreatedAt)
       .maybeSingle();
 
     if (playerError) {
@@ -79,7 +90,7 @@ export default async function handler(req, res) {
 
     // Generate a token request for client-side authentication
     const tokenRequestData = await client.auth.createTokenRequest({
-      clientId: `room:${roomID}:${username}`,
+      clientId: `room:${roomID}:${username}:${Date.parse(playerCreatedAt)}`,
       // Subscribe-only to the specific room channel.
       capability: {
         [`room-${roomID}`]: ["subscribe"],

@@ -1,15 +1,26 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "./Button";
 import { translations } from "../locales/translations";
 
 export default function JoinRoom({ onRoomJoined, language = "en", username }) {
   const [roomID, setRoomID] = useState("");
+  const [localUsername, setLocalUsername] = useState(username || "");
+  const [showUsernameInput, setShowUsernameInput] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const i18n = translations[language];
 
+  useEffect(() => {
+    setLocalUsername(username || "");
+  }, [username]);
+
+  const storedPlayerCreatedAt = useMemo(() => {
+    return localStorage.getItem("playerCreatedAt") || "";
+  }, []);
+
   const handleJoin = async () => {
-    if (!username || typeof username !== "string" || !username.trim()) {
+    const name = (localUsername || "").trim();
+    if (!name) {
       setError(i18n.ui.pleaseEnterPlayerName || "Please enter a name first");
       return;
     }
@@ -23,7 +34,12 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
     setError("");
 
     try {
-      const payload = { roomID: roomID.trim().toUpperCase(), username: username.trim() };
+      const payload = {
+        roomID: roomID.trim().toUpperCase(),
+        username: name,
+        // Used to disambiguate players in the same room when reconnecting.
+        playerCreatedAt: storedPlayerCreatedAt,
+      };
       console.groupCollapsed("[JoinRoom] POST /api/join-room");
       console.log("payload", payload);
 
@@ -46,13 +62,23 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
       console.groupEnd();
 
       if (res.ok) {
+        if (data?.playerCreatedAt) {
+          localStorage.setItem("playerCreatedAt", String(data.playerCreatedAt));
+        }
+        localStorage.setItem("playerName", name);
         onRoomJoined({
           roomID: roomID.trim().toUpperCase(),
-          username: username.trim(),
+          username: name,
           gameStarted: Boolean(data?.gameStarted),
         });
       } else {
-        setError((data && data.error) || i18n.ui.networkError || "Network error");
+        const code = data?.code;
+        if (res.status === 409 && code === "USERNAME_TAKEN") {
+          setShowUsernameInput(true);
+          setError(i18n.ui.usernameTaken || "The username is already taken");
+        } else {
+          setError((data && data.error) || i18n.ui.networkError || "Network error");
+        }
       }
     } catch (err) {
       console.error(err);
@@ -66,10 +92,28 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }) {
   return (
     <div className="join-room">
       <h2>{i18n.ui.joinRoom}</h2>
+      {showUsernameInput && (
+        <div className="friend-input" style={{ marginBottom: "1rem" }}>
+          <input
+            type="text"
+            placeholder={i18n.ui.placeholderPlayerName || "playername..."}
+            value={localUsername}
+            onChange={(e) => {
+              setLocalUsername(e.target.value);
+              setError("");
+            }}
+            onKeyDown={(e) => e.key === "Enter" && !loading && handleJoin()}
+            disabled={loading}
+            autoCapitalize="words"
+            autoCorrect="off"
+            spellCheck={false}
+          />
+        </div>
+      )}
       <div className="friend-input">
         <input
           type="text"
-          placeholder={i18n.ui.placeholderEnterRoomID || "enter a room ID..."}
+          placeholder={i18n.ui.placeholderEnterRoomID || "enter room ID..."}
           value={roomID}
           onChange={(e) => setRoomID(e.target.value.toUpperCase())}
           onKeyDown={(e) => e.key === "Enter" && !loading && handleJoin()}

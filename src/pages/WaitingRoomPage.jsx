@@ -20,6 +20,10 @@ export default function WaitingRoomPage({ language = "en" }) {
     return localStorage.getItem("playerName") || "";
   }, []);
 
+  const playerCreatedAt = useMemo(() => {
+    return localStorage.getItem("playerCreatedAt") || "";
+  }, []);
+
   const [host, setHost] = useState("");
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -137,7 +141,7 @@ export default function WaitingRoomPage({ language = "en" }) {
       await fetch("/api/heartbeat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, playerCreatedAt }),
       });
     } catch (err) {
       console.warn("[WaitingRoom] heartbeat failed", err);
@@ -238,7 +242,7 @@ export default function WaitingRoomPage({ language = "en" }) {
     if (!normalizedRoomID) return;
 
     const ably = new Ably.Realtime({
-      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}`,
+      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}&playerCreatedAt=${encodeURIComponent(playerCreatedAt)}`,
     });
     ablyRef.current = ably;
 

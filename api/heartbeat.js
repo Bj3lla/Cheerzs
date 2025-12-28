@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid JSON body", requestId });
     }
 
-    const { roomID, username } = body;
+    const { roomID, username, playerCreatedAt: rawPlayerCreatedAt } = body;
 
     const roomIdCheck = validateRoomId(roomID);
     if (!roomIdCheck.ok) {
@@ -45,6 +45,11 @@ export default async function handler(req, res) {
 
     const normalizedRoomID = roomIdCheck.value;
     const normalizedUsername = usernameCheck.value;
+
+    const playerCreatedAt =
+      typeof rawPlayerCreatedAt === "string" && !Number.isNaN(Date.parse(rawPlayerCreatedAt))
+        ? rawPlayerCreatedAt
+        : "";
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -68,12 +73,17 @@ export default async function handler(req, res) {
 
     const now = new Date().toISOString();
 
-    const { data: updated, error: updateError } = await supabase
+    let updateQuery = supabase
       .from("players")
       .update({ joined_at: now })
       .eq("room_id", normalizedRoomID)
-      .eq("username", normalizedUsername)
-      .select("id");
+      .eq("username", normalizedUsername);
+
+    if (playerCreatedAt) {
+      updateQuery = updateQuery.eq("created_at", playerCreatedAt);
+    }
+
+    const { data: updated, error: updateError } = await updateQuery.select("id");
 
     if (updateError) {
       console.error("[heartbeat] update failed", { requestId, updateError });
@@ -81,13 +91,34 @@ export default async function handler(req, res) {
     }
 
     if (!updated || updated.length === 0) {
-      const { error: insertError } = await supabase
-        .from("players")
-        .insert({ room_id: normalizedRoomID, username: normalizedUsername, joined_at: now });
+      // If the client provided a created_at but we couldn't update, do NOT insert a new row.
+      // This prevents accidentally creating duplicates or bypassing "username taken".
+      if (playerCreatedAt) {
+        return res.status(404).json({ error: "Player not found", requestId });
+      }
 
-      if (insertError) {
-        console.error("[heartbeat] insert failed", { requestId, insertError });
-        return res.status(500).json({ error: insertError.message, requestId });
+      // Backward-compatible fallback: only insert if username is not already present in the room.
+      const { data: existing, error: existingError } = await supabase
+        .from("players")
+        .select("id")
+        .eq("room_id", normalizedRoomID)
+        .eq("username", normalizedUsername)
+        .maybeSingle();
+
+      if (existingError) {
+        console.error("[heartbeat] existing check failed", { requestId, existingError });
+        return res.status(500).json({ error: existingError.message, requestId });
+      }
+
+      if (!existing?.id) {
+        const { error: insertError } = await supabase
+          .from("players")
+          .insert({ room_id: normalizedRoomID, username: normalizedUsername, joined_at: now });
+
+        if (insertError) {
+          console.error("[heartbeat] insert failed", { requestId, insertError });
+          return res.status(500).json({ error: insertError.message, requestId });
+        }
       }
     }
 

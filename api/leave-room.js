@@ -36,7 +36,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid JSON body", requestId });
     }
 
-    const { roomID, username } = body;
+    const { roomID, username, playerCreatedAt: rawPlayerCreatedAt } = body;
 
     const roomIdCheck = validateRoomId(roomID);
     if (!roomIdCheck.ok) {
@@ -50,6 +50,11 @@ export default async function handler(req, res) {
 
     const normalizedRoomID = roomIdCheck.value;
     const normalizedUsername = usernameCheck.value;
+
+    const playerCreatedAt =
+      typeof rawPlayerCreatedAt === "string" && !Number.isNaN(Date.parse(rawPlayerCreatedAt))
+        ? rawPlayerCreatedAt
+        : "";
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -114,11 +119,18 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, roomDeleted: true, requestId });
     }
 
-    const { error: deleteError } = await supabase
+    let deleteQuery = supabase
       .from("players")
       .delete()
       .eq("room_id", normalizedRoomID)
       .eq("username", normalizedUsername);
+
+    // If provided, use username + created_at to uniquely identify the player.
+    if (playerCreatedAt) {
+      deleteQuery = deleteQuery.eq("created_at", playerCreatedAt);
+    }
+
+    const { error: deleteError } = await deleteQuery;
 
     if (deleteError) {
       console.error("[leave-room] delete failed", { requestId, deleteError });
