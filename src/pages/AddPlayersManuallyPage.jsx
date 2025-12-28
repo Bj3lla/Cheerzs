@@ -41,9 +41,20 @@ export default function AddPlayersManuallyPage({ language }) {
   };
 
   const startGame = () => {
+    const storedName = (localStorage.getItem("playerName") || "").trim();
+    const selfName = storedName || i18n?.ui?.chosenOne || "Chosen one";
+
+    // If the user didn't add themselves to the list, include a default name
+    // so player-targeted prompts always have someone to pick.
+    if (!friends.includes(selfName)) {
+      setFriends((prev) => [...prev, selfName]);
+      addFriendToGame(selfName);
+    }
+
     setGameStarted(true);
     generatePrompt();
-    navigate("/game", { state: { friends } });
+    const nextFriends = friends.includes(selfName) ? friends : [...friends, selfName];
+    navigate("/game", { state: { friends: nextFriends } });
   };
 
   return (

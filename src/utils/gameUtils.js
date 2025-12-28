@@ -7,10 +7,12 @@ export const getRandomRounds = (min = 10, max = 20) =>
 
 export const getRandomCategory = () => {
   const random = Math.random() * 100;
+  if (random < 2) return "drinkingbuddy";
+  if (random < 4) return "wildcard";
   if (random < 10) return "rule";
-  if (random < 35) return "point";
-  if (random < 60) return "never";
-  if (random < 80) return "truth";
+  if (random < 36) return "point";
+  if (random < 62) return "never";
+  if (random < 81) return "truth";
   return "dare";
 };
 
@@ -21,6 +23,8 @@ export const categoryColors = {
   never: "#007f96",
   rule: "#b42a82",
   repeal: "#b42a82",
+  drinkingbuddy: "#b42a82",
+  wildcard: "#b42a82",
 };
 
 // Unused so far because not referenced in the project
