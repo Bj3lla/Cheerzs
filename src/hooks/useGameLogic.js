@@ -20,7 +20,7 @@ const pickTwoDifferentPlayers = (players) => {
 };
 
 export default function useGameLogic(language) {
-  const { unread, read, pickQuestion } = useQuestionState();
+  const { unread, read, pickQuestion, resetAllQuestions } = useQuestionState();
   const {
     friends,
     replaceFriends,
@@ -41,6 +41,7 @@ export default function useGameLogic(language) {
     addRule,
     clearRepel,
     replaceActiveRules,
+    resetRules,
   } = useRuleManagement(language);
 
   const [gameStarted, setGameStarted] = useState(false);
@@ -58,14 +59,33 @@ export default function useGameLogic(language) {
   const [roomId, setRoomId] = useState(null);
   const [roomPlayers, setRoomPlayers] = useState([]);
 
+  const resetGameState = () => {
+    setGameStarted(false);
+    setCategory(null);
+    setPrompt("");
+    setCurrentCard(null);
+    broadcastStateRef.current = null;
+    setPlayer("");
+    setShowActiveRules(true);
+
+    // Reset decks/rules so a new room is always a fresh game.
+    resetAllQuestions();
+    resetRules();
+  };
+
   const playersForPrompts = roomId ? roomPlayers : friends;
 
   const setRoomSession = ({ roomID, players }) => {
-    setRoomId(roomID || null);
+    const nextRoomId = roomID || null;
+    if (nextRoomId !== roomId) {
+      resetGameState();
+    }
+    setRoomId(nextRoomId);
     setRoomPlayers(Array.isArray(players) ? players : []);
   };
 
   const clearRoomSession = () => {
+    resetGameState();
     setRoomId(null);
     setRoomPlayers([]);
   };

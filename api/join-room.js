@@ -109,6 +109,16 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: deletePlayersError.message, requestId });
       }
 
+      const { error: deleteStateError } = await supabase
+        .from("room_game_state")
+        .delete()
+        .eq("room_id", normalizedRoomID);
+
+      if (deleteStateError) {
+        console.error("[join-room] expired cleanup room_game_state failed", { requestId, deleteStateError });
+        return res.status(500).json({ error: deleteStateError.message, requestId });
+      }
+
       const { error: deleteRoomError } = await supabase
         .from("rooms")
         .delete()

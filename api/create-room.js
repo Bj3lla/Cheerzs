@@ -113,6 +113,16 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: deletePlayersError.message, requestId });
       }
 
+      const { error: deleteStateError } = await supabase
+        .from("room_game_state")
+        .delete()
+        .eq("room_id", normalizedRoomID);
+
+      if (deleteStateError) {
+        console.error("[create-room] expired cleanup room_game_state failed", { requestId, deleteStateError });
+        return res.status(500).json({ error: deleteStateError.message, requestId });
+      }
+
       const { error: deleteRoomError } = await supabase
         .from("rooms")
         .delete()
@@ -144,6 +154,25 @@ export default async function handler(req, res) {
     if (playerError) {
       console.error("[create-room] supabase player insert error", { requestId, playerError });
       return res.status(500).json({ error: playerError.message, requestId });
+    }
+
+    // Initialize a fresh game state for this room.
+    // Keeps rooms isolated even if an old room_game_state row existed for this code.
+    const { error: initStateError } = await supabase
+      .from("room_game_state")
+      .upsert(
+        {
+          room_id: normalizedRoomID,
+          seq: 0,
+          state: { started: false, card: null, activeRules: [] },
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "room_id" }
+      );
+
+    if (initStateError) {
+      console.error("[create-room] init game state failed", { requestId, initStateError });
+      return res.status(500).json({ error: initStateError.message, requestId });
     }
 
     // Notify Ably
