@@ -496,7 +496,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
    🌐 Language Toggle Button (Top-Right)
 --------------------------------*/
 .language-btn {
-  position: absolute;
+  position: fixed;
   display: flex;
   align-items: right;
   top: 2rem;
@@ -614,13 +614,13 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 
   #root {
     align-items: flex-start;
-    padding-top: 7rem;
+    padding-top: 2rem;
   }
 
   .top-bar { padding: 0.8rem 1rem; }
 
   /* Waiting room sits slightly lower on mobile */
-  .waiting-room-page { padding-top: 6rem; }
+  .waiting-room-page { padding-top: 2rem; }
 
   .card-wrapper { width: 90%; gap: 1rem; }
 
