@@ -5,17 +5,34 @@ export default function Room({ roomID }) {
   const [players, setPlayers] = useState([]);
   
   useEffect(() => {
-    const ably = new Ably.Realtime({ authUrl: '/api/ably-auth' });
-    const channel = ably.channels.get(`room-${roomID}`);
-    channel.subscribe("player-joined", (msg) => {
-      console.log(msg.data);
+    const normalizedRoomID = typeof roomID === 'string' ? roomID.trim().toUpperCase() : '';
+    const username = localStorage.getItem('playerName') || '';
+    const playerId = localStorage.getItem('playerId') || '';
+
+    if (!normalizedRoomID || !username) return;
+
+    const ably = new Ably.Realtime({
+      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}&playerId=${encodeURIComponent(playerId)}`,
     });
+    const channel = ably.channels.get(`room-${normalizedRoomID}`);
 
     channel.subscribe('player-joined', (msg) => {
       setPlayers(prev => [...prev, msg.data.username]);
     });
 
-    return () => channel.unsubscribe();
+    return () => {
+      channel.unsubscribe();
+      try {
+        channel.detach();
+      } catch {
+        // ignore
+      }
+      try {
+        ably.close();
+      } catch {
+        // ignore
+      }
+    };
   }, [roomID]);
 
   return (

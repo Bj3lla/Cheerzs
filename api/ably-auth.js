@@ -38,10 +38,6 @@ export default async function handler(req, res) {
   const rawPlayerId = req.query?.playerId;
   const playerId = typeof rawPlayerId === "string" ? rawPlayerId.trim() : "";
 
-  if (!playerId) {
-    return res.status(400).json({ error: "Missing playerId" });
-  }
-
   const roomID = roomIdCheck.value;
   const username = usernameCheck.value;
 
@@ -65,19 +61,28 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: roomError.message });
     }
 
-    // Verify the user is in the room
-    const { data: player, error: playerError } = await supabase
+    // Verify the user is in the room.
+    // Username is enforced unique per room via join-room, so username is safe for identity.
+    // If playerId is provided, we additionally verify it matches.
+    let playerQuery = supabase
       .from("players")
       .select("id")
       .eq("room_id", roomID)
       .eq("username", username)
-      .eq("id", playerId)
-      .maybeSingle();
+      .order("joined_at", { ascending: false, nullsFirst: false })
+      .limit(1);
+
+    if (playerId) {
+      playerQuery = playerQuery.eq("id", playerId);
+    }
+
+    const { data: playerRows, error: playerError } = await playerQuery;
 
     if (playerError) {
       return res.status(500).json({ error: playerError.message });
     }
 
+    const player = Array.isArray(playerRows) ? playerRows[0] : null;
     if (!player?.id) {
       return res.status(403).json({ error: "Not in room" });
     }
@@ -87,7 +92,7 @@ export default async function handler(req, res) {
 
     // Generate a token request for client-side authentication
     const tokenRequestData = await client.auth.createTokenRequest({
-      clientId: `room:${roomID}:${username}:${playerId}`,
+      clientId: `room:${roomID}:${username}:${playerId || player.id}`,
       // Subscribe-only to the specific room channel.
       capability: {
         [`room-${roomID}`]: ["subscribe"],
