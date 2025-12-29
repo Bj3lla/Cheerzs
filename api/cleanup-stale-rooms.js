@@ -36,8 +36,8 @@ export default async function handler(req, res) {
     }
 
     // Delete ONLY when BOTH are true:
-    // 1) rooms.created_at is older than 3 hours
-    // 2) room_game_state.updated_at is older than 3 hours
+    // 1) rooms.created_at is older than 1 hours
+    // 2) room_game_state.updated_at is older than 1 hours
     const nowMs = Date.now();
     const staleUpdatedCutoffMs = 1 * 60 * 60 * 1000;
     const oldRoomCreatedCutoffMs = 1 * 60 * 60 * 1000;
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, requestId, deletedRooms: 0 });
     }
 
-    // Filter candidates down to rooms that are ALSO older than 3 hours.
+    // Filter candidates down to rooms that are ALSO older than 1 hours.
     const { data: oldRooms, error: roomsFetchError } = await supabase
       .from("rooms")
       .select("id, created_at")

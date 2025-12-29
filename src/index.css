@@ -537,7 +537,8 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   background: var(--pale-yellow);
   color: var(--dark);
   border-radius: 16px;
-  padding: 2rem 1.5rem;
+  /* Reserve space at the top so the close button doesn't overlap content */
+  padding: 3.25rem 1.5rem 2rem;
   width: 100%;          /* ✅ allows it to shrink within overlay’s padding */
   max-width: 400px;
   text-align: center;
@@ -546,13 +547,18 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 }
 
 .popup p {
-  padding-top: 1.5rem;
+  padding-top: 0;
 }
 
 .cheerzs-rules-list {
   text-align: left;
   margin: 1rem 0 0;
   padding-left: 1.2rem;
+}
+
+/* Make emphasized rule names stand out (italic + bold) */
+.cheerzs-rules-list em {
+  font-weight: 700;
 }
 
 .popup.cheerzs-rules-popup {
@@ -567,6 +573,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   padding-top: 0.5rem;
   border: var(--pink) 2px solid;
   border-radius: 10px;
+  margin: 1rem;
 }
 
 .cheerzs-rules-list li {
@@ -620,6 +627,15 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 
 .popup-done-btn:hover {
   background-color: #d91860;
+}
+
+/* Menu page divider between language section and rules */
+.menu-divider {
+  width: min(520px, 90vw);
+  border: 0;
+  border-top: 2px solid var(--dark);
+  opacity: 0.25;
+  margin: 1.5rem 0;
 }
 
 /* Options */
@@ -685,7 +701,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   }
 
   .popup {
-    padding: 1.8rem 1rem;
+    padding: 3rem 1rem 1.8rem;
   }
 
   .popup-close-btn {
