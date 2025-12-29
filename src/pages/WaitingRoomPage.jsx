@@ -373,7 +373,7 @@ export default function WaitingRoomPage({ language = "en" }) {
 
           <div className="start-game-btn">
             <Button
-              label={i18n.ui.rulesButton || "Rules"}
+              label={i18n.ui.gameRules || "Rules"}
               color="light"
               onClick={() => setShowRulesPopup(true)}
               size="large"
