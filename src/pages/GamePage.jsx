@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Ably from "ably";
+import { IoArrowBack } from "react-icons/io5";
 import Button from "../components/Button";
 import Card from "../components/Card";
 import LateJoinPopup from "../components/LateJoinPopup";
+import LeaveRoomPopup from "../components/LeaveRoomPopup";
 import { useGame } from "../context/GameContext";
 import { categoryColors } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
@@ -60,6 +62,7 @@ export default function GamePage({ language }) {
 
   const [lateJoinMessage, setLateJoinMessage] = useState("");
   const [showLateJoinPopup, setShowLateJoinPopup] = useState(false);
+  const [showLeaveRoomPopup, setShowLeaveRoomPopup] = useState(false);
 
 
   const i18n = translations[language] || translations.en;
@@ -441,15 +444,26 @@ export default function GamePage({ language }) {
           language={language}
         />
       )}
+
+      {showLeaveRoomPopup && (
+        <LeaveRoomPopup
+          language={language}
+          onClose={() => setShowLeaveRoomPopup(false)}
+          onConfirm={() => {
+            setShowLeaveRoomPopup(false);
+            void leaveFromGamePage();
+          }}
+        />
+      )}
       <div className="top-bar">
         <button
           type="button"
-          className="dark-border small"
-          onClick={leaveFromGamePage}
+          className="button"
+          onClick={() => setShowLeaveRoomPopup(true)}
           aria-label={i18n.ui.leaveGame}
           title={i18n.ui.leaveGame}
         >
-          {i18n.ui.leaveGame}
+          <IoArrowBack size={24} />
         </button>
 
         {isRoomGame && normalizedRoomID && (

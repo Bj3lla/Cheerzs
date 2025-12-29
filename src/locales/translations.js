@@ -52,6 +52,7 @@ export const translations = {
       penalty7: "drink 7 sips.",
       penaltyShot: "take a shot.",
       lateJoinPenaltyMessage: "Ops! You're late to the party, so unfortunatly, you have to {penalty}",
+      confirmLeaveRoom: "Are you sure you want to leave the room?",
     },
     categories: {
       truth: "Truth",
@@ -112,6 +113,7 @@ export const translations = {
       penalty7: "drikk 7 slurker.",
       penaltyShot: "ta en shot.",
       lateJoinPenaltyMessage: "Oops! Du er sen til festen, så dessverre må du {penalty}",
+      confirmLeaveRoom: "Er du sikker på at du vil forlate rommet?",
     },
     categories: {
       truth: "Sannhet",
