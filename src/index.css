@@ -570,6 +570,8 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 .popup.cheerzs-rules-popup {
   display: flex;
   flex-direction: column;
+  /* No extra popup margin; rely on overlay padding for screen breathing room */
+  margin: 0;
   /* Fit content when possible, but never exceed the viewport height */
   max-height: calc(100dvh - 2rem);
   overflow: hidden;
@@ -658,15 +660,14 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   border: 2px solid var(--light-pink);
   border-radius: 12px;
   padding: 1rem;
-  margin: auto 0.5rem;;
+  margin: 0.5rem;
 }
 
 /* When select-language is used inside a popup, keep it centered and fitted */
 .popup .select-language {
   width: 100%;
-  margin: 0.5rem auto;
+  margin: 0.5rem;
   box-sizing: border-box;
-  border: transparent;
 }
 
 .select-language h3 {
