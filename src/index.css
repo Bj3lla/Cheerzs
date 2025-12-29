@@ -738,7 +738,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   }
 
   .popup-overlay {
-    padding: 0 0.75rem;
+    padding: 0.5rem 0.75rem;
   }
 
   .popup {
