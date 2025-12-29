@@ -30,6 +30,25 @@ body {
   align-items: center;
 }
 
+/* HomePage background image (behind entire app) */
+body.home-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+body.home-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("./assets/IMG_6401_kristine.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.4;
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* -------------------------------
    ✍️ Typography
 --------------------------------*/
@@ -275,6 +294,8 @@ span.manual-link, .link {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .app {

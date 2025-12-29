@@ -96,7 +96,24 @@ export default async function handler(req, res) {
 
     if (existingRoom) {
       const cutoffIso = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
-      const isExpired = Boolean(existingRoom.created_at) && existingRoom.created_at < cutoffIso;
+      const { data: gameStateRow, error: gameStateError } = await supabase
+        .from("room_game_state")
+        .select("updated_at")
+        .eq("room_id", normalizedRoomID)
+        .maybeSingle();
+
+      if (gameStateError) {
+        console.error("[create-room] room_game_state fetch failed", { requestId, gameStateError });
+        return res.status(500).json({ error: gameStateError.message, requestId });
+      }
+
+      const stateUpdatedAt = gameStateRow?.updated_at || existingRoom.created_at;
+
+      const isExpired =
+        Boolean(existingRoom.created_at) &&
+        Boolean(stateUpdatedAt) &&
+        existingRoom.created_at < cutoffIso &&
+        stateUpdatedAt < cutoffIso;
 
       if (!isExpired) {
         return res.status(409).json({ error: "Room already exists", requestId });

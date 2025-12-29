@@ -95,9 +95,29 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: roomError.message, requestId });
     }
 
-    // Treat very old rooms as expired so their codes become reusable.
+    // Treat rooms as expired ONLY when BOTH are true:
+    // 1) rooms.created_at is older than 3 hours
+    // 2) room_game_state.updated_at is older than 3 hours
     const cutoffIso = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
-    const isExpired = Boolean(room?.created_at) && room.created_at < cutoffIso;
+
+    const { data: gameStateRow, error: gameStateError } = await supabase
+      .from("room_game_state")
+      .select("updated_at")
+      .eq("room_id", normalizedRoomID)
+      .maybeSingle();
+
+    if (gameStateError) {
+      console.error("[join-room] room_game_state fetch failed", { requestId, gameStateError });
+      return res.status(500).json({ error: gameStateError.message, requestId });
+    }
+
+    const stateUpdatedAt = gameStateRow?.updated_at || room?.created_at;
+
+    const isExpired =
+      Boolean(room?.created_at) &&
+      Boolean(stateUpdatedAt) &&
+      room.created_at < cutoffIso &&
+      stateUpdatedAt < cutoffIso;
     if (isExpired) {
       const { error: deletePlayersError } = await supabase
         .from("players")
