@@ -46,7 +46,10 @@ export default function MenuPage({ language, onLanguageChange }) {
           🇳🇴 Norsk
         </label>
       </div>
-        <GameRules language={language} />
+
+      <hr className="menu-divider" />
+
+      <GameRules language={language} />
     </div>
   );
 }

@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     );
 
     // Remove inactive players (tracked via joined_at heartbeat)
-    const cutoff = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
+    const cutoff = new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString();
     const { error: cleanupError } = await supabase
       .from("players")
       .delete()
@@ -57,9 +57,9 @@ export default async function handler(req, res) {
     }
 
     // Remove expired rooms ONLY when BOTH are true:
-    // 1) rooms.created_at is older than 3 hours
-    // 2) room_game_state.updated_at is older than 3 hours
-    const roomCutoff = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
+    // 1) rooms.created_at is older than 1 hours
+    // 2) room_game_state.updated_at is older than 1 hours
+    const roomCutoff = new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString();
 
     const { data: gameStateRow, error: gameStateError } = await supabase
       .from("room_game_state")
