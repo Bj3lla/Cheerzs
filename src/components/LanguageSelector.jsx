@@ -1,16 +1,43 @@
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { GrLanguage } from "react-icons/gr";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoMenu } from "react-icons/io5";
 import { translations } from "../locales/translations";
 
 export default function LanguageSelector({ language, onLanguageChange }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const i18n = translations[language];
+
+  const pathname = location?.pathname || "";
+  const isGamePage = pathname === "/game";
+  const isMenuPage = pathname === "/menu";
 
   const handleLanguageChange = (newLanguage) => {
     onLanguageChange(newLanguage);
   };
+
+  if (isMenuPage) return null;
+
+  if (isGamePage) {
+    return (
+      <IoMenu
+        className="language-btn"
+        onClick={() => navigate("/menu")}
+        title="Menu"
+        size={28}
+        role="button"
+        tabIndex={0}
+        aria-label="Menu"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") navigate("/menu");
+        }}
+      />
+    );
+  }
 
   return (
     <>
