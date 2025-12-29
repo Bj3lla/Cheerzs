@@ -1,11 +1,11 @@
 import { translations } from "../locales/translations"; 
 
-export default function CheerzsRulesPopup({ language = "en" }) {
+export default function GameRules({ language = "en" }) {
   const i18n = translations[language] || translations.en;
 
   return (
         <div className="cheerzs-rules-content">
-          <h2>{i18n.ui.gameRules || "Game Rules"}</h2>
+          <h3>{i18n.ui.gameRules || "Game Rules"}</h3>
           <p>
             Welcome to Cheerzs! Every card has a category, and here are the rules for each of them:
           </p>
