@@ -30,25 +30,6 @@ body {
   align-items: center;
 }
 
-/* HomePage background image (behind entire app) */
-body.home-bg {
-  position: relative;
-  isolation: isolate;
-}
-
-body.home-bg::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: url("./assets/IMG_6401_kristine.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.3;
-  z-index: 0;
-  pointer-events: none;
-}
-
 /* -------------------------------
    ✍️ Typography
 --------------------------------*/
@@ -564,10 +545,28 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   animation: popIn 0.3s ease;
 }
 
+.popup p {
+  padding-top: 1.5rem;
+}
+
 .cheerzs-rules-list {
   text-align: left;
   margin: 1rem 0 0;
   padding-left: 1.2rem;
+}
+
+.popup.cheerzs-rules-popup {
+  display: flex;
+  flex-direction: column;
+  max-height: min(80vh, 560px);
+  overflow: hidden;
+}
+
+.cheerzs-rules-content {
+  overflow-y: auto;
+  padding-top: 0.5rem;
+  border: var(--pink) 2px solid;
+  border-radius: 10px;
 }
 
 .cheerzs-rules-list li {

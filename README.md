@@ -2,6 +2,17 @@
 
 This application uses React working in Vite with HMR and some ESLint rules. Vercel is used for hosting the webapplication, and is linked to the GitHub repository, so whenever a an update is pushed to main, Vercel auto-deploys this change.  
 
+
+## Tech stack
+Frontend: React + Vite 
+Supabase database to handle players, roomIDs, and sessions. 
+Ably for real-time message delivery (Pub/Sub Websockets)
+Vercel for web-hosting.
+
+Libraries:
+- Animate UI
+- React Icons
+
 ## Important terminal commands
 npm install -> to install dependencies
 npm install ably 

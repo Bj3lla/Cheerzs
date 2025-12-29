@@ -17,22 +17,6 @@ export default function HomePage({ language = "en" }) {
   const navigate = useNavigate();
   const i18n = translations[language] || translations.en;
 
-  useEffect(() => {
-    try {
-      document.body.classList.add("home-bg");
-    } catch {
-      // ignore
-    }
-
-    return () => {
-      try {
-        document.body.classList.remove("home-bg");
-      } catch {
-        // ignore
-      }
-    };
-  }, []);
-
   // Optional: persist username in localStorage
   useEffect(() => {
     const savedName = localStorage.getItem("playerName");
