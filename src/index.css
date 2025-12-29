@@ -44,7 +44,7 @@ body.home-bg::before {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.4;
+  opacity: 0.3;
   z-index: 0;
   pointer-events: none;
 }
@@ -124,7 +124,8 @@ p.error-message {
   margin-top: 1.5rem;
 }
 .create-room-page,
-.join-room-page {
+.join-room-page,
+.menu-page {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -132,6 +133,7 @@ p.error-message {
   padding-bottom: 2rem;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .waiting-room-page {
@@ -142,6 +144,9 @@ p.error-message {
   padding-bottom: 2rem;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .waiting-room-title {
@@ -559,6 +564,19 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   animation: popIn 0.3s ease;
 }
 
+.cheerzs-rules-list {
+  text-align: left;
+  margin: 1rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.cheerzs-rules-list li {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin: 0.5rem 0;
+}
+
 @keyframes popIn {
   from { transform: scale(0.9) translateY(10px); opacity: 0; }
   to { transform: scale(1) translateY(0); opacity: 1; }
@@ -636,14 +654,14 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 @media (max-width: 768px) {
 
   #root {
-    align-items: flex-start;
-    padding-top: 3rem;
+    align-items: center;
+    padding-top: 0;
   }
 
   .top-bar { padding: 0.8rem 1rem; }
 
   /* Waiting room sits slightly lower on mobile */
-  .waiting-room-page { padding-top: 5rem; }
+  .waiting-room-page { padding-top: calc(2rem + env(safe-area-inset-top, 0px)); }
 
   .card-wrapper { width: 90%; gap: 1rem; }
 

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Ably from "ably";
 import Button from "../components/Button";
+import CheerzsRulesPopup from "../components/CheerzsRulesPopup";
 import { useGame } from "../context/GameContext";
 import { translations } from "../locales/translations";
 
@@ -28,6 +29,7 @@ export default function WaitingRoomPage({ language = "en" }) {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showRulesPopup, setShowRulesPopup] = useState(false);
 
   const ablyRef = useRef(null);
   const channelRef = useRef(null);
@@ -329,6 +331,9 @@ export default function WaitingRoomPage({ language = "en" }) {
 
   return (
     <div className="waiting-room-page">
+      {showRulesPopup && (
+        <CheerzsRulesPopup onClose={() => setShowRulesPopup(false)} />
+      )}
       <div className="top-bar">
         <button
           type="button"
@@ -367,6 +372,13 @@ export default function WaitingRoomPage({ language = "en" }) {
           </div>
 
           <div className="start-game-btn">
+            <Button
+              label={i18n.ui.rulesButton || "Rules"}
+              color="light"
+              onClick={() => setShowRulesPopup(true)}
+              size="large"
+            />
+
             {isHost ? (
               <Button
                 label={i18n.ui.startGame}

@@ -5,6 +5,7 @@ import { GameProvider } from "./context/GameContext";
 import LanguageSelector from "./components/LanguageSelector";
 import HomePage from "./pages/HomePage";
 import GamePage from "./pages/GamePage";
+import MenuPage from "./pages/MenuPage";
 import CreateRoomPage from "./pages/CreateRoomPage";
 import JoinRoomPage from "./pages/JoinRoomPage";
 import AddPlayersManuallyPage from "./pages/AddPlayersManuallyPage";
@@ -19,6 +20,10 @@ function InnerApp({ language, setLanguage }) {
         <Routes>
           <Route path="/" element={<HomePage language={language} />} />
           <Route path="/game" element={<GamePage language={language} />} />
+          <Route
+            path="/menu"
+            element={<MenuPage language={language} onLanguageChange={setLanguage} />}
+          />
           <Route path="/create-room" element={<CreateRoomPage language={language} />} />
           <Route path="/join-room" element={<JoinRoomPage language={language} />} />
           <Route path="/add-players" element={<AddPlayersManuallyPage language={language} />} />
