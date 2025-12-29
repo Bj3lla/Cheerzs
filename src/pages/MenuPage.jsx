@@ -23,28 +23,34 @@ export default function MenuPage({ language, onLanguageChange }) {
     <div className="menu-page">
       <Topbar to="/game" />
 
-      <h2>{i18n.ui.selectLanguage}</h2>
-      <div className="language-options">
-        <label>
-          <input
-            type="radio"
-            name="language"
-            value="en"
-            checked={language === "en"}
-            onChange={() => onLanguageChange("en")}
-          />
-          🇬🇧 English
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="language"
-            value="no"
-            checked={language === "no"}
-            onChange={() => onLanguageChange("no")}
-          />
-          🇳🇴 Norsk
-        </label>
+      <h2 className="menu-title">{i18n.ui.menu || (language === "no" ? "Meny" : "Menu")}</h2>
+
+      <hr className="menu-divider" />
+
+      <div className="select-language">
+        <h3>{i18n.ui.selectLanguage}</h3>
+        <div className="language-options">
+          <label>
+            <input
+              type="radio"
+              name="language"
+              value="en"
+              checked={language === "en"}
+              onChange={() => onLanguageChange("en")}
+            />
+            🇬🇧 English
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="language"
+              value="no"
+              checked={language === "no"}
+              onChange={() => onLanguageChange("no")}
+            />
+            🇳🇴 Norsk
+          </label>
+        </div>
       </div>
 
       <hr className="menu-divider" />

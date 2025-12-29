@@ -95,7 +95,7 @@ export default async function handler(req, res) {
     }
 
     if (existingRoom) {
-      const cutoffIso = new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString();
+      const cutoffIso = new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString();
       const { data: gameStateRow, error: gameStateError } = await supabase
         .from("room_game_state")
         .select("updated_at")

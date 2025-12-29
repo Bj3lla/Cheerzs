@@ -67,28 +67,30 @@ export default function LanguageSelector({ language, onLanguageChange }) {
                 if (e.key === "Enter" || e.key === " ") setIsOpen(false);
               }}
             />
-            <h3>{i18n.ui.selectLanguage}</h3>
-            <div className="language-options">
-              <label>
-                <input
-                  type="radio"
-                  name="language"
-                  value="en"
-                  checked={language === "en"}
-                  onChange={() => handleLanguageChange("en")}
-                />
-                🇬🇧 English
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="language"
-                  value="no"
-                  checked={language === "no"}
-                  onChange={() => handleLanguageChange("no")}
-                />
-                🇳🇴 Norsk
-              </label>
+            <div className="select-language">
+              <h3>{i18n.ui.selectLanguage}</h3>
+              <div className="language-options">
+                <label>
+                  <input
+                    type="radio"
+                    name="language"
+                    value="en"
+                    checked={language === "en"}
+                    onChange={() => handleLanguageChange("en")}
+                  />
+                  🇬🇧 English
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="language"
+                    value="no"
+                    checked={language === "no"}
+                    onChange={() => handleLanguageChange("no")}
+                  />
+                  🇳🇴 Norsk
+                </label>
+              </div>
             </div>
 
             <button

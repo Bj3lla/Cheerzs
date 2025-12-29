@@ -568,16 +568,20 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 .popup.cheerzs-rules-popup {
   display: flex;
   flex-direction: column;
-  max-height: min(80vh, 560px);
+  /* Fit content when possible, but never exceed the viewport height */
+  max-height: calc(100dvh - 2rem);
   overflow: hidden;
 }
 
 .cheerzs-rules-content {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   padding-top: 0.5rem;
   border: var(--pink) 2px solid;
   border-radius: 10px;
   padding: 1rem;
+  margin: 0.5rem 0;
 }
 
 .cheerzs-rules-list li {
@@ -637,9 +641,31 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 .menu-divider {
   width: min(520px, 90vw);
   border: 0;
-  border-top: 2px solid var(--dark);
+  border-top: 2px solid var(--pink);
   opacity: 0.25;
   margin: 1.5rem 0;
+}
+
+.menu-title {
+  text-align: center;
+}
+
+/* Menu page: Select language box */
+.select-language {
+  width: min(520px, 90vw);
+  border: 2px solid var(--light-pink);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.select-language h3 {
+  margin-top: 0;
+}
+
+.select-language .language-options {
+  padding: 0;
+  align-items: flex-start;
+  text-align: left;
 }
 
 /* Options */
