@@ -30,7 +30,12 @@ body {
   align-items: center;
 }
 
-
+/* Prevent padding/borders from pushing elements wider than their containers */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 /* -------------------------------
    ✍️ Typography
@@ -529,6 +534,8 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   color: var(--dark);
   border-radius: 10px;
   transition: all 0.2s ease;
+  /* Keep icon sizing consistent with react-icons `size={...}` */
+  box-sizing: content-box;
 }
 
 /* -------------------------------
@@ -627,6 +634,8 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   left: 0.6rem;
   width: 2rem;
   height: 2rem;
+  /* width/height here are meant to be the icon box, not include padding */
+  box-sizing: content-box;
   display: flex;          /* centers the icon */
   align-items: center;
   justify-content: center;
