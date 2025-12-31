@@ -369,11 +369,6 @@ export const truthOrDare = {
       no: "kjør en 20-sekunders freestyle rap om denne festen."
     },
     {
-      id: 26,
-      en: "(don't read this out loud) make as many toasts as you can before someone asks what's going on. Number of toasts = number of sips the others have to take.",
-      no: "(ikke les dette høyt) utbring så mange skåler du klarer før noen spør hva som skjer. Antall skåler du klarer = antall slurker de andre må drikke."
-    },
-    {
       id: 27,
       en: "pick someone and hype them up for 20 seconds like a sports commentator.",
       no: "velg noen i rommet og hype dem opp i 20 sekunder som en ekte sportskommentator."

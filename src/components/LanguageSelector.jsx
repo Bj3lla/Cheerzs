@@ -10,7 +10,7 @@ export default function LanguageSelector({ language, onLanguageChange }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const i18n = translations[language];
+  const i18n = translations[language] || translations.en;
 
   const pathname = location?.pathname || "";
   const isGamePage = pathname === "/game";

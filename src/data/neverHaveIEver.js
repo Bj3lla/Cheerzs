@@ -67,7 +67,7 @@ export const neverHaveIEver = [
   {
     id: 14,
     en: "dated a friend’s ex.",
-    no: "datet en venn sin eks.",
+    no: "dated en venn sin eks.",
   },
   {
     id: 15,
@@ -376,12 +376,12 @@ export const neverHaveIEver = [
   },
     {
     id: 80,
-    en: "datet someone just for the plot",
+    en: "dated someone just for the plot",
     no: "datet noen bare for plottet.",
   },
       {
     id: 81,
-    en: "datet someone more than 3 years younger than me.",
+    en: "dated someone more than 3 years younger than me.",
     no: "datet noen mer enn 3 år yngre enn meg.",
     }
 
