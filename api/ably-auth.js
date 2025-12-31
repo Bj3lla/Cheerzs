@@ -48,7 +48,7 @@ export default async function handler(req, res) {
     );
 
     // Verify the room exists
-    const { data: room, error: roomError } = await supabase
+    const { data: _room, error: roomError } = await supabase
       .from("rooms")
       .select("id")
       .eq("id", roomID)

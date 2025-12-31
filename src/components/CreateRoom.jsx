@@ -6,8 +6,6 @@ export default function CreateRoom({ onRoomCreated, language = "en", username })
   const [roomID, setRoomID] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [createdRoomID, setCreatedRoomID] = useState("");
-  const [copied, setCopied] = useState(false);
   const i18n = translations[language];
 
   const handleCreate = async () => {
@@ -23,7 +21,6 @@ export default function CreateRoom({ onRoomCreated, language = "en", username })
 
     setLoading(true);
     setError("");
-    setCopied(false);
 
     try {
       const payload = { roomID: roomID.trim().toUpperCase(), username: username.trim() };
@@ -53,7 +50,6 @@ export default function CreateRoom({ onRoomCreated, language = "en", username })
           localStorage.setItem("playerId", String(data.playerId));
           localStorage.setItem("playerRoomId", roomID.trim().toUpperCase());
         }
-        setCreatedRoomID(roomID.trim().toUpperCase());
         onRoomCreated({ roomID: roomID.trim().toUpperCase(), username: username.trim() });
       } else {
         setError((data && data.error) || i18n.ui.networkError || "Network error");

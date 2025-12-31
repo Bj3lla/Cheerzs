@@ -30,12 +30,7 @@ body {
   align-items: center;
 }
 
-/* Prevent padding/borders from pushing elements wider than their containers */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+
 
 /* -------------------------------
    ✍️ Typography

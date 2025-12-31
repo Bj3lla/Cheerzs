@@ -1,8 +1,3 @@
-// 🎲 Utility: Random number of rounds for each rule
-function getRandomRounds(min = 10, max = 30) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 // 📜 Exported list of all rules
 export const newRules = [
   {

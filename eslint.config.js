@@ -26,4 +26,24 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+
+  // Vercel serverless functions (Node runtime)
+  {
+    files: ['api/**/*.js'],
+    languageOptions: {
+      globals: globals.node,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+  },
+
+  // React context modules often export both providers and hooks.
+  {
+    files: ['src/context/GameContext.jsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])

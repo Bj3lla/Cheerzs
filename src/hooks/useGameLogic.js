@@ -20,7 +20,7 @@ const pickTwoDifferentPlayers = (players) => {
 };
 
 export default function useGameLogic(language) {
-  const { unread, read, pickQuestion, resetAllQuestions } = useQuestionState();
+  const { unread: _unread, read, pickQuestion, resetAllQuestions } = useQuestionState();
   const {
     friends,
     replaceFriends,
