@@ -14,21 +14,26 @@ export const wildcard = {
         },
         {
         id: 3,
-        en: "you need to take take 2 sips now.",
-        no: "du må ta 2 slurker nå.",
+        en: "you need to take take 3 sips now.",
+        no: "du må ta 3 slurker nå.",
         },
     ],
     
     allPlayers: [
         {
         id: 1,
-        en: "Everyone give 2 sips!",
+        en: "Everyone hands out 2 sips!",
         no: "Alle gir ut 2 slurker!",
         },
         {
-        id: 2,
-        en: "Everyone takes 2 sips!",
-        no: "Alle drikker 2 slurker!",
+        id: 3,
+        en: "Last one to touch their nose drinks 3 sips!",
+        no: "Sist til å ta på nesen drikker 3 slurker!",
         },
+        {
+        id: 4,
+        en: "Pig! Last person to put their thumb on the table chugs the rest of their drink!",
+        no: "Gris! Siste til å sette tommelen på bordet chugger resten av drikken sin!",
+        }
     ]
 }
