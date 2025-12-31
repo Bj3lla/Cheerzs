@@ -125,24 +125,14 @@ export const neverHaveIEver = [
     no: "sagt 'jeg elsker deg' uten å mene det.",
   },
   {
-    id: 26,
-    en: "been caught doing something embarrassing.",
-    no: "blitt tatt på fersken mens jeg gjorde noe pinlig.",
-  },
-  {
     id: 27,
     en: "lied in this game.",
     no: "løyet i dette spillet.",
   },
   {
     id: 28,
-    en: "completed a New Year’s resolution from last year.",
-    no: "fullført et nyttårsforsett fra i fjor.",
-  },
-  {
-    id: 30,
-    en: "learned a new skill this year.",
-    no: "lært en ny ferdighet i år.",
+    en: "completed a New Year’s resolution.",
+    no: "fullført et nyttårsforsett.",
   },
   {
     id: 32,
@@ -161,8 +151,8 @@ export const neverHaveIEver = [
   },
   {
     id: 36,
-    en: "bought something expensive this year and felt immediately guilty.",
-    no: "kjøpt noe dyrt i år og fått dårlig samvittighet med én gang.",
+    en: "bought an apartment/house this year.",
+    no: "kjøpt en leilighet/hus i år.",
   },
   {
     id: 37,
@@ -190,11 +180,6 @@ export const neverHaveIEver = [
     no: "gått glipp av en tur eller et arrangement i år på grunn av penger eller tid.",
   },
   {
-    id: 42,
-    en: "had a ‘main character moment’ this year.",
-    no: "hatt et «main character moment» i år.",
-  },
-  {
     id: 44,
     en: "deleted social media apps for a while to be more productive.",
     no: "slettet sosiale medier en periode for å være mer produktiv.",
@@ -205,14 +190,9 @@ export const neverHaveIEver = [
     no: "sett en hel serie i stedet for å gjøre noe jeg hadde planlagt å gjøre.",
   },
   {
-    id: 47,
-    en: "written a ‘this year I’m going to…’ list and forgotten it by February.",
-    no: "skrevet en «i år skal jeg…»-liste og glemt den innen februar.",
-  },
-  {
     id: 48,
-    en: "lost my friends on a night out and had to find them again.",
-    no: "mistet vennene mine på byen og måttet finne dem igjen.",
+    en: "lost my friends on a night out, but found them again hours later.",
+    no: "mistet vennene mine på byen, men fant dem igjen.",
   },
   {
     id: 49,
@@ -225,34 +205,29 @@ export const neverHaveIEver = [
     no: "prøvd å snike med mat inn på et utested eller en bar.",
   },
   {
-    id: 51,
-    en: "sung loudly to a song in public like I was the main act.",
-    no: "sunget høyt til en låt offentlig som om jeg var hovedartisten.",
-  },
-  {
     id: 52,
     en: "taken a ‘bathroom break’ just to recharge for a minute.",
     no: "tatt en ‘dopause’ bare for å hente meg inn litt.",
   },
   {
     id: 53,
-    en: "spent way too much money on drinks on a night out.",
-    no: "brukt altfor mye penger på drikke på en kveld ute.",
+    en: "spent over 300$ on drinks on a night out.",
+    no: "brukt over 3000kr på drikke ute på byen.",
   },
   {
     id: 54,
-    en: "lost something important on a night out (like my keys or wallet).",
-    no: "mistet noe viktig på byen (som nøkler eller lommebok).",
+    en: "lost my keys and/or wallet on a night out.",
+    no: "mistet nøklene og/eller lommeboken på byen.",
   },
   {
     id: 55,
-    en: "taken a blurry group photo and made it my favorite anyway.",
-    no: "tatt et uklart gruppebilde og hatt det som favoritt likevel.",
+    en: "been dressed up as The Lorax in public just for fun.",
+    no: "vært utkledd som The Lorax i offentligheten bare for moro skyld.",
   },
   {
     id: 56,
-    en: "had a spontaneous afterparty at someone’s place.",
-    no: "hatt en spontan nachspiel hjemme hos noen.",
+    en: "joined a spontaneous afterparty at a stranger's place.",
+    no: "blitt med på et spontant nachspiel hos en fremmed.",
   },
   {
     id: 57,
@@ -383,6 +358,56 @@ export const neverHaveIEver = [
     id: 81,
     en: "dated someone more than 3 years younger than me.",
     no: "datet noen mer enn 3 år yngre enn meg.",
+    },
+    {
+      id: 82,
+      en: "dated someone more than 3 years older than me.",
+      no: "datet noen mer enn 3 år eldre enn meg.",
+    },
+    {
+      id: 83,
+      en: "got high.",
+      no: "blitt høy.",
+    },
+    {
+      id: 84,
+      en: "been able to do a backflip.",
+      no: "kunne tatt en baklengs salto.",
+    },
+    {
+      id: 85,
+      en: "posted a TikTok",
+      no: "lagt ut en TikTok.",
+    },
+    {
+      id: 86,
+      en: "gone vegan/vegetarian for more than a month.",
+      no: "blitt veganer/vegetarianer i mer enn en måned.",
+    },
+    {
+      id: 87,
+      en: "been scuba diving.",
+      no: "vært på dykketur.",
+    },
+    {
+      id: 88,
+      en: "skydived.",
+      no: "hoppet i fallskjerm.",
+    },
+    {
+      id: 89,
+      en: "been on a road trip longer than 9 hours.",
+      no: "vært på en biltur som varte i mer enn 9 timer.",
+    },
+    {
+      id: 90,
+      en: "studied abroad.",
+      no: "studert i utlandet.",
+    },
+    {
+      id: 91,
+      en: "posted a picture of myself in the sun with a glass of Aperol Spritz.",
+      no: "lagt ut et bilde av meg selv i solen med et glass Aperol Spritz.",
     }
 
 ];

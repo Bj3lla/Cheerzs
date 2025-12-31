@@ -11,7 +11,7 @@ export const pointAtSomeone = [
   },
   {
     id: 3,
-    en: "text their ex tonight?",
+    en: "texts their ex tonight?",
     no: "kommer til å sende melding til eksen i kveld?"
   },
   {
@@ -21,7 +21,7 @@ export const pointAtSomeone = [
   },
   {
     id: 5,
-    en: "forget their own birthday?",
+    en: "forgets their own birthday?",
     no: "glemmer sin egen bursdag?"
   },
   {
@@ -31,7 +31,7 @@ export const pointAtSomeone = [
   },
   {
     id: 7,
-    en: "end up on reality TV?",
+    en: "ends up on reality TV?",
     no: "ender opp på reality TV?"
   },
   {
@@ -46,93 +46,93 @@ export const pointAtSomeone = [
   },
   {
     id: 10,
-    en: "dance first at an empty dance floor?",
+    en: "dances first at an empty dance floor?",
     no: "danser først på et tomt dansegulv?"
   },
   {
     id: 11,
-    en: "send a risky text?",
+    en: "sends a risky text?",
     no: 'har lett for å sende "risky" meldinger?'
   },
   {
     id: 12,
-    en: "get lost on the way home?",
+    en: "gets lost on the way home?",
     no: "går seg vill på veien hjem?"
   },
   {
     id: 13,
-    en: "get married first?",
+    en: "gets married first?",
     no: "gifter seg først?"
   },
   {
     id: 14,
-    en: "be the last person at the party?",
+    en: "is the last person at the party?",
     no: "er den siste personen på festen?"
   },
   {
     id: 15,
-    en: "go viral on TikTok?",
+    en: "goes viral on TikTok?",
     no: "går viral på TikTok?"
   },
   {
     id: 16,
-    en: "not cook dinner for themselves?",
+    en: "doesn't cook dinner for themselves?",
     no: "lager ikke middag til seg selv?"
   },
   {
     id: 17,
-    en: "spend too much money on something random?",
+    en: "spends too much money on something random?",
     no: "bruker for mye penger på noe tilfeldig?"
   },
   {
     id: 18,
-    en: "cry during a movie?",
+    en: "cries during a movie?",
     no: "gråter alltid under en film?"
   },
   {
     id: 19,
-    en: "not check their bank account for months?",
+    en: "doesn't check their bank account for months?",
     no: "sjekker ikke bankkontoen sin på flere måneder?"
   },
   {
     id: 20,
-    en: "plan a spontaneous trip to Asia?",
+    en: "plans a spontaneous trip to Asia?",
     no: "planlegger en spontan reise til Asia?"
   },
 
   {
     id: 21,
-    en: "keep a New Year’s resolution?",
+    en: "keeps a New Year’s resolution?",
     no: "holder faktisk et nyttårsforsett?"
   },
   {
     id: 22,
-    en: "start going to the gym and stick with it even when January is over?",
+    en: "starts going to the gym and sticks with it even when January is over?",
     no: "kommer til å begynne å trene og fortsette med det når Januar er over?"
   },
   {
     id: 23,
-    en: "learn a new skill next year?",
+    en: "learns a new skill next year?",
     no: "lærer mest sannsynlig en ny ferdighet neste år?"
   },
   {
     id: 24,
-    en: "finally get their finances under control?",
+    en: "finally gets their finances under control?",
     no: "får endelig orden på økonomien?"
   },
   {
     id: 25,
-    en: "plan their weeks with a calendar - like an adult?",
+    en: "plans their weeks with a calendar - like an adult?",
     no: "planlegger ukene sine med en kalender - som en voksen?"
   },
   {
     id: 26,
-    en: "go on the most trips next year?",
+    en: "goes on the most trips next year?",
     no: "kommer til å reise mest neste år?"
   },
   {
     id: 27,
-    en: "say yes to more opportunities next year?",
+    en: "says yes to more opportunities next year?",
     no: "kommer til å si ja til flere muligheter neste år?"
   },
   {
@@ -142,17 +142,17 @@ export const pointAtSomeone = [
   },
   {
     id: 29,
-    en: "get a big career win next year?",
+    en: "gets a big career win next year?",
     no: "får en stor karriereseier neste år?"
   },
   {
     id: 31,
-    en: "become a morning person next year?",
+    en: "becomes a morning person next year?",
     no: "blir et A-menneske neste år?"
   },
   {
     id: 32,
-    en: "drink more water then everyone else here combined?",
+    en: "drinks more water than everyone else here combined?",
     no: "drikker mer vann enn alle her til sammen?"
   },
   {
@@ -162,82 +162,82 @@ export const pointAtSomeone = [
   },
   {
     id: 34,
-    en: "read the most books next year?",
+    en: "reads the most books next year?",
     no: "kommer til å lese flest bøker neste år?"
   },
   {
     id: 35,
-    en: "start upgrading their food-prepping game?",
+    en: "starts upgrading their food-prepping game?",
     no: "kommer til å upgrade food-prepping gamet sitt?"
   },
   {
     id: 36,
-    en: "become the group’s mom next year?",
+    en: "becomes the group’s mom next year?",
     no: "kommer til å bli gjengens mamma neste år?"
   },
   {
     id: 37,
-    en: "learn a new language (or at least try)?",
+    en: "learns a new language (or at least try)?",
     no: "lære seg et nytt språk (eller i hvert fall prøve)?"
   },
   {
     id: 38,
-    en: "be the first one to move to a new place next year?",
+    en: "becomes the first one to move to a new place next year?",
     no: "kommer til å være den første som flytter til et nytt sted neste år?"
   },
   {
     id: 39,
-    en: "have the biggest glow-up next year?",
+    en: "has the biggest glow-up next year?",
     no: "kommer til å få den største glow-upen neste år?"
   },
   {
     id: 40,
-    en: "keep in touch with you next year?",
+    en: "keeps in touch with you next year?",
     no: "kommer til å holde kontakten med deg neste år?"
   },
   {
     id: 41,
-    en: "overthink a text message for more than 30 minutes?",
+    en: "overthinks a text message for more than 30 minutes?",
     no: "overtenker en tekstmelding i mer enn 30 minutter?"
   },
   {
     id: 42,
-    en: "be that ‘therapist friend’?",
+    en: "is that ‘therapist friend’?",
     no: "kommer til å være ‘terapeutvennen’?"
   },
   {
     id: 43,
-    en: "be chronically late, no matter what?",
+    en: "is chronically late, no matter what?",
     no: "er kronisk forsinket, uansett hva?"
   },
   {
     id: 45,
-    en: "queue the first \"That's right, were going out\"-banger?",
+    en: "queues the first \"That's right, were going out\"-banger?",
     no: "queuer den første \"That's right, were going out\"-bangeren?"
   },
   {
     id: 46,
-    en: "say ‘I’m not that drunk’ while clearly being that drunk?",
+    en: "says ‘I’m not that drunk’ while clearly being that drunk?",
     no: "sier «jeg er ikke så full» når de åpenbart er borte?"
   },
   {
     id: 47,
-    en: "be the ‘one more episode’ person?",
+    en: "is the ‘one more episode’ person?",
     no: "er den «én episode til»-personen?"
   },
   {
     id: 48,
-    en: "have 27 tabs open at all times?",
+    en: "has 27 tabs open at all times?",
     no: "har 27 faner åpne hele tiden?"
   },
   {
     id: 49,
-    en: "make a joke in a serious situation?",
+    en: "makes a joke in a serious situation?",
     no: "kommer alltid med en vits i en seriøs situasjon?"
   },
   {
     id: 50,
-    en: "be the friend who always brings snacks?",
+    en: "is the friend who always brings snacks?",
     no: "er vennen som alltid tar med snacks?"
   },
 ];
