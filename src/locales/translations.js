@@ -56,6 +56,27 @@ export const translations = {
       lateJoinPenaltyMessage: "Ops! You're late to the party, so unfortunatly, you have to {penalty}",
       confirmLeaveRoom: "Are you sure you want to leave the room?",
       menu: "Menu",
+
+      gameRulesIntro:
+        "Welcome to Cheerzs! Every card has a category, and the rules for each are as follows:",
+      gameRulesList: [
+        { title: "Truth", text: "answer honestly, or drink 5 sips." },
+        { title: "Dare", text: "do the dare, or drink 5 sips." },
+        {
+          title: "Who's Most Likely To...",
+          text: "pointing game; the person with the most votes drinks 1 sip.",
+        },
+        { title: "Never Have I Ever", text: "if you've done what the card says, drink 1 sip." },
+        {
+          title: "New Rule / Rule Repealed",
+          text: "follow new rules until they're repealed; if you forget, you drink 1 sip.",
+        },
+        {
+          title: "Drinkingbuddy",
+          text: "you're partnered up! If one drinks, both drink (the same amount).",
+        },
+        { title: "Wildcard", text: "Play the game to find out. Cheerzs!" },
+      ],
     },
     categories: {
       truth: "Truth",
@@ -120,6 +141,30 @@ export const translations = {
       lateJoinPenaltyMessage: "Oops! Du er sen til festen, så dessverre må du {penalty}",
       confirmLeaveRoom: "Er du sikker på at du vil forlate rommet?",
       menu: "Meny",
+
+      gameRulesIntro:
+        "Velkommen til Cheerzs! Hvert kort har en kategori, og reglene for hver av dem er som følger:",
+      gameRulesList: [
+        { title: "Sannhet", text: "svar ærlig, eller drikk 5 slurker." },
+        { title: "Utfordring", text: "gjør utfordringen, eller drikk 5 slurker." },
+        {
+          title: "Pekeleken! Hvem...",
+          text: "personen med flest stemmer drikker 1 slurk.",
+        },
+        {
+          title: "Jeg har aldri",
+          text: "drikk 1 slurk hvis du har gjort det kortet sier.",
+        },
+        {
+          title: "Ny regel / Regel opphevet",
+          text: "følg nye regler til de oppheves; gjør du feil, må du drikke 1 slurk.",
+        },
+        {
+          title: "Drikkekompis",
+          text: "du får en \"partner in crime\"! Hvis én drikker, drikker begge (like mange slurker).",
+        },
+        { title: "Wildcard", text: "Spill for å finne ut. Cheerzs!" },
+      ],
     },
     categories: {
       truth: "Sannhet",
