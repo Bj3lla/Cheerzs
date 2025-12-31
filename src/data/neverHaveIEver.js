@@ -396,8 +396,18 @@ export const neverHaveIEver = [
     },
     {
       id: 89,
-      en: "been on a road trip longer than 10 hours.",
-      no: "vært på en biltur som varte i mer enn 10 timer.",
+      en: "been on a road trip longer than 9 hours.",
+      no: "vært på en biltur som varte i mer enn 9 timer.",
+    },
+    {
+      id: 90,
+      en: "studied abroad.",
+      no: "studert i utlandet.",
+    },
+    {
+      id: 91,
+      en: "posted a picture of myself in the sun with a glass of Aperol Spritz.",
+      no: "lagt ut et bilde av meg selv i solen med et glass Aperol Spritz.",
     }
 
 ];
