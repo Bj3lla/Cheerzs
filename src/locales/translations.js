@@ -9,6 +9,7 @@ const getCurrentYearNorwegian = () => {
 export const translations = {
   en: {
     ui: {
+      intro: "Welcome to Cheerzs! The ultimate drinking game. Let's get started!",
       add: "Add",
       startGame: "Start Game",
       editGame: "Edit Game",
@@ -92,6 +93,7 @@ export const translations = {
 
   no: {
     ui: {
+      intro: "Velkommen til Cheerzs! Det ultimate drikkespillet. La oss komme i gang!",
       add: "Legg til",
       startGame: "Start spill",
       editGame: "Rediger spill",

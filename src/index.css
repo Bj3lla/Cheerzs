@@ -168,6 +168,10 @@ span.manual-link, .link {
   margin-bottom: 3rem;
 }
 
+.friend-input-spacer {
+  margin-top: 3rem;
+}
+
 .friend-input {
   display: flex;
   flex-direction: row;

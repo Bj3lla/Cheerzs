@@ -51,18 +51,23 @@ export default function HomePage({ language = "en" }) {
         {i18n.ui.year}
       </h1>
 
-      <div className="friend-input">
-        <AddPlayer
-          language={language}
-          value={playerName}
-          onChange={setPlayerName}
-          hideButton={true} // hide internal button
-          placeholder={i18n.ui.placeholderPlayerName}
-        />
+      <p className="intro-text">{i18n.ui.intro || "Welcome to Cheerzs! The drinking game to get every party started. Let's jump right into it!"}</p>
+
+      <div className ="friend-input-spacer" > 
+        <div className="friend-input">
+          <AddPlayer
+            language={language}
+            value={playerName}
+            onChange={setPlayerName}
+            hideButton={true} // hide internal button
+            placeholder={i18n.ui.placeholderPlayerName}
+          />
+        </div>
+        {getErrorMessage(playerNameErrorCode, i18n) && (
+          <p className="error-message">{getErrorMessage(playerNameErrorCode, i18n)}</p>
+        )}
       </div>
-      {getErrorMessage(playerNameErrorCode, i18n) && (
-        <p className="error-message">{getErrorMessage(playerNameErrorCode, i18n)}</p>
-      )}
+
 
       <div className="room-buttons">
         <Button label={i18n.ui.createRoom || "Create Room"} color="accent" onClick={goCreateRoom} />

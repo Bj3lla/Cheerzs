@@ -241,6 +241,11 @@ export const truthOrDare = {
       no: "hva er det fineste noen har gjort for deg i det siste?",
     },
     {
+      id: 49,
+      en: "how old were you when you first tasted alcohol?",
+      no: "hvor gammel var du da du smakte alkohol for første gang?",
+    },
+    {
       id: 50,
       en: "if you could delete one cringe memory forever, what would it be?",
       no: "hvis du kunne slettet ett pinlig minne for alltid, hvilket ville det vært?",
