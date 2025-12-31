@@ -30,6 +30,13 @@ body {
   align-items: center;
 }
 
+/* Prevent padding/borders from pushing elements wider than their containers */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* -------------------------------
    ✍️ Typography
 --------------------------------*/
@@ -115,6 +122,14 @@ p.error-message {
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
+}
+
+/* Menu page: ensure no horizontal overflow on small screens */
+.menu-page {
+  max-width: 100vw;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  overflow-x: hidden;
 }
 
 .waiting-room-page {
@@ -581,11 +596,15 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-top: 0.5rem;
   border: var(--light-pink) 2px solid;
   border-radius: 10px;
   padding: 1rem;
-  margin: 0.5rem 0.5rem;
+  margin: 0.5rem 0;
+  width: 100%;
+  max-width: 520px;
+  overflow-wrap: anywhere;
 }
 
 .cheerzs-rules-list li {
@@ -643,7 +662,8 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 
 /* Menu page divider between language section and rules */
 .menu-divider {
-  width: min(520px, 90vw);
+  width: 100%;
+  max-width: 520px;
   border: 0;
   border-top: 2px solid var(--light-pink);
   opacity: 0.25;
@@ -656,11 +676,13 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 
 /* Menu page: Select language box */
 .select-language {
-  width: min(520px, 90vw);
+  width: 100%;
+  max-width: 520px;
   border: 2px solid var(--light-pink);
   border-radius: 12px;
   padding: 1rem;
-  margin: 0.5rem 0.5rem;
+  margin: 0.5rem 0;
+  overflow-wrap: anywhere;
 }
 
 /* When select-language is used inside a popup, keep it centered and fitted */
@@ -696,6 +718,8 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   padding-left: 0.8rem;
   cursor: pointer;
   display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
   align-items: center;
   gap: 0.8rem;
   padding-bottom: 0.8rem;
