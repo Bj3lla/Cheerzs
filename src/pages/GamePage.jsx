@@ -23,7 +23,7 @@ export default function GamePage({ language }) {
     repelMessage,
     repelActive,
     showActiveRules,
-    setShowActiveRules,
+    setShowActiveRules: _setShowActiveRules,
     roomId,
     setRoomSession,
     clearRoomSession,
@@ -406,7 +406,7 @@ export default function GamePage({ language }) {
         .replace("{penalty}", penalty)
     );
     setShowLateJoinPopup(true);
-  }, [isRoomGame, normalizedRoomID, username, isHost, location]);
+  }, [i18n, isRoomGame, normalizedRoomID, username, isHost, location]);
 
   useEffect(() => {
     if (!isRoomGame) return;
@@ -507,7 +507,7 @@ export default function GamePage({ language }) {
         <div className="active-rules-container">
           <div
             className="active-rules-header"
-            // onClick={() => setShowActiveRules((prev) => !prev)}
+            // onClick={() => _setShowActiveRules((prev) => !prev)}
             style={{ cursor: "pointer" }}
           >
             <h3>{i18n.ui.activeRules}</h3>

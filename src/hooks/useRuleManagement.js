@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { newRules } from "../data/newRule";
-import { getRandomItem, getRandomRounds } from "../utils/gameUtils";
+import { getRandomRounds } from "../utils/gameUtils";
 
 export default function useRuleManagement(language) {
   const [availableRules, setAvailableRules] = useState([...newRules]);

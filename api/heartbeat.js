@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     );
 
     // If room does not exist (or was deleted), return 404 instead of failing FK constraint.
-    const { data: room, error: roomError } = await supabase
+    const { data: _room, error: roomError } = await supabase
       .from("rooms")
       .select("id")
       .eq("id", normalizedRoomID)
