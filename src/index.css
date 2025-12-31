@@ -585,7 +585,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   border: var(--light-pink) 2px solid;
   border-radius: 10px;
   padding: 1rem;
-  margin: 0.5rem;
+  margin: 0.5rem 0.5rem;
 }
 
 .cheerzs-rules-list li {
@@ -660,14 +660,15 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   border: 2px solid var(--light-pink);
   border-radius: 12px;
   padding: 1rem;
-  margin: 0.5rem;
+  margin: 0.5rem 0.5rem;
 }
 
 /* When select-language is used inside a popup, keep it centered and fitted */
 .popup .select-language {
-  width: 100%;
+  width: calc(100% - 1rem);
   margin: 0.5rem;
   box-sizing: border-box;
+  border: transparent;
 }
 
 .select-language h3 {
@@ -684,7 +685,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 .language-options {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.8rem;
   margin-top: 1.2rem;
   padding: 0 1rem;  /* ✅ add horizontal padding */
 }
@@ -692,11 +693,12 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 
 .language-options label {
   font-size: 1.2rem;
-  padding-left: 2rem;
+  padding-left: 0.8rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  padding-bottom: 0.8rem;
 }
 
 .language-options input[type="radio"] {
