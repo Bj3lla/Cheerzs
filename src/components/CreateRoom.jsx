@@ -33,7 +33,8 @@ export default function CreateRoom({ onRoomCreated, language = "en", username })
         body: JSON.stringify(payload),
       });
 
-      let data;
+      const data = await res.json();
+      console.log("data", data);
       try {
         data = await res.json();
       } catch (parseErr) {

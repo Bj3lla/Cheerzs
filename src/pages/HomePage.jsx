@@ -16,6 +16,7 @@ export default function HomePage({ language = "en" }) {
   const [playerNameErrorCode, setPlayerNameErrorCode] = useState(null);
   const navigate = useNavigate();
   const i18n = translations[language] || translations.en;
+  const { ui } = i18n;
 
   // Optional: persist username in localStorage
   useEffect(() => {
@@ -46,12 +47,12 @@ export default function HomePage({ language = "en" }) {
   return (
     <div className="home-screen">
       <h1 className="home-title">
-        {i18n.ui.cheers}
+        {ui.cheers}
         <br />
-        {i18n.ui.year}
+        {ui.year}
       </h1>
 
-      <p className="intro-text">{i18n.ui.intro || "Welcome to Cheerzs! The drinking game to get every party started. Let's jump right into it!"}</p>
+      <p className="intro-text">{ui.intro || "Welcome to Cheerzs! The drinking game to get every party started. Let's jump right into it!"}</p>
 
       <div className ="friend-input-spacer" > 
         <div className="friend-input">
@@ -60,24 +61,25 @@ export default function HomePage({ language = "en" }) {
             value={playerName}
             onChange={setPlayerName}
             hideButton={true} // hide internal button
-            placeholder={i18n.ui.placeholderPlayerName}
+            placeholder={ui.placeholderPlayerName}
           />
         </div>
-        {getErrorMessage(playerNameErrorCode, i18n) && (
-          <p className="error-message">{getErrorMessage(playerNameErrorCode, i18n)}</p>
-        )}
+        {(() => {
+          const errorMessage = getErrorMessage(playerNameErrorCode, i18n);
+          return errorMessage ? <p className="error-message">{errorMessage}</p> : null;
+        })()}
       </div>
 
 
       <div className="room-buttons">
-        <Button label={i18n.ui.createRoom || "Create Room"} color="accent" onClick={goCreateRoom} />
-        <Button label={i18n.ui.joinRoom || "Join Room"} color="primary" onClick={goJoinRoom} />
+        <Button label={ui.createRoom || "Create Room"} color="accent" onClick={goCreateRoom} />
+        <Button label={ui.joinRoom || "Join Room"} color="primary" onClick={goJoinRoom} />
       </div>
 
       <p className="manual-add">
-        {i18n.ui.orAddPlayers || "or add players manually"}{" "}
+        {ui.orAddPlayers || "or add players manually"}{" "}
         <span className="manual-link" onClick={() => navigate("/add-players")}>
-          {i18n.ui.here || "here"}
+          {ui.here || "here"}
         </span>
       </p>
     </div>
