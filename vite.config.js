@@ -8,5 +8,9 @@ export default defineConfig({
     allowedHosts: [
       'plastic-destiny-packets-sen.trycloudflare.com'
     ]
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts'
   }
 })
