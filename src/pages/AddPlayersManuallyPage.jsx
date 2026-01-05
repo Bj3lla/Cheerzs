@@ -9,7 +9,7 @@ import Topbar from "../components/Topbar";
 export default function AddPlayersManuallyPage({ language }) {
   const navigate = useNavigate();
   const i18n = translations[language];
-  const [friendInput, setFriendInput] = useState("");
+  const [friendInput, setFriendInput] = useState(""); 
   const [friends, setFriends] = useState([]);
   const [friendErrorCode, setFriendErrorCode] = useState(null);
   const {

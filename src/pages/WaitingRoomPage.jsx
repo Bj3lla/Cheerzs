@@ -4,7 +4,7 @@ import Ably from "ably";
 import Button from "../components/Button";
 import CheerzsRulesPopup from "../components/CheerzsRulesPopup";
 import { useGame } from "../context/GameContext";
-import { translations } from "../locales/translations";
+import { translations } from "../locales/translations"; 
 
 export default function WaitingRoomPage({ language = "en" }) {
   const navigate = useNavigate();

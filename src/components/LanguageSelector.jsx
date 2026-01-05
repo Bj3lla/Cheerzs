@@ -97,7 +97,7 @@ export default function LanguageSelector({ language, onLanguageChange }) {
               className="popup-done-btn"
               onClick={() => setIsOpen(false)}
             >
-              Done
+              {i18n.ui.done || "Done"}
             </button>
           </div>
         </div>

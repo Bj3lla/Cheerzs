@@ -32,7 +32,7 @@ function RoomCleanupOnLanding() {
     try {
       const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
       navigator.sendBeacon("/api/leave-room", blob);
-    } catch {
+    } catch (error) {
       fetch("/api/leave-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

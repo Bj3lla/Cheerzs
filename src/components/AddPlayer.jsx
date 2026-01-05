@@ -13,7 +13,7 @@ export default function AddPlayer({
 }) {
   const [internalName, setInternalName] = useState("");
   const [error, setError] = useState("");
-  const i18n = translations[language];
+  const i18n = translations[language] || translations.en;
 
   const playerName = typeof value === "string" ? value : internalName;
   const setPlayerName = typeof onChange === "function" ? onChange : setInternalName;
@@ -60,7 +60,7 @@ export default function AddPlayer({
         />
         {!hideButton && (
           <Button
-            label={isLoading ? "Adding..." : i18n?.ui?.addPlayer || "Add Player"}
+            label={isLoading ? (i18n.ui.loading || "Loading...") : (i18n.ui.add || "Add")}
             color="accent"
             onClick={handleAddPlayer}
             size="small"
