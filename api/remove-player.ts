@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import Ably from "ably";
-import { validateRoomId, validateUsername } from "./_lib/security";
+import { getClientIp, rateLimit, validateRoomId, validateUsername } from "./_lib/security";
 
 const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -23,6 +23,13 @@ export default async function handler(req, res) {
   const requestId = makeRequestId();
 
   try {
+    const ip = getClientIp(req);
+    const rl = rateLimit({ key: `remove-player:${ip}`, limit: 60, windowMs: 60 * 1000 });
+    if (!rl.allowed) {
+      res.setHeader("Retry-After", String(rl.retryAfterSec));
+      return res.status(429).json({ error: "Too many requests", requestId });
+    }
+
     if (
       !process.env.SUPABASE_URL ||
       !process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -36,7 +43,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid JSON body", requestId });
     }
 
-    const { roomID, username, targetUsername } = body;
+    const { roomID, username, targetUsername, playerId: rawPlayerId } = body;
 
     const roomIdCheck = validateRoomId(roomID);
     if (!roomIdCheck.ok) {
@@ -57,10 +64,31 @@ export default async function handler(req, res) {
     const normalizedUsername = usernameCheck.value;
     const normalizedTargetUsername = targetCheck.value;
 
+    const playerId = typeof rawPlayerId === "string" ? rawPlayerId.trim() : "";
+    if (!playerId) {
+      return res.status(400).json({ error: "Missing playerId", requestId });
+    }
+
     const supabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
     );
+
+    // Verify caller is a real player row.
+    const { data: callerRow, error: callerError } = await supabase
+      .from("players")
+      .select("id")
+      .eq("room_id", normalizedRoomID)
+      .eq("username", normalizedUsername)
+      .eq("id", playerId)
+      .maybeSingle();
+
+    if (callerError) {
+      return res.status(500).json({ error: callerError.message, requestId });
+    }
+    if (!callerRow?.id) {
+      return res.status(403).json({ error: "Not in room", requestId });
+    }
 
     const { data: room, error: roomError } = await supabase
       .from("rooms")

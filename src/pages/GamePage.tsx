@@ -166,7 +166,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
       await fetch("/api/draw-card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, state }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId, state }),
       });
     } catch {
       // ignore

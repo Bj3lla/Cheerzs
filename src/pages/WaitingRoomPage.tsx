@@ -119,7 +119,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
       const res = await fetch("/api/leave-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
       });
 
       const data = await res.json().catch(() => null);
@@ -168,7 +168,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
       const res = await fetch("/api/start-game", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
       });
 
       const data = await res.json().catch(() => null);
@@ -197,7 +197,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
       const res = await fetch("/api/remove-player", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, targetUsername }),
+        body: JSON.stringify({ roomID: normalizedRoomID, username, targetUsername, playerId }),
       });
 
       const data = await res.json().catch(() => null);
