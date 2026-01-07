@@ -29,28 +29,37 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
     setLoading(true);
     setError("");
 
-    try {
-      const payload = { roomID: roomID.trim().toUpperCase(), username: username.trim() };
-      console.groupCollapsed("[CreateRoom] POST /api/create-room");
-      console.log("payload", payload);
+    const payload = { roomID: roomID.trim().toUpperCase(), username: username.trim() };
+    console.groupCollapsed("[CreateRoom] POST /api/create-room");
+    console.log("payload", payload);
 
+    try {
       const res = await fetch("/api/create-room", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      let data: any;
-      try {
-        data = await res.json();
-      } catch (parseErr) {
-        data = null;
-        console.warn("[CreateRoom] failed to parse JSON", parseErr);
+      const contentType = res.headers.get("content-type") || "";
+      const vercelError = res.headers.get("x-vercel-error") || "";
+      const vercelId = res.headers.get("x-vercel-id") || "";
+
+      const rawText = await res.text();
+      let data: any = null;
+      if (rawText) {
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          data = null;
+        }
       }
 
       console.log("status", res.status);
-      console.log("response", data);
-      console.groupEnd();
+      console.log("content-type", contentType);
+      if (vercelError) console.log("x-vercel-error", vercelError);
+      if (vercelId) console.log("x-vercel-id", vercelId);
+      console.log("parsed response", data);
+      if (!data && rawText) console.log("raw response", rawText);
 
       if (res.ok) {
         if (data?.playerId) {
@@ -59,13 +68,15 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
         }
         onRoomCreated({ roomID: roomID.trim().toUpperCase(), username: username.trim() });
       } else {
+        const requestId = typeof data?.requestId === "string" ? data.requestId : "";
+        if (requestId) console.log("requestId", requestId);
         setError((data && data.error) || i18n.ui.networkError || "Network error");
       }
     } catch (err) {
-      console.error(err);
-      (console as any).groupEnd?.();
+      console.error("[CreateRoom] request failed", err);
       setError(i18n.ui.networkError || "Network error");
     } finally {
+      console.groupEnd();
       setLoading(false);
     }
   };

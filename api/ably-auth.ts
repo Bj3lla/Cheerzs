@@ -1,5 +1,5 @@
-import Ably from "ably";
 import { createClient } from "@supabase/supabase-js";
+import { getAblyRest } from "./_lib/ably";
 import { getClientIp, rateLimit, validateRoomId, validateUsername } from "./_lib/security";
 
 export default async function handler(req, res) {
@@ -88,7 +88,7 @@ export default async function handler(req, res) {
     }
 
     // Create Ably REST client with server API key
-    const client = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+    const client = await getAblyRest(process.env.ABLY_API_KEY);
 
     // Generate a token request for client-side authentication
     const tokenRequestData = await client.auth.createTokenRequest({
