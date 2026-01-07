@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import Ably from "ably";
+import { getAblyRest } from "./_lib/ably";
 import { getClientIp, rateLimit, validateRoomId, validateUsername } from "./_lib/security";
 
 const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -127,7 +127,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "Player not found in room", requestId });
     }
 
-    const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+    const ably = await getAblyRest(process.env.ABLY_API_KEY);
 
     try {
       await ably.channels

@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import Ably from "ably";
+import { getAblyRest } from "./_lib/ably";
 import { getClientIp, rateLimit, validateRoomId, validateUsername } from "./_lib/security";
 
 const makeRequestId = () =>
@@ -146,7 +146,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: upsertError.message, requestId });
     }
 
-    const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+    const ably = await getAblyRest(process.env.ABLY_API_KEY);
     try {
       await ably.channels
         .get(`room-${normalizedRoomID}`)

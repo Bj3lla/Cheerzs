@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import Ably from "ably";
+import { getAblyRest } from "./_lib/ably";
 import { getClientIp, rateLimit, validateRoomId, validateUsername } from "./_lib/security";
 
 const makeRequestId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
       process.env.SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
     );
-    const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+    const ably = await getAblyRest(process.env.ABLY_API_KEY);
 
     const body = await safeJson(req);
     if (!body) {

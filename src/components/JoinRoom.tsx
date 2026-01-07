@@ -49,6 +49,7 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
     setLoading(true);
     setError("");
 
+    console.groupCollapsed("[JoinRoom] POST /api/join-room");
     try {
       const normalizedRoomID = roomID.trim().toUpperCase();
       const payload: any = { roomID: normalizedRoomID, username: name };
@@ -62,7 +63,6 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
       ) {
         payload.playerId = storedPlayerId;
       }
-      console.groupCollapsed("[JoinRoom] POST /api/join-room");
       console.log("payload", payload);
 
       const res = await fetch("/api/join-room", {
@@ -71,17 +71,26 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
         body: JSON.stringify(payload),
       });
 
-      let data: any;
-      try {
-        data = await res.json();
-      } catch (parseErr) {
-        data = null;
-        console.warn("[JoinRoom] failed to parse JSON", parseErr);
+      const contentType = res.headers.get("content-type") || "";
+      const vercelError = res.headers.get("x-vercel-error") || "";
+      const vercelId = res.headers.get("x-vercel-id") || "";
+
+      const rawText = await res.text();
+      let data: any = null;
+      if (rawText) {
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          data = null;
+        }
       }
 
       console.log("status", res.status);
-      console.log("response", data);
-      console.groupEnd();
+      console.log("content-type", contentType);
+      if (vercelError) console.log("x-vercel-error", vercelError);
+      if (vercelId) console.log("x-vercel-id", vercelId);
+      console.log("parsed response", data);
+      if (!data && rawText) console.log("raw response", rawText);
 
       if (res.ok) {
         if (data?.playerId) {
@@ -105,10 +114,10 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
         }
       }
     } catch (err) {
-      console.error(err);
-      (console as any).groupEnd?.();
+      console.error("[JoinRoom] request failed", err);
       setError(i18n.ui.networkError || "Network error");
     } finally {
+      console.groupEnd();
       setLoading(false);
     }
   };

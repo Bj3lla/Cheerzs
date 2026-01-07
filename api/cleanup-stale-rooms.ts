@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import Ably from "ably";
+import { getAblyRest } from "./_lib/ably";
 
 const makeRequestId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -115,7 +115,7 @@ export default async function handler(req, res) {
 
     // Best-effort notify connected clients.
     if (process.env.ABLY_API_KEY) {
-      const ably = new Ably.Rest({ key: process.env.ABLY_API_KEY });
+      const ably = await getAblyRest(process.env.ABLY_API_KEY);
       for (const roomID of roomIDs) {
         try {
           // Same event name used elsewhere for consistency.
