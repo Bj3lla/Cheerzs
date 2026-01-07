@@ -1,12 +1,12 @@
 export const pointAtSomeone = [
   {
     id: 1,
-    en: "become famous?",
+    en: "becomes famous?",
     no: "kommer til å bli kjendis?"
   },
   {
     id: 2,
-    en: "not use a calendar to plan their weeks?",
+    en: "doesn't use a calendar to plan their weeks?",
     no: "bruker ikke kalender for å planlegge ukene sine?"
   },
   {
@@ -16,7 +16,7 @@ export const pointAtSomeone = [
   },
   {
     id: 4,
-    en: "not reply in a group chat?",
+    en: "doesn't reply in a group chat?",
     no: "svarer aldri i gruppechatten?"
   },
   {
@@ -26,7 +26,7 @@ export const pointAtSomeone = [
   },
   {
     id: 6,
-    en: "not show up on time?",
+    en: "doesn't show up on time?",
     no: "møter sjelden opp i tide?"
   },
   {
@@ -36,12 +36,12 @@ export const pointAtSomeone = [
   },
   {
     id: 8,
-    en: "start a business?",
+    en: "starts a business?",
     no: 'kommer til å starte egen "business"?'
   },
   {
     id: 9,
-    en: "not survive a zombie apocalypse?",
+    en: "has the least chance of surviving a zombie apocalypse?",
     no: "har minst sjans for å overleve en zombieapokalypse?"
   },
   {
@@ -51,12 +51,12 @@ export const pointAtSomeone = [
   },
   {
     id: 11,
-    en: "sends a risky text?",
+    en: "can easily send a risky text?",
     no: 'har lett for å sende "risky" meldinger?'
   },
   {
     id: 12,
-    en: "gets lost on the way home?",
+    en: "gets lost on their way home?",
     no: "går seg vill på veien hjem?"
   },
   {
@@ -66,8 +66,8 @@ export const pointAtSomeone = [
   },
   {
     id: 14,
-    en: "is the last person at the party?",
-    no: "er den siste personen på festen?"
+    en: "is usually the last person at the party?",
+    no: "er vanligvisden siste personen på festen?"
   },
   {
     id: 15,
@@ -102,8 +102,8 @@ export const pointAtSomeone = [
 
   {
     id: 21,
-    en: "keeps a New Year’s resolution?",
-    no: "holder faktisk et nyttårsforsett?"
+    en: "keeps a New Year’s resolution for the whole year?",
+    no: "holder faktisk et nyttårsforsett ut året?"
   },
   {
     id: 22,
@@ -137,7 +137,7 @@ export const pointAtSomeone = [
   },
   {
     id: 28,
-    en: "start a side hustle next year?",
+    en: "starts a side hustle next year?",
     no: "kommer til å starte en \"side hustle\" neste år?"
   },
   {
@@ -157,7 +157,7 @@ export const pointAtSomeone = [
   },
   {
     id: 33,
-    en: "cut down on doomscrolling?",
+    en: "cuts down on doomscrolling?",
     no: "kommer til å kutte ned på doomscrollingen?"
   },
   {
@@ -177,7 +177,7 @@ export const pointAtSomeone = [
   },
   {
     id: 37,
-    en: "learns a new language (or at least try)?",
+    en: "learns a new language (or at least tries)?",
     no: "lære seg et nytt språk (eller i hvert fall prøve)?"
   },
   {
@@ -212,8 +212,8 @@ export const pointAtSomeone = [
   },
   {
     id: 45,
-    en: "queues the first \"That's right, were going out\"-banger?",
-    no: "queuer den første \"That's right, were going out\"-bangeren?"
+    en: "usually queues the first \"That's right, were going out\"-banger of a song?",
+    no: "queueer vanligvis den første \"That's right, were going out\"-bangeren av en sang?"
   },
   {
     id: 46,
