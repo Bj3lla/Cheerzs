@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { validateRoomId } from "./_lib/security";
+import { validateRoomId } from "./_lib/security.js";
 
 const makeRequestId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;

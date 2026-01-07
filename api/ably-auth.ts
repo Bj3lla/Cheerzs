@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { getAblyRest } from "./_lib/ably";
-import { getClientIp, rateLimit, validateRoomId, validateUsername } from "./_lib/security";
+import { getAblyRest } from "./_lib/ably.js";
+import { getClientIp, rateLimit, validateRoomId, validateUsername } from "./_lib/security.js";
 
 export default async function handler(req, res) {
   // Only allow GET requests

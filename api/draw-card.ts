@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { getAblyRest } from "./_lib/ably";
-import { getClientIp, rateLimit, validateRoomId, validateUsername } from "./_lib/security";
+import { getAblyRest } from "./_lib/ably.js";
+import { getClientIp, rateLimit, validateRoomId, validateUsername } from "./_lib/security.js";
 
 const makeRequestId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
