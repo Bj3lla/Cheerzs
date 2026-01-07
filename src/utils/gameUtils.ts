@@ -19,13 +19,13 @@ export type RandomDrawCategoryKey = Exclude<CategoryKey, "repeal">;
 
 export const getRandomCategory = (): RandomDrawCategoryKey => {
   const random = Math.random() * 100;
-  if (random < 2) return "drinkingbuddy";
-  if (random < 4) return "wildcard";
-  if (random < 10) return "rule";
-  if (random < 36) return "point";
-  if (random < 62) return "never";
-  if (random < 81) return "truth";
-  return "dare";
+  if (random < 2) return "drinkingbuddy"; // 2%
+  if (random < 4) return "wildcard"; // 2%
+  if (random < 8) return "rule"; // 4%
+  if (random < 34) return "point"; // 26%
+  if (random < 60) return "never"; // 26%
+  if (random < 80) return "truth"; // 20%
+  return "dare"; // 20%
 };
 
 export const categoryColors: Record<CategoryKey, string> = {

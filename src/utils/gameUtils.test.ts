@@ -28,22 +28,22 @@ describe("gameUtils", () => {
     mock.mockReturnValue(0.0);
     expect(getRandomCategory()).toBe("drinkingbuddy");
 
-    mock.mockReturnValue(0.03); // 3%
+    mock.mockReturnValue(0.02); // 2%
     expect(getRandomCategory()).toBe("wildcard");
 
-    mock.mockReturnValue(0.05); // 5%
+    mock.mockReturnValue(0.04); // 4%
     expect(getRandomCategory()).toBe("rule");
 
-    mock.mockReturnValue(0.2); // 20%
+    mock.mockReturnValue(0.08); // 8%
     expect(getRandomCategory()).toBe("point");
 
-    mock.mockReturnValue(0.5); // 50%
+    mock.mockReturnValue(0.34); // 34%
     expect(getRandomCategory()).toBe("never");
 
-    mock.mockReturnValue(0.7); // 70%
+    mock.mockReturnValue(0.6); // 60%
     expect(getRandomCategory()).toBe("truth");
 
-    mock.mockReturnValue(0.95); // 95%
+    mock.mockReturnValue(0.8); // 80%
     expect(getRandomCategory()).toBe("dare");
   });
 
