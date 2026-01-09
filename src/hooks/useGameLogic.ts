@@ -16,9 +16,9 @@ type PlayerName = string;
 
 type CardDescriptor =
   | { kind: "repeal"; ruleId: string | number }
-  | { kind: "question"; category: CategoryKey; questionId?: string | number }
+  | { kind: "question"; category: CategoryKey; questionId?: string | number; selectedPlayer?: PlayerName }
   | { kind: "rule"; ruleId: string | number }
-  | { kind: "wildcard"; questionId?: string | number }
+  | { kind: "wildcard"; questionId?: string | number; selectedPlayer?: PlayerName }
   | { kind: "drinkingbuddy"; p1: PlayerName | null; p2: PlayerName | null };
 
 const pickTwoDifferentPlayers = (players: PlayerName[]) => {
@@ -195,6 +195,7 @@ export default function useGameLogic(language: LanguageCode) {
       const nextCard: CardDescriptor = {
         kind: "wildcard",
         questionId: questionObj.id,
+        selectedPlayer,
       };
 
       setCurrentCard(nextCard);
@@ -213,6 +214,7 @@ export default function useGameLogic(language: LanguageCode) {
           kind: "question",
           category: cat,
           questionId: questionObj.id,
+          selectedPlayer: undefined,
         };
         setCurrentCard(nextCard);
         broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
@@ -226,6 +228,7 @@ export default function useGameLogic(language: LanguageCode) {
           kind: "question",
           category: cat,
           questionId: questionObj.id,
+          selectedPlayer,
         };
         setCurrentCard(nextCard);
         broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
@@ -234,7 +237,7 @@ export default function useGameLogic(language: LanguageCode) {
       }
     } else {
       newPrompt = questionObj[language];
-      const nextCard: CardDescriptor = { kind: "question", category: cat, questionId: questionObj.id };
+      const nextCard: CardDescriptor = { kind: "question", category: cat, questionId: questionObj.id, selectedPlayer: undefined };
       setCurrentCard(nextCard);
       broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
       setPrompt(newPrompt);
