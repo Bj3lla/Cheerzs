@@ -26,7 +26,7 @@ npm run build       # production build
 
 ## Local testing of /api routes
 
-- `npm run dev` (Vite on http://localhost:5173) does not serve Vercel functions in `api/`, so `/api/*` will 404.
+- `npm run dev` (Vite on http://localhost:5173) does not serve Vercel functions in `api/`, so `/api/*` will result in 404 message.
 - Use `npm run dev:vercel` to test API routes locally (it prints a URL, commonly http://localhost:3000).
 
 ## Environment variables
@@ -66,8 +66,8 @@ src/pages/* (Page components)
 - Key methods:
   - `generatePrompt()` — picks next category + card and updates state
   - `getRoomBroadcastState()` — serializes state for Ably broadcast
-  - `applyRoomBroadcastState(state, language)` — applies state received over Ably
-  - `setRoomSession(roomID, players)` / `clearRoomSession()` — multiplayer session lifecycle
+  - `applyRoomBroadcastState(state, language)` — applies state received over Ably on remote clients (from host). 
+  - `setRoomSession(roomID, players)` / `clearRoomSession()` — multiplayer session lifecycle (enter/exit multiplayer)
 
 Card payloads broadcast between clients are modeled as a discriminated union (`CardDescriptor`).
 
@@ -75,7 +75,7 @@ Card payloads broadcast between clients are modeled as a discriminated union (`C
 
 ### Pages & navigation
 
-All pages live in [src/pages/](src/pages/).
+All pages reside in [src/pages/](src/pages/).
 
 - `/` → `HomePage.tsx`
 - `/create-room` → `CreateRoomPage.tsx`
