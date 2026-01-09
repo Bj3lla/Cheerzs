@@ -19,8 +19,7 @@ type CardDescriptor =
   | { kind: "question"; category: CategoryKey; questionId?: string | number }
   | { kind: "rule"; ruleId: string | number }
   | { kind: "wildcard"; questionId?: string | number }
-  | { kind: "drinkingbuddy"; p1: PlayerName | null; p2: PlayerName | null }
-  | { kind: string; [key: string]: any };
+  | { kind: "drinkingbuddy"; p1: PlayerName | null; p2: PlayerName | null };
 
 const pickTwoDifferentPlayers = (players: PlayerName[]) => {
   if (!Array.isArray(players) || players.length < 2) return { p1: null, p2: null };
@@ -128,7 +127,7 @@ export default function useGameLogic(language: LanguageCode) {
     const activeAfterTick = tick?.activeRules ?? (Array.isArray(activeRules) ? activeRules : []);
 
     if (tick?.expiredRule) {
-      const nextCard = { kind: "repeal", ruleId: tick.expiredRule.id };
+      const nextCard: CardDescriptor = { kind: "repeal", ruleId: tick.expiredRule.id };
       setCurrentCard(nextCard);
       broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
       return nextCard;
@@ -142,7 +141,8 @@ export default function useGameLogic(language: LanguageCode) {
 
       if (remainingRules.length === 0) {
         setPrompt(translations[language].ui.noMoreRules);
-        const nextCard = { kind: "info", messageKey: "noMoreRules" };
+        // Use wildcard as fallback card type
+        const nextCard: CardDescriptor = { kind: "wildcard", questionId: undefined };
         setCurrentCard(nextCard);
         broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
         return nextCard;
@@ -152,7 +152,7 @@ export default function useGameLogic(language: LanguageCode) {
       const addResult = addRule(picked, activeAfterTick);
       const nextActiveRules = addResult?.activeRules ?? activeAfterTick;
       setPrompt(picked[language]);
-      const nextCard = { kind: "rule", ruleId: picked.id };
+      const nextCard: CardDescriptor = { kind: "rule", ruleId: picked.id };
       setCurrentCard(nextCard);
       broadcastStateRef.current = { card: nextCard, activeRules: nextActiveRules };
       return nextCard;
@@ -168,12 +168,10 @@ export default function useGameLogic(language: LanguageCode) {
         ? `${p1}${translations[language].ui.and}${p2} ${suffix}`
         : `${translations[language].ui.you}${translations[language].ui.and}${translations[language].ui.i} ${suffix}`;
 
-      const nextCard = {
-        kind: "question",
-        category: "drinkingbuddy",
-        questionId: questionObj.id,
-        selectedPlayer: p1,
-        selectedPlayer2: p2,
+      const nextCard: CardDescriptor = {
+        kind: "drinkingbuddy",
+        p1: p1 || null,
+        p2: p2 || null,
       };
 
       setCurrentCard(nextCard);
@@ -194,12 +192,9 @@ export default function useGameLogic(language: LanguageCode) {
       const text = questionObj?.[language] || "";
       const newPrompt = selectedPlayer ? `${selectedPlayer}, ${text}` : text;
 
-      const nextCard = {
-        kind: "question",
-        category: "wildcard",
-        wildcardType,
+      const nextCard: CardDescriptor = {
+        kind: "wildcard",
         questionId: questionObj.id,
-        selectedPlayer,
       };
 
       setCurrentCard(nextCard);
@@ -214,11 +209,10 @@ export default function useGameLogic(language: LanguageCode) {
     if (cat === "truth" || cat === "dare") {
       if (playersForPrompts.length === 0) {
         newPrompt = questionObj[language];
-        const nextCard = {
+        const nextCard: CardDescriptor = {
           kind: "question",
           category: cat,
           questionId: questionObj.id,
-          selectedPlayer: null,
         };
         setCurrentCard(nextCard);
         broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
@@ -228,11 +222,10 @@ export default function useGameLogic(language: LanguageCode) {
         const selectedPlayer = getRandomItem(playersForPrompts);
         setPlayer(selectedPlayer);
         newPrompt = `${selectedPlayer}, ${questionObj[language]}`;
-        const nextCard = {
+        const nextCard: CardDescriptor = {
           kind: "question",
           category: cat,
           questionId: questionObj.id,
-          selectedPlayer,
         };
         setCurrentCard(nextCard);
         broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
@@ -241,7 +234,7 @@ export default function useGameLogic(language: LanguageCode) {
       }
     } else {
       newPrompt = questionObj[language];
-      const nextCard = { kind: "question", category: cat, questionId: questionObj.id };
+      const nextCard: CardDescriptor = { kind: "question", category: cat, questionId: questionObj.id };
       setCurrentCard(nextCard);
       broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
       setPrompt(newPrompt);

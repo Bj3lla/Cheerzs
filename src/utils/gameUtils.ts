@@ -38,9 +38,3 @@ export const categoryColors: Record<CategoryKey, string> = {
   drinkingbuddy: "#ff5757",
   wildcard: "#ff9800",
 };
-
-// Unused so far because not referenced in the project
-export const getRandomAmountOfZips = (min: number, max: number): string => {
-  const amount = Math.floor(Math.random() * (max - min + 1)) + min;
-  return amount === 1 ? '1 sip' : `${amount} sips` ;
-};

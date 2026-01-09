@@ -52,7 +52,7 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
     console.groupCollapsed("[JoinRoom] POST /api/join-room");
     try {
       const normalizedRoomID = roomID.trim().toUpperCase();
-      const payload: any = { roomID: normalizedRoomID, username: name };
+      const payload: Record<string, string> = { roomID: normalizedRoomID, username: name };
 
       // Only send playerId when re-joining the same room with the same username.
       if (
@@ -61,7 +61,7 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
         storedPlayerRoomId === normalizedRoomID &&
         (localStorage.getItem("playerName") || "").trim() === name
       ) {
-        payload.playerId = storedPlayerId;
+        (payload as Record<string, string | undefined>).playerId = storedPlayerId;
       }
       console.log("payload", payload);
 
@@ -76,10 +76,10 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
       const vercelId = res.headers.get("x-vercel-id") || "";
 
       const rawText = await res.text();
-      let data: any = null;
+      let data: Record<string, unknown> | null = null;
       if (rawText) {
         try {
-          data = JSON.parse(rawText);
+          data = JSON.parse(rawText) as Record<string, unknown>;
         } catch {
           data = null;
         }
@@ -93,24 +93,25 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
       if (!data && rawText) console.log("raw response", rawText);
 
       if (res.ok) {
-        if (data?.playerId) {
-          localStorage.setItem("playerId", String(data.playerId));
+        if (typeof (data as Record<string, unknown>)?.playerId === "string") {
+          localStorage.setItem("playerId", String((data as Record<string, unknown>).playerId));
           localStorage.setItem("playerRoomId", normalizedRoomID);
         }
         localStorage.setItem("playerName", name);
         onRoomJoined({
           roomID: normalizedRoomID,
           username: name,
-          gameStarted: Boolean(data?.gameStarted),
-          startedAt: data?.startedAt || null,
+          gameStarted: Boolean((data as Record<string, unknown>)?.gameStarted),
+          startedAt: (typeof (data as Record<string, unknown>)?.startedAt === "string" ? (data as Record<string, unknown>).startedAt : null) as string | null,
         });
       } else {
-        const code = data?.code;
+        const code = (data as Record<string, unknown>)?.code;
         if (res.status === 409 && code === "USERNAME_TAKEN") {
           setShowUsernameInput(true);
           setError(i18n.ui.usernameTaken || "The username is already taken");
         } else {
-          setError((data && data.error) || i18n.ui.networkError || "Network error");
+          const errorMsg = typeof (data as Record<string, unknown>)?.error === "string" ? (data as Record<string, unknown>).error as string : i18n.ui.networkError || "Network error";
+          setError(errorMsg);
         }
       }
     } catch (err) {

@@ -6,8 +6,13 @@ import { drinkingBuddy } from "../data/drinkingBuddy";
 import { wildcard } from "../data/wildcard";
 import { getRandomItem } from "../utils/gameUtils";
 
+interface Question {
+  id: string | number;
+  en: string;
+  no: string;
+}
+
 export default function useQuestionState() {
-  type Question = any;
 
   const makeInitialUnread = () => ({
     truth: [...truthOrDare.truth],
@@ -39,8 +44,8 @@ export default function useQuestionState() {
     let categoryRead = [...(read[categoryKey] as Question[])];
 
     if (categoryUnread.length > 0) {
-      const questionObj = getRandomItem(categoryUnread) as Question;
-      categoryUnread = categoryUnread.filter((q: any) => q.id !== questionObj.id);
+      const questionObj = getRandomItem(categoryUnread);
+      categoryUnread = categoryUnread.filter((q) => q.id !== questionObj.id);
       categoryRead.push(questionObj);
 
       setUnread((prev) => ({ ...prev, [categoryKey]: categoryUnread }));
@@ -51,8 +56,8 @@ export default function useQuestionState() {
 
     // unread is empty - reset the cycle by moving read back to unread
     const resetUnread = [...categoryRead];
-    const questionObj = getRandomItem(resetUnread) as Question;
-    const newUnread = resetUnread.filter((q: any) => q.id !== questionObj.id);
+    const questionObj = getRandomItem(resetUnread);
+    const newUnread = resetUnread.filter((q) => q.id !== questionObj.id);
     const newRead = [questionObj];
 
     setUnread((prev) => ({ ...prev, [categoryKey]: newUnread }));
