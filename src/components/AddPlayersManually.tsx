@@ -4,9 +4,9 @@ import type { LanguageCode } from "../hooks/useLanguage";
 
 type FriendErrorCode = "emptyFriend" | null;
 
-const getErrorMessage = (errorCode: FriendErrorCode, i18n: any) => {
+const getErrorMessage = (errorCode: FriendErrorCode, i18nData: typeof translations["en"]): string | null => {
   const errorMap: Record<Exclude<FriendErrorCode, null>, string | undefined> = {
-    emptyFriend: i18n.ui.pleaseAddFriend,
+    emptyFriend: i18nData.ui.pleaseAddFriend,
   };
   return errorCode ? errorMap[errorCode] || null : null;
 };

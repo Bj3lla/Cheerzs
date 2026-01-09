@@ -45,10 +45,10 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
       const vercelId = res.headers.get("x-vercel-id") || "";
 
       const rawText = await res.text();
-      let data: any = null;
+      let data: Record<string, unknown> | null = null;
       if (rawText) {
         try {
-          data = JSON.parse(rawText);
+          data = JSON.parse(rawText) as Record<string, unknown>;
         } catch {
           data = null;
         }
@@ -62,15 +62,16 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
       if (!data && rawText) console.log("raw response", rawText);
 
       if (res.ok) {
-        if (data?.playerId) {
-          localStorage.setItem("playerId", String(data.playerId));
+        if (typeof (data as Record<string, unknown>)?.playerId === "string") {
+          localStorage.setItem("playerId", String((data as Record<string, unknown>).playerId));
           localStorage.setItem("playerRoomId", roomID.trim().toUpperCase());
         }
         onRoomCreated({ roomID: roomID.trim().toUpperCase(), username: username.trim() });
       } else {
-        const requestId = typeof data?.requestId === "string" ? data.requestId : "";
+        const requestId = typeof (data as Record<string, unknown>)?.requestId === "string" ? (data as Record<string, unknown>).requestId : "";
         if (requestId) console.log("requestId", requestId);
-        setError((data && data.error) || i18n.ui.networkError || "Network error");
+        const errorMsg = typeof (data as Record<string, unknown>)?.error === "string" ? (data as Record<string, unknown>).error as string : i18n.ui.networkError || "Network error";
+        setError(errorMsg);
       }
     } catch (err) {
       console.error("[CreateRoom] request failed", err);

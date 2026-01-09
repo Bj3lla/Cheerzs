@@ -7,11 +7,11 @@ import type { LanguageCode } from "../hooks/useLanguage";
 
 type PlayerNameErrorCode = "emptyPlayerName" | null;
 
-const getErrorMessage = (errorCode: PlayerNameErrorCode, i18n: any): string | null => {
+const getErrorMessage = (errorCode: PlayerNameErrorCode, i18nData: typeof translations["en"]): string | null => {
   if (!errorCode) return null;
 
   const errorMap: Record<Exclude<PlayerNameErrorCode, null>, string | undefined> = {
-    emptyPlayerName: i18n.ui.pleaseEnterPlayerName,
+    emptyPlayerName: i18nData.ui.pleaseEnterPlayerName,
   };
 
   return errorMap[errorCode] || null;

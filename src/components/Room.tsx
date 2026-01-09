@@ -16,8 +16,11 @@ export default function Room({ roomID }: { roomID?: string }) {
     });
     const channel = ably.channels.get(`room-${normalizedRoomID}`);
 
-    channel.subscribe("player-joined", (msg: any) => {
-      setPlayers((prev) => [...prev, msg?.data?.username]);
+    channel.subscribe("player-joined", (msg: { data?: { username?: unknown } }) => {
+      const username = msg.data?.username;
+      if (typeof username === "string") {
+        setPlayers((prev) => [...prev, username]);
+      }
     });
 
     return () => {
