@@ -46,8 +46,8 @@ h1, h2, h3 {
   margin: 0.5em 0;
 }
 
-h1 { font-size: 60px; line-height: 1.1; }
-h2 { font-size: 40px; }
+h1 { font-size: 70px; line-height: 1.1; }
+h2 { font-size: 50px; }
 h3 { font-size: 30px; }
 
 p {
@@ -381,7 +381,6 @@ p.waiting-for-host-message {
 .category-header {
   margin-top: 1rem;
   font-family: "Shrikhand", cursive;
-  font-size: 2.5rem;
 }
 
 .game-screen {
@@ -393,7 +392,7 @@ p.waiting-for-host-message {
   padding-top: 3rem;
   margin-top: 1rem;
   width: 100%;
-  gap: 1.5rem;
+  gap: 0.5rem;
 }
 
 .card-container {

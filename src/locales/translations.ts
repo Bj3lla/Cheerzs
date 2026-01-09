@@ -162,7 +162,7 @@ export const translations = {
           text: "følg nye regler til de oppheves; gjør du feil, må du drikke 1 slurk.",
         },
         {
-          title: "Drikkekompis",
+          title: "Drikke kompis",
           text: "du får en \"partner in crime\"! Hvis én drikker, drikker begge (like mange slurker).",
         },
         { title: "Wildcard", text: "Spill for å finne ut. Cheerzs!" },
@@ -175,7 +175,7 @@ export const translations = {
       point: "Pekeleken! Hvem...",
       rule: "Ny regel!",
       repeal: "Regel opphevet!",
-      drinkingbuddy: "Drikkekompis",
+      drinkingbuddy: "Drikke Kompis",
       wildcard: "Wildcard",
     },
   },
