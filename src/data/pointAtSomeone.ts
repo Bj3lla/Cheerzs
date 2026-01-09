@@ -112,8 +112,8 @@ export const pointAtSomeone = [
   },
   {
     id: 23,
-    en: "learns a new skill next year?",
-    no: "lærer mest sannsynlig en ny ferdighet neste år?"
+    en: "learns a new skill this year?",
+    no: "lærer mest sannsynlig en ny ferdighet i år?"
   },
   {
     id: 24,
@@ -127,28 +127,28 @@ export const pointAtSomeone = [
   },
   {
     id: 26,
-    en: "goes on the most trips next year?",
-    no: "kommer til å reise mest neste år?"
+    en: "is traveling all the time, deserving of the title \"Mr. Worldwide\"?",
+    no: "reiser hele tiden og fortjener tittelen \"Mr. Worldwide\"?"
   },
   {
     id: 27,
-    en: "says yes to more opportunities next year?",
-    no: "kommer til å si ja til flere muligheter neste år?"
+    en: "is a true \"Yes Man\" - taking every opportunity he can?",
+    no: "er en ekte \"Yes Man\" - tar alle muligheter han kan?"
   },
   {
     id: 28,
-    en: "starts a side hustle next year?",
-    no: "kommer til å starte en \"side hustle\" neste år?"
+    en: "will most likely start a side hustle in the near future?",
+    no: "kommer til å starte en \"side hustle\" i nær fremtid?"
   },
   {
     id: 29,
-    en: "gets a big career win next year?",
-    no: "får en stor karriereseier neste år?"
+    en: "gets a big career win in the near future?",
+    no: "får en stor karriereseier i nær fremtid?"
   },
   {
     id: 31,
-    en: "becomes a morning person next year?",
-    no: "blir et A-menneske neste år?"
+    en: "is a morning person?",
+    no: "er et morgen-menneske/A-menneske?"
   },
   {
     id: 32,
@@ -162,38 +162,38 @@ export const pointAtSomeone = [
   },
   {
     id: 34,
-    en: "reads the most books next year?",
-    no: "kommer til å lese flest bøker neste år?"
+    en: "reads the most books?",
+    no: "leser flest bøker?"
   },
   {
     id: 35,
-    en: "starts upgrading their food-prepping game?",
-    no: "kommer til å upgrade food-prepping gamet sitt?"
+    en: "is the best chef?",
+    no: "er den beste kokken?"
   },
   {
     id: 36,
-    en: "becomes the group’s mom next year?",
-    no: "kommer til å bli gjengens mamma neste år?"
+    en: "is the group’s mom?",
+    no: "er gjengens mamma?"
   },
   {
     id: 37,
-    en: "learns a new language (or at least tries)?",
-    no: "lære seg et nytt språk (eller i hvert fall prøve)?"
+    en: "learns a new language this year (or at least tries)?",
+    no: "lærer seg et nytt språk i år (eller prøver i hvert fall)?"
   },
   {
     id: 38,
-    en: "becomes the first one to move to a new place next year?",
-    no: "kommer til å være den første som flytter til et nytt sted neste år?"
+    en: "becomes the first one to move to a new place?",
+    no: "kommer til å være den første som flytter til et nytt sted?"
   },
   {
     id: 39,
-    en: "has the biggest glow-up next year?",
-    no: "kommer til å få den største glow-upen neste år?"
+    en: "had the biggest glow-up this year?",
+    no: "hadde den største glow-upen i år?"
   },
   {
     id: 40,
-    en: "keeps in touch with you next year?",
-    no: "kommer til å holde kontakten med deg neste år?"
+    en: "is best at keeping in touch?",
+    no: "er flinkest til å holde kontakten?"
   },
   {
     id: 41,
@@ -212,13 +212,13 @@ export const pointAtSomeone = [
   },
   {
     id: 45,
-    en: "usually queues the first \"That's right, were going out\"-banger of a song?",
-    no: "queueer vanligvis den første \"That's right, were going out\"-bangeren av en sang?"
+    en: "usually queues the first \"That's right, we're going out\"-banger of a song?",
+    no: "queueer vanligvis den første \"Det stemmer, vi skal ut\"-slageren av en sang?"
   },
   {
     id: 46,
     en: "says ‘I’m not that drunk’ while clearly being that drunk?",
-    no: "sier «jeg er ikke så full» når de åpenbart er borte?"
+    no: "sier «jeg er ikke så full» når de åpenbart er helt borte?"
   },
   {
     id: 47,
@@ -227,8 +227,8 @@ export const pointAtSomeone = [
   },
   {
     id: 48,
-    en: "has 27 tabs open at all times?",
-    no: "har 27 faner åpne hele tiden?"
+    en: "has 27 tabs open at all times in their browser?",
+    no: "har 27 faner åpne hele tiden i nettleseren sin?"
   },
   {
     id: 49,
@@ -240,4 +240,50 @@ export const pointAtSomeone = [
     en: "is the friend who always brings snacks?",
     no: "er vennen som alltid tar med snacks?"
   },
+  {
+    id: 51,
+    en: "is most likely to become a meme?",
+    no: "kommer mest sannsynlig til å bli et meme?"
+  },
+  {
+    id: 52,
+    en: "is always down for an adventure?",
+    no: "er alltid klar for et eventyr?"
+  },
+  {
+    id: 53,
+    en: "is the biggest sweet-tooth?",
+    no: "er den største godtemomsen?"
+  }, 
+  {
+    id: 54,
+    en: "is most likely to survive a zombie apocalypse?",
+    no: "kommer mest sannsynlig til å overleve en zombieapokalypse?"
+  }, 
+  {
+    id: 55,
+    en: "is the best dancer?",
+    no: "er den beste til å danse?"
+  },
+  {
+    id: 56,
+    en: "is most likely to win a Nobel Prize?",
+    no: "kommer mest sannsynlig til å vinne en Nobelpris?"
+  },
+  {
+    id: 57,
+    en: "is most likely to become president?",
+    no: "kommer mest sannsynlig til å bli president?"
+  },
+  {
+    id: 58,
+    en: "is most likely to become a millionaire?",
+    no: "kommer mest sannsynlig til å bli millionær?"
+  },
+  {
+    id: 59,
+    en: "is most likely to become a social media influencer?",
+    no: "kommer mest sannsynlig til å bli en influencer?"
+  },
+
 ];
