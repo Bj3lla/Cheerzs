@@ -59,11 +59,13 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
       if (vercelError) console.log("x-vercel-error", vercelError);
       if (vercelId) console.log("x-vercel-id", vercelId);
       console.log("parsed response", data);
+      console.log("playerId value:", (data as Record<string, unknown>)?.playerId, "type:", typeof (data as Record<string, unknown>)?.playerId);
       if (!data && rawText) console.log("raw response", rawText);
 
       if (res.ok) {
-        if (typeof (data as Record<string, unknown>)?.playerId === "string") {
-          localStorage.setItem("playerId", String((data as Record<string, unknown>).playerId));
+        const playerId = (data as Record<string, unknown>)?.playerId;
+        if (playerId) {
+          localStorage.setItem("playerId", String(playerId));
           localStorage.setItem("playerRoomId", roomID.trim().toUpperCase());
         }
         onRoomCreated({ roomID: roomID.trim().toUpperCase(), username: username.trim() });

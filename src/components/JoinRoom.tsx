@@ -93,8 +93,9 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
       if (!data && rawText) console.log("raw response", rawText);
 
       if (res.ok) {
-        if (typeof (data as Record<string, unknown>)?.playerId === "string") {
-          localStorage.setItem("playerId", String((data as Record<string, unknown>).playerId));
+        const playerId = (data as Record<string, unknown>)?.playerId;
+        if (playerId) {
+          localStorage.setItem("playerId", String(playerId));
           localStorage.setItem("playerRoomId", normalizedRoomID);
         }
         localStorage.setItem("playerName", name);
