@@ -408,6 +408,75 @@ export const neverHaveIEver = [
       id: 91,
       en: "posted a picture of myself in the sun with a glass of Aperol Spritz.",
       no: "lagt ut et bilde av meg selv i solen med et glass Aperol Spritz.",
-    }
-
+    },
+    {
+      id: 92,
+      en: "been to a music festival.",
+      no: "vært på en musikkfestival.",
+    },
+    {
+      id: 93,
+      en: "swam with dolphins.",
+      no: "svømt med delfiner.",
+    },
+    {
+      id: 94,
+      en: "crossed the country for a booty call.",
+      no: "krysset landet for en \"booty call.\"",
+    },
+    {
+      id: 95,
+      en: "ran a marathon.",
+      no: "løpt et maraton.",
+    },
+    {
+      id: 96,
+      en: "been on TV.",
+      no: "vært på TV.",
+    },
+    {
+      id: 97,
+      en: "met a celebrity.",
+      no: "møtt en kjendis.",
+    },
+    {
+      id: 98,
+      en: "wanted to be an actor/actress.",
+      no: "ønsket å bli skuespiller.",
+    },
+    {
+      id: 99,
+      en: "broken a bone.",
+      no: "brukket et bein.",
+    },
+    {
+      id: 100,
+      en: "been in a band.",
+      no: "vært med i et band.",
+    },
+    {
+      id: 101,
+      en: "stopped watching a movie because I got too scared halfway through.",
+      no: "sluttet å se en film fordi jeg ble for redd underveis.",
+    },
+    {
+      id: 102,
+      en: "missed my stop because I fell asleep on the bus.",
+      no: "mistet stoppestedet mitt fordi jeg sovnet på bussen.",
+    },
+    {
+      id: 103,
+      en: "sang in front of a crowd.",
+      no: "sunget foran et publikum.",
+    },
+    {
+      id: 104,
+      en: "been at Après ski.",
+      no: "vært på Afterski.",
+    },
+    {
+      id: 105,
+      en: "tried snowboarding.",
+      no: "prøvd snowboard.",
+    },
 ];

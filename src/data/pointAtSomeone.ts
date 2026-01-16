@@ -285,5 +285,44 @@ export const pointAtSomeone = [
     en: "is most likely to become a social media influencer?",
     no: "kommer mest sannsynlig til å bli en influencer?"
   },
-
+  {
+    id: 60,
+    en: "has the best taste in music?",
+    no: "har best musikksmak?"
+  },
+  {
+    id: 61,
+    en: "is most likely to binge-watch an entire series in one day?",
+    no: "kommer mest sannsynlig til å se en hel serie på en dag?"
+  },
+  {
+    id: 62,
+    en: "is most likely to forget where they parked their car?",
+    no: "kommer mest sannsynlig til å glemme hvor de parkerte bilen sin?"
+  },
+  {
+    id: 63,
+    en: "is most likely to have kids first?",
+    no: "kommer mest sannsynlig til å få barn først?"
+  },
+  {
+    id: 64,
+    en: "is most likely to get married first?",
+    no: "kommer til å gifte seg først?"
+  },
+  { 
+    id: 65,
+    en: "has the worst taste in music?",
+    no: "har dårligst musikksmak?"
+  },
+  {
+    id: 66,
+    en: "could fall asleep anywhere, anytime?",
+    no: "kan sovne hvor som helst, når som helst?"
+  },
+  {
+    id: 67,
+    en: "has the highest standards?",
+    no: "har de høyeste standardene?"
+  },
 ];
