@@ -479,4 +479,44 @@ export const neverHaveIEver = [
       en: "tried snowboarding.",
       no: "prøvd snowboard.",
     },
+    {
+      id: 106,
+      en: "had a one night stand",
+      no: "hatt et one night stand.",
+    },
+    {
+      id: 107,
+      en: "fallen asleep in public.",
+      no: "sovnet i offentligheten.",
+    },
+    {
+      id: 108,
+      en: "lied on a dating app.",
+      no: "løyet på en dating-app.",
+    },
+    {
+      id: 109,
+      en: "texted my ex while drunk.",
+      no: "sendt melding til eksen mens jeg var full.",
+    },
+    {
+      id: 110,
+      en: "used a dating app",
+      no: "brukt en dating-app.",
+    },
+    {
+      id: 111,
+      en: "been to a nude beach.",
+      no: "vært på en nakenstrand.",
+    },
+    {
+      id: 112,
+      en: "lied about my age to get into a club.",
+      no: "løyet om alderen min for å komme meg inn på et utested.",
+    },
+    {
+      id: 113,
+      en: "been kicked out of a bar or club.",
+      no: "blitt kastet ut av en bar eller et utested.",
+    },
 ];
