@@ -95,7 +95,7 @@ export const translations = {
 
   no: {
     ui: {
-      intro: "Velkommen til Cheerzs! Det ultimate drikkespillet. La oss komme i gang!",
+      intro: "Velkommen til Cheerzs! Lag et rom for å starte!",
       add: "Legg til",
       startGame: "Start spill",
       editGame: "Rediger spill",
