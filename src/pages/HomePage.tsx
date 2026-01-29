@@ -53,9 +53,11 @@ export default function HomePage({ language = "en" }: { language?: LanguageCode 
   return (
     <div className="home-screen">
       <h1 className="home-title">
-        {ui.cheers}
+        {ui.cheerzs}
         <br />
-        {ui.year}
+        <div className="subtitle">
+          {ui.ifiSkiturEdition}
+        </div>
       </h1>
 
       <p className="intro-text">

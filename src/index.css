@@ -69,6 +69,7 @@ p.error-message {
   margin-top: 0.5rem;
 }
 
+
 /* -------------------------------
    🏠 Home Screen & Friend List
 --------------------------------*/
@@ -81,6 +82,13 @@ p.error-message {
 .home-title {
   font-family: "Asset";
   font-size: 50px;
+}
+
+.subtitle {
+  margin: 1rem 0;
+  font-family: "Asset", cursive;
+  font-size: 30px;
+  color: var(--rule);
 }
 
 .room-input {
