@@ -85,6 +85,9 @@ export default function AddPlayersManuallyPage({ language }: { language: Languag
         <br />
         {i18n.ui.year}
       </h1>
+      <p> 
+        {i18n.ui.addPlayersInstruction}
+      </p>
 
       <AddPlayersManually
         language={language}

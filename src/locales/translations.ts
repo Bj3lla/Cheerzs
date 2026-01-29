@@ -9,7 +9,7 @@ const getCurrentYearNorwegian = () => {
 export const translations = {
   en: {
     ui: {
-      intro: "Welcome to Cheerzs! The ultimate drinking game. Let's get started!",
+      intro: "Welcome to Cheerzs! Create a room to get started.",
       add: "Add",
       startGame: "Start Game",
       editGame: "Edit Game",
@@ -21,11 +21,12 @@ export const translations = {
       cheers: "Cheerzs!",
       selectLanguage: "Select Language",
       done: "Done",
-      createRoom: "Create Room",
-      joinRoom: "Join Room",
+      createRoom: "Create room",
+      joinRoom: "Join room",
       joiningRoom: "Joining room...",
       orAddPlayers: "...or add players manually",
       here: "here",
+      addPlayersInstruction: "Add your friends' names to get started!",
       year: getCurrentYearNorwegian(),
       placeholderCreateRoomID: "create room ID...",
       pleaseEnterRoomID: "Please enter a room ID",
@@ -110,6 +111,7 @@ export const translations = {
       joiningRoom: "Blir med i rommet",
       orAddPlayers: "...eller legg til spillere manuelt",
       here: "her",
+      addPlayersInstruction: "Legg til vennenes navn for å komme i gang!",
       year: getCurrentYearNorwegian(),
       placeholderCreateRoomID: "Lag en rom-ID...",
       pleaseEnterRoomID: "Vennligst skriv inn rom-ID",

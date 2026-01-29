@@ -25,3 +25,5 @@ dist-ssr
 
 # Local-only docs
 PROJECT_OVERVIEW.md
+.vercel
+.env*.local

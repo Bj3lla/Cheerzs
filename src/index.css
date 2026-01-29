@@ -1,7 +1,7 @@
 /* -------------------------------
    🎨 Global Styles & Variables
 --------------------------------*/
-@import url("https://fonts.googleapis.com/css2?family=Shrikhand&family=Montserrat:wght@300;400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Asset&family=Montserrat:wght@300;400;600&display=swap");
 
 :root {
   --dark: #221a22;
@@ -78,6 +78,11 @@ p.error-message {
   align-items: center;
 }
 
+.home-title {
+  font-family: "Asset";
+  font-size: 50px;
+}
+
 .room-input {
   display: flex;
   flex-direction: column;
@@ -102,15 +107,28 @@ p.error-message {
   gap: 1rem;
   margin-top: 1.5rem;
   padding-bottom: 7rem;
+  width: 100%;
+  max-width: 400px;
 }
 
 .join-room-button {
   margin-top: 1.5rem;
 }
 
+.join-room h2 {
+  text-transform: uppercase;
+  font-size: 40px;
+}
+
 .create-room-button {
   margin-top: 1.5rem;
 }
+
+.create-room h2 {
+  text-transform: uppercase;
+  font-size: 40px;
+}
+
 .create-room-page,
 .join-room-page,
 .menu-page {
@@ -154,9 +172,14 @@ span.manual-link, .link {
   cursor: pointer;
 }
 
+.add-player {
+  width: 100%;
+}
+
 .add-player-error {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .friend-input-wrapper {
@@ -176,6 +199,8 @@ span.manual-link, .link {
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
+  width: 100%;
+  max-width: 400px;
 }
 
 .friend-input input {
@@ -189,6 +214,7 @@ span.manual-link, .link {
   letter-spacing: 0.1em;
   outline: none;
   flex: 1;
+  width: 100%;
   min-width: 0;
   transition: border-color 0.25s ease;
 }
@@ -447,6 +473,7 @@ button {
   letter-spacing: 0.1em;
   width: fit-content;
   align-self: center;
+  text-transform: uppercase;
 }
 
 @media (hover: hover) {
