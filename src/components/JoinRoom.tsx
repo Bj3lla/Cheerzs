@@ -126,7 +126,7 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
 
   return (
     <div className="join-room">
-      <h2>{i18n.ui.joinRoom}</h2>
+      {/* <h2>{i18n.ui.joinRoom}</h2> */}
       {showUsernameInput && (
         <div className="friend-input" style={{ marginBottom: "1rem" }}>
           <input

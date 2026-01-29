@@ -60,11 +60,6 @@ export default function HomePage({ language = "en" }: { language?: LanguageCode 
         </div>
       </h1>
 
-      <p className="intro-text">
-        {ui.intro ||
-          "Welcome to Cheerzs! The drinking game to get every party started. Let's jump right into it!"}
-      </p>
-
       <div className="friend-input-spacer">
         <div className="friend-input">
           <AddPlayer
