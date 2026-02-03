@@ -461,7 +461,14 @@ export default function GamePage({ language }: { language: LanguageCode }) {
         <button
           type="button"
           className="button"
-          onClick={() => setShowLeaveRoomPopup(true)}
+          onClick={() => {
+            if (isHost) {
+              leaveFromGamePage();
+              return;
+            } else {
+              setShowLeaveRoomPopup(true);
+            }
+          }}
           aria-label={i18n.ui.leaveGame}
           title={i18n.ui.leaveGame}
         >
