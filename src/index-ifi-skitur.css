@@ -911,7 +911,10 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
     padding-top: 0;
   }
 
-  .top-bar { padding: 0.8rem 1rem; }
+  .top-bar { 
+    padding: 0.5rem 0rem;
+    padding-right: 1rem;
+  }
 
   /* Waiting room sits slightly lower on mobile */
   .waiting-room-page { padding-top: calc(2rem + env(safe-area-inset-top, 0px)); }
