@@ -34,9 +34,7 @@ export default function CreateRoomPage({ language }: { language: LanguageCode })
     <div className="create-room-page">
       <Topbar to="/" />
       <h1 className="home-title">
-        {i18n.ui.cheers}
-        <br />
-        {i18n.ui.year}
+        {/* {i18n.ui.cheerzs} */}
       </h1>
       <CreateRoom onRoomCreated={handleRoomCreated} language={language} username={playerName} />
     </div>

@@ -1,4 +1,4 @@
-import "../index.css";
+import "../index-ifi-skitur.css";
 
 export default function Card({ prompt }: { prompt: React.ReactNode }) {
   return (

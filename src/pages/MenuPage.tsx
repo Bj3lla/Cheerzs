@@ -32,7 +32,7 @@ export default function MenuPage({
 
       <h2 className="menu-title">{i18n.ui.menu || (language === "no" ? "Meny" : "Menu")}</h2>
 
-      <hr className="menu-divider" />
+      {/* <hr className="menu-divider" /> */}
 
       <div className="select-language">
         <h3>{i18n.ui.selectLanguage}</h3>

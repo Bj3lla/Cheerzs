@@ -1,4 +1,4 @@
-import "../index.css";
+import "../index-ifi-skitur.css";
 
 type ButtonProps = {
   label: React.ReactNode;

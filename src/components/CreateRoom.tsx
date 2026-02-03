@@ -86,7 +86,7 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
 
   return (
     <div className="create-room">
-      <h2>{i18n.ui.createRoom}</h2>
+      {/* <h2>{i18n.ui.createRoom}</h2> */}
       <div className="friend-input">
         <input
           type="text"

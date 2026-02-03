@@ -53,15 +53,12 @@ export default function HomePage({ language = "en" }: { language?: LanguageCode 
   return (
     <div className="home-screen">
       <h1 className="home-title">
-        {ui.cheers}
+        {ui.cheerzs}
         <br />
-        {ui.year}
+        <div className="subtitle">
+          {ui.ifiSkiturEdition}
+        </div>
       </h1>
-
-      <p className="intro-text">
-        {ui.intro ||
-          "Welcome to Cheerzs! The drinking game to get every party started. Let's jump right into it!"}
-      </p>
 
       <div className="friend-input-spacer">
         <div className="friend-input">
@@ -77,11 +74,11 @@ export default function HomePage({ language = "en" }: { language?: LanguageCode 
           const errorMessage = getErrorMessage(playerNameErrorCode, i18n);
           return errorMessage ? <p className="error-message">{errorMessage}</p> : null;
         })()}
-      </div>
 
-      <div className="room-buttons">
-        <Button label={ui.createRoom || "Create Room"} color="accent" onClick={goCreateRoom} />
-        <Button label={ui.joinRoom || "Join Room"} color="primary" onClick={goJoinRoom} />
+        <div className="room-buttons">
+          <Button label={ui.createRoom || "Create Room"} color="accent" onClick={goCreateRoom} />
+          <Button label={ui.joinRoom || "Join Room"} color="primary" onClick={goJoinRoom} />
+        </div>
       </div>
 
       <p className="manual-add">

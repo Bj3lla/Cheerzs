@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import "./index.css";
+import "./index-ifi-skitur.css";
 import useLanguage from "./hooks/useLanguage";
 import { GameProvider } from "./context/GameContext";
 import LanguageSelector from "./components/LanguageSelector";

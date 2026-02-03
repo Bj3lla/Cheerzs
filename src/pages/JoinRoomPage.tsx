@@ -61,9 +61,7 @@ export default function JoinRoomPage({ language }: { language: LanguageCode }) {
     <div className="join-room-page">
       <Topbar to="/" />
       <h1 className="home-title">
-        {i18n.ui.cheers}
-        <br />
-        {i18n.ui.year}
+        {/* {i18n.ui.cheerzs} */}
       </h1>
       <JoinRoom onRoomJoined={handleRoomJoined} language={language} username={playerName} />
     </div>

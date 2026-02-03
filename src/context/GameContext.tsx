@@ -4,8 +4,8 @@ import type { LanguageCode } from "../hooks/useLanguage";
 
 type GameContextValue = ReturnType<typeof useGameLogic>;
 
-const GameContext = createContext<GameContextValue>(
-  undefined as unknown as GameContextValue
+const GameContext = createContext<GameContextValue>( 
+  undefined as unknown as GameContextValue 
 );
 
 export function GameProvider({

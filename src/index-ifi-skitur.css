@@ -4,14 +4,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Asset&family=Montserrat:wght@300;400;600&display=swap");
 
 :root {
-  --dark: #221a22;
+  
+  /* IFI Skitur Edition */
+  --dark: #051324;
+  --ifi-blue-dark: #395069;
+  --ifi-blue: #698ea8;
+  --ifi-gray-blue: #86a6ba;
+  --ifi-gray: #e1e6e7;
+  --ifi-pale-yellow: #ffffcf;
+  --ifi-orange: #ff9800;
   --pink: #e91e63;
-  --gray: #a6a6a6;
+  --light-pink: #ffa9f9;
   --light-pink: #ffa9f9;
   --light-yellow: #fff7ad;
-  --pale-yellow: #ffffcf;
   --rule: #b42a82; 
-  padding-top: 4rem;
 }
 
 /* -------------------------------
@@ -19,15 +25,18 @@
 --------------------------------*/
 body {
   margin: 0;
+  padding: 0;
   font-family: "Montserrat", sans-serif;
-  background: linear-gradient(90deg, var(--light-yellow), var(--light-pink));
+  background: var(--ifi-gray);
   color: var(--dark);
   text-align: center;
   min-height: 100vh;
-
+  width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Prevent padding/borders from pushing elements wider than their containers */
@@ -77,12 +86,20 @@ p.error-message {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background-image: url(/src/assets/ifi-skitur-uten-tekst.png);
   background-size: cover;
-  background-position: center;
+  background-position: top left;
   background-attachment: fixed;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
   z-index: 1;
+  overflow-y: auto;
 }
 
 .home-screen::before {
@@ -92,25 +109,28 @@ p.error-message {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.5);
-  z-index: -1;
+  background-color: white;
+  opacity: 0.6;
+  z-index: 1;
 }
-
 .home-screen > * {
   position: relative;
   z-index: 1;
 }
 
 .home-title {
+  padding: 0 1rem;
+  margin: 0;
   font-family: "Asset";
   font-size: 50px;
+  color: var(--dark);
 }
 
 .subtitle {
   margin: 1rem 0;
   font-family: "Asset", cursive;
   font-size: 30px;
-  color: var(--rule);
+  color: var(--ifi-blue-dark);
 }
 
 .room-input {
@@ -122,7 +142,7 @@ p.error-message {
 }
 
 .room-input input {
-  background-color: var(--pale-yellow);
+  background-color: var(--ifi-pale-yellow);
   border: none;
   border-radius: 8px;
   padding: 0.6rem 1rem;
@@ -136,7 +156,7 @@ p.error-message {
   display: flex;
   gap: 1rem;
   margin-top: 1.5rem;
-  padding-bottom: 7rem;
+  padding-bottom: 1.5rem;
   width: 100%;
   max-width: 400px;
 }
@@ -159,17 +179,71 @@ p.error-message {
   font-size: 40px;
 }
 
-.create-room-page,
+
+/* Main app pages (except Home/CreateRoom) */
+.add-players-manually,
 .join-room-page,
+.game-screen,
+.waiting-room-page,
 .menu-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 2rem;
+  justify-content: center;
+  padding-top: 5rem;
   padding-bottom: 2rem;
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
+  background: linear-gradient(180deg, var(--ifi-gray) 0%, var(--ifi-gray-blue) 100%);
+  background-attachment: fixed;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
+}
+
+
+/* -------------------------------
+   🏔️ Create Room Page (with overlay image)
+--------------------------------*/
+.join-room-page,
+.create-room-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url(/src/assets/ifi-skitur-uten-tekst.png);
+  background-size: cover;
+  background-position: top left;
+  background-attachment: fixed;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow-y: auto;
+}
+
+.join-room-page::before,
+.create-room-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: top left;
+  background-attachment: fixed;
+  background-color: white;
+  opacity: 0.6;
+  z-index: 0;
+  pointer-events: none;
+}
+.join-room-page > *,
+.create-room-page > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Menu page: ensure no horizontal overflow on small screens */
@@ -180,30 +254,17 @@ p.error-message {
   overflow-x: hidden;
 }
 
-.waiting-room-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
 .waiting-room-title {
   margin-top: 0.5rem;
 }
 span.manual-link, .link {
-  color: var(--pink);
+  color: var(--ifi-blue-dark);
   text-decoration: underline;
   cursor: pointer;
 }
 
 .add-player {
-  width: 100%;
+  min-width: 100%;
 }
 
 .add-player-error {
@@ -230,12 +291,11 @@ span.manual-link, .link {
   flex-direction: row;
   gap: 0.5rem;
   width: 100%;
-  max-width: 400px;
 }
 
 .friend-input input {
-  background-color: var(--pale-yellow);
-  border: 2px solid transparent; /* ensures layout stays stable */
+  background-color: var(--ifi-gray-blue);
+  border: 2px solid var(--ifi-gray); /* ensures layout stays stable */
   border-radius: 8px;
   padding: 0.6rem 1rem;
   font-size: 1.3rem;
@@ -249,14 +309,19 @@ span.manual-link, .link {
   transition: border-color 0.25s ease;
 }
 
+.friend-input input::placeholder {
+  color: var(--ifi-gray);
+  opacity: 1;
+}
+
 /* ✨ Error state */
 .friend-input input.error {
   border-color: var(--pink);
 }
 
 .friend-input input:focus {
-  border-color: var(--pale-yellow); /* or another color you prefer */
-  box-shadow: 0 0 0 3px var(--light-yellow); /* soft glow (optional) */
+  border-color: var(--ifi-gray); /* or another color you prefer */
+  box-shadow: 0 0 0 3px white; /* soft glow (optional) */
   outline: none; /* removes the browser’s default blue outline */
 }
 
@@ -269,7 +334,7 @@ span.manual-link, .link {
 .sync-loading {
   width: min(520px, 90vw);
   height: 10px;
-  background: var(--pale-yellow);
+  background: var(--ifi-gray);
   border-radius: 999px;
   overflow: hidden;
   margin: 1rem auto;
@@ -278,7 +343,7 @@ span.manual-link, .link {
 .sync-loading-bar {
   height: 100%;
   width: 40%;
-  background: var(--pink);
+  background: var(--ifi-blue);
   border-radius: 999px;
   animation: sync-loading-slide 1.1s ease-in-out infinite;
 }
@@ -298,8 +363,8 @@ span.manual-link, .link {
 
 /* Friend "pill" container */
 .friend-item {
-  background-color: var(--light-yellow);
-  color: var(--pink);
+  background-color: var(--ifi-gray);
+  color: var(--ifi-blue-dark);
   border-radius: 10px;
   padding: 0.4rem 1rem;
   margin: 0.4rem;
@@ -317,8 +382,8 @@ span.manual-link, .link {
 
 /* Remove button */
 .friend-item .remove-btn {
-  background-color: var(--pink);
-  color: var(--light-yellow);
+  background-color: var(--ifi-blue);
+  color: var(--ifi-gray);
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -351,7 +416,8 @@ span.manual-link, .link {
    🧩 App Container
 --------------------------------*/
 #root {
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -365,9 +431,9 @@ span.manual-link, .link {
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+  height: 100%;
+  padding: 0;
+  margin: 0;
   text-align: center;
 }
 
@@ -384,6 +450,7 @@ span.manual-link, .link {
   align-items: center;
   padding: 1rem 1rem;
   background: transparent;
+  background-color: transparent;
   z-index: 1000;
 }
 
@@ -424,11 +491,11 @@ p.waiting-for-host-message {
    🃏 Create and Join rooms
 --------------------------------*/
 .create-room h2 {
-  color: var(--rule)
+  color: var(--ifi-blue-dark);
 }
 
 .join-room h2 {
-  color: var(--pink)
+  color: var(--ifi-blue-dark);
 }
 
 /* -------------------------------
@@ -438,22 +505,9 @@ p.waiting-for-host-message {
   margin-top: 1rem;
   font-family: "Shrikhand", cursive;
 }
-
-.game-screen {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 3rem;
-  margin-top: 1rem;
-  width: 100%;
-  gap: 0.5rem;
-}
-
 .card-container {
   background-color: var(--dark);
-  color: var(--pale-yellow);
+  color: var(--ifi-gray);
   border-radius: 1rem;
   padding: 2rem 1.5rem;
   max-width: 80vw;
@@ -472,9 +526,9 @@ p.waiting-for-host-message {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background-color: var(--pale-yellow);
+  background-color: var(--ifi-gray);
   color: var(--dark);
-  border: 2px dashed var(--pink);
+  border: 2px dashed var(--ifi-blue);
   border-radius: 1rem;
   display: flex;
   justify-content: center;
@@ -491,6 +545,44 @@ p.waiting-for-host-message {
   to { transform: scale(1); opacity: 1; }
 }
 
+.spotify-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background-color: var(--ifi-gray-blue);
+}
+
+.spotify-card p {
+  color: var(--ifi-blue-dark);
+  font-size: 1rem;
+  max-width: 200px;
+  margin: 0.5rem 0 0;
+}
+
+.qr-code {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.qr-code img {
+  width: 200px;
+  height: 200px;
+  border-radius: 12px;
+}
+
+.qr-code a {
+  margin-top: 0.5rem;
+  color: var(--ifi-blue-dark);
+  text-decoration: underline;
+  font-size: 1rem;
+}
 /* -------------------------------
    🔘 Buttons (Global)
 --------------------------------*/
@@ -516,8 +608,8 @@ button.medium { font-size: 18px; padding: 0.8rem 2rem; }
 button.large { font-size: 20px; padding: 1rem 2.5rem; }
 
 /* Color variants */
-button.accent { background-color: var(--rule); color: var(--pale-yellow); }
-button.primary { background-color: var(--pink); color: var(--pale-yellow); }
+button.accent { background-color: var(--ifi-blue); color: var(--ifi-gray); }
+button.primary { background-color: var(--ifi-blue-dark); color: var(--ifi-gray); }
 button.light { background-color: var(--pale-yellow); color: var(--dark); }
 button.dark { background-color: var(--dark); color: var(--pale-yellow); }
 button.dark-border { background-color: transparent; color: var(--dark); border: 3px solid var(--dark); }
@@ -540,7 +632,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 }
 
 .active-rules-header h3 {
-  color: var(--rule);
+  color: var(--ifi-blue-dark);
   margin: 0;
   text-align: center;
 }
@@ -563,14 +655,15 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   border-radius: 10px;
   padding: 0.5rem 1rem;
   color: var(--dark);
-  text-align: left;
+  text-align: center;
   font-family: "Montserrat", sans-serif;
-  
+  min-width: 400px;
 }
 
 .active-rules ul {
   list-style-type: "✔️ ";
-  padding-left: 1.6rem;
+  list-style-position: inside;
+  padding-left: 0rem;
   margin: 0.75rem 0;
 }
 
@@ -615,7 +708,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 
 .popup {
   position: relative;
-  background: var(--pale-yellow);
+  background: var(--ifi-gray);
   color: var(--dark);
   border-radius: 16px;
   /* Reserve space at the top so the close button doesn't overlap content */
@@ -660,7 +753,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   overflow-y: auto;
   overflow-x: hidden;
   padding-top: 0.5rem;
-  border: var(--light-pink) 2px solid;
+  border: var(--ifi-gray-blue) 2px solid;
   border-radius: 10px;
   padding: 1rem;
   margin: 0.5rem 0;
@@ -709,8 +802,8 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 /* ✅ Done button */
 .popup-done-btn {
   margin-top: 1rem;
-  background-color: var(--pink);
-  color: var(--pale-yellow);
+  background-color: var(--ifi-blue-dark);
+  color: var(--ifi-gray);
   border: none;
   border-radius: 10px;
   padding: 0.7rem 1.8rem;
@@ -721,7 +814,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 }
 
 .popup-done-btn:hover {
-  background-color: #d91860;
+  background-color: var(--ifi-blue-dark);
 }
 
 /* Menu page divider between language section and rules */
@@ -729,8 +822,8 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   width: 100%;
   max-width: 520px;
   border: 0;
-  border-top: 2px solid var(--light-pink);
-  opacity: 0.25;
+  border-top: 2px solid var(--ifi-blue);
+  opacity: 0;
   margin: 1rem 0;
 }
 
@@ -742,7 +835,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 .select-language {
   width: 100%;
   max-width: 520px;
-  border: 2px solid var(--light-pink);
+  border: 2px solid var(--ifi-gray-blue);
   border-radius: 12px;
   padding: 1rem;
   margin: 0.5rem 0;
@@ -790,7 +883,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 }
 
 .language-options input[type="radio"] {
-  accent-color: var(--pink);
+  accent-color: var(--ifi-blue-dark);
   transform: scale(1.6);
 }
 
@@ -840,5 +933,10 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   .popup-close-btn {
     top: 0.3rem;
     left: 0.3rem;
+  }
+
+  /* Mobile: disable fixed background attachment for better performance */
+  .home-screen {
+    background-attachment: scroll;
   }
 }

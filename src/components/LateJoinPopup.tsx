@@ -29,7 +29,7 @@ export default function LateJoinPopup({
         <p>{message}</p>
 
         <button type="button" className="popup-done-btn" onClick={onClose}>
-          {i18n.ui.cheers || "Cheerzs!"}
+          {i18n.ui.cheerzs || "Cheerzs!"}
         </button>
       </div>
     </div>

@@ -519,4 +519,9 @@ export const neverHaveIEver = [
       en: "been kicked out of a bar or club.",
       no: "blitt kastet ut av en bar eller et utested.",
     },
+    {
+      id: 114,
+      en: "flirted my way out of trouble.",
+      no: "flørtet meg ut av problemer.",
+    }
 ];

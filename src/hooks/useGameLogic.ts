@@ -11,6 +11,7 @@ import { pointAtSomeone } from "../data/pointAtSomeone";
 import { newRules } from "../data/newRule";
 import { drinkingBuddy } from "../data/drinkingBuddy";
 import { wildcard } from "../data/wildcard";
+import { spotifyUrls } from "../data/urls/spotifyUrls";
 
 type PlayerName = string;
 
@@ -19,7 +20,7 @@ type CardDescriptor =
   | { kind: "question"; category: CategoryKey; questionId?: string | number; selectedPlayer?: PlayerName }
   | { kind: "rule"; ruleId: string | number }
   | { kind: "wildcard"; questionId?: string | number; selectedPlayer?: PlayerName }
-  | { kind: "drinkingbuddy"; p1: PlayerName | null; p2: PlayerName | null };
+  | { kind: "drinkingbuddy"; p1: PlayerName | null; p2: PlayerName | null }
 
 const pickTwoDifferentPlayers = (players: PlayerName[]) => {
   if (!Array.isArray(players) || players.length < 2) return { p1: null, p2: null };
@@ -136,6 +137,27 @@ export default function useGameLogic(language: LanguageCode) {
     const cat = getRandomCategory();
     setCategory(cat);
 
+    if (cat === "spotify") {
+      const track = getRandomItem(spotifyUrls as { id: string | number; url: string }[]);
+      const trackUrl = track?.url || "https://open.spotify.com";
+      const selectedPlayer = playersForPrompts.length > 0 ? getRandomItem(playersForPrompts) : null;
+
+      if (selectedPlayer) {
+        setPlayer(selectedPlayer);
+      }
+
+      const nextCard: CardDescriptor = {
+        kind: "question",
+        category: "spotify",
+        questionId: track?.id,
+        selectedPlayer,
+      };
+
+      setCurrentCard(nextCard);
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      setPrompt(trackUrl);
+      return nextCard;
+    }
     if (cat === "rule") {
       const remainingRules = newRules.filter((r) => !activeAfterTick.some((a) => a.id === r.id));
 
