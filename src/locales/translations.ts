@@ -59,6 +59,8 @@ export const translations = {
       lateJoinPenaltyMessage: "Ops! You're late to the party, so unfortunatly, you have to {penalty}",
       confirmLeaveRoom: "Are you sure you want to leave the room?",
       menu: "Menu",
+      loadingQr: "Loading QR...",
+      openInSpotify: "Open in Spotify",
 
       gameRulesIntro:
         "Welcome to Cheerzs! Every card has a category, and the rules for each are as follows:",
@@ -108,8 +110,8 @@ export const translations = {
       ifiSkiturEdition: "IFI Skitur Edition",
       selectLanguage: "Velg språk",
       done: "Ferdig",
-      createRoom: "Opprett et rom",
-      joinRoom: "Bli med i et rom",
+      createRoom: "Lag rom",
+      joinRoom: "Join rom",
       joiningRoom: "Blir med i rommet",
       orAddPlayers: "...eller spill offline ",
       here: "her",
@@ -147,6 +149,8 @@ export const translations = {
       lateJoinPenaltyMessage: "Oops! Du er sen til festen, så dessverre må du {penalty}",
       confirmLeaveRoom: "Er du sikker på at du vil forlate rommet?",
       menu: "Meny",
+      loadingQr: "Laster QR...",
+      openInSpotify: "Åpne i Spotify",
 
       gameRulesIntro:
         "Velkommen til Cheerzs! Hvert kort har en kategori, og reglene for hver av dem er som følger:",

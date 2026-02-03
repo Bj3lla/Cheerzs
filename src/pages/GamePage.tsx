@@ -10,6 +10,7 @@ import { useGame } from "../context/GameContext";
 import { categoryColors } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 import type { LanguageCode } from "../hooks/useLanguage";
+import SpotifyCard from "../components/SpotifyCard";
 
 export default function GamePage({ language }: { language: LanguageCode }) {
   const {
@@ -490,9 +491,19 @@ export default function GamePage({ language }: { language: LanguageCode }) {
         </div>
       )}
 
-      <Card
-        prompt={cardPrompt}
-      />
+      {String(category) === "spotify" ? (
+        <SpotifyCard
+          trackID={
+            currentCard && 'questionId' in currentCard 
+              ? (typeof currentCard.questionId === 'number' ? currentCard.questionId : Number(currentCard.questionId) || 0)
+              : 0
+          }
+          trackUrl={prompt}
+          language={language}
+        />
+      ) : (
+        <Card prompt={cardPrompt} />
+      )}
 
       {(!isRoomGame || isHost) && (
         <Button

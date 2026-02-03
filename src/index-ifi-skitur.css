@@ -264,7 +264,7 @@ span.manual-link, .link {
 }
 
 .add-player {
-  width: 100%;
+  min-width: 100%;
 }
 
 .add-player-error {
@@ -291,7 +291,6 @@ span.manual-link, .link {
   flex-direction: row;
   gap: 0.5rem;
   width: 100%;
-  max-width: 400px;
 }
 
 .friend-input input {
