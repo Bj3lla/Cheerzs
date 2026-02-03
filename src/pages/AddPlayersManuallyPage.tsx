@@ -80,13 +80,13 @@ export default function AddPlayersManuallyPage({ language }: { language: Languag
   return (
     <div className="add-players-manually">
       <Topbar to="/" />
-      <h1 className="home-title">
+      {/* <h1 className="home-title">
         {i18n.ui.cheerzs}
         <br />
         <div className="subtitle">
           {i18n.ui.ifiSkiturEdition}
         </div>
-      </h1>
+      </h1> */}
       <p> 
         {i18n.ui.addPlayersInstruction}
       </p>
