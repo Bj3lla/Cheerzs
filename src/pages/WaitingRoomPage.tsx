@@ -353,7 +353,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
       <div className="top-bar">
         <button
           type="button"
-          className="dark-border small"
+          className="button"
           onClick={() => setShowLeaveRoomPopup(true)}
           aria-label={i18n.ui.leaveGame}
           title={i18n.ui.leaveGame}
@@ -394,7 +394,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
           <div className="start-game-btn">
             <Button
               label={i18n.ui.gameRules || "Rules"}
-              color="light"
+              color="dark-border"
               onClick={() => setShowRulesPopup(true)}
               size="large"
             />
