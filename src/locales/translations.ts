@@ -60,10 +60,11 @@ export const translations = {
       confirmLeaveRoom: "Are you sure you want to leave the room?",
       menu: "Menu",
       loadingQr: "Loading QR...",
-      openInSpotify: "Open in Spotify",
+      openInSpotify: "Scan QR code to play in Spotify, or click ",
+      spotifyRules: " hand out 5 sips if you guess the song title right. Otherwise, drink 5 sips yourself.",
 
       gameRulesIntro:
-        "Welcome to Cheerzs! Every card has a category, and the rules for each are as follows:",
+        "Every card has a category, and the rules for each are as follows:",
       gameRulesList: [
         { title: "Truth", text: "answer honestly, or drink 5 sips." },
         { title: "Dare", text: "do the dare, or drink 5 sips." },
@@ -77,10 +78,16 @@ export const translations = {
           text: "follow new rules until they're repealed; if you forget, you drink 1 sip.",
         },
         {
-          title: "Drinkingbuddy",
+          title: "Drinking Buddy",
           text: "you're partnered up! If one drinks, both drink (the same amount).",
         },
-        { title: "Wildcard", text: "Play the game to find out. Cheerzs!" },
+        {
+          title: "Guess the Song!",
+          text: "If you can guess the songtitle, hand out 5 sips; otherwise, drink 5 sips. Optionally, if you can guess the artist(s) too, hand out 10 sips!",
+        },
+        { title: "Wildcard", 
+          text: "Play the game to find out. Cheerzs!" 
+        },
       ],
     },
     categories: {
@@ -92,6 +99,7 @@ export const translations = {
       repeal: "Rule Repealed!",
       drinkingbuddy: "Drinking Buddy",
       wildcard: "Wildcard",
+      spotify: "Guess the Song!",
     },
   },
 
@@ -150,10 +158,11 @@ export const translations = {
       confirmLeaveRoom: "Er du sikker på at du vil forlate rommet?",
       menu: "Meny",
       loadingQr: "Laster QR...",
-      openInSpotify: "Åpne i Spotify",
+      openInSpotify: "Skann QR-koden for å spille i Spotify, eller klikk ",
+      spotifyRules: " del ut 5 slurker hvis du gjetter sangtittelen riktig. Hvis ikke drikker du 5 slurker selv.",
 
       gameRulesIntro:
-        "Velkommen til Cheerzs! Hvert kort har en kategori, og reglene for hver av dem er som følger:",
+        "Hvert kort har en kategori, og reglene for hver av dem er som følger:",
       gameRulesList: [
         { title: "Sannhet", text: "svar ærlig, eller drikk 5 slurker." },
         { title: "Utfordring", text: "gjør utfordringen, eller drikk 5 slurker." },
@@ -173,6 +182,10 @@ export const translations = {
           title: "Drikke kompis",
           text: "du får en \"partner in crime\"! Hvis én drikker, drikker begge (like mange slurker).",
         },
+        {
+          title: "Guess the Song!",
+          text: "del ut 5 slurker hvis du klarer å gjette sangtittelen. Hvis ikke drikker du 5 slurker selv. Valgfritt: del ut 10 slurker hvis du også klarer gjette artisten(e)!"
+        }, 
         { title: "Wildcard", text: "Spill for å finne ut. Cheerzs!" },
       ],
     },
@@ -185,6 +198,7 @@ export const translations = {
       repeal: "Regel opphevet!",
       drinkingbuddy: "Drikke Kompis",
       wildcard: "Wildcard",
+      spotify: "Gjett Sangen!",
     },
   },
 };

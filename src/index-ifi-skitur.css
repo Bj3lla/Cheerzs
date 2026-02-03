@@ -6,7 +6,7 @@
 :root {
   
   /* IFI Skitur Edition */
-  --dark: #221a22;
+  --dark: #051324;
   --ifi-blue-dark: #395069;
   --ifi-blue: #698ea8;
   --ifi-gray-blue: #86a6ba;
@@ -507,7 +507,7 @@ p.waiting-for-host-message {
 }
 .card-container {
   background-color: var(--dark);
-  color: var(--pale-yellow);
+  color: var(--ifi-gray);
   border-radius: 1rem;
   padding: 2rem 1.5rem;
   max-width: 80vw;
@@ -545,6 +545,44 @@ p.waiting-for-host-message {
   to { transform: scale(1); opacity: 1; }
 }
 
+.spotify-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background-color: var(--ifi-gray-blue);
+}
+
+.spotify-card p {
+  color: var(--ifi-blue-dark);
+  font-size: 1rem;
+  max-width: 200px;
+  margin: 0.5rem 0 0;
+}
+
+.qr-code {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.qr-code img {
+  width: 200px;
+  height: 200px;
+  border-radius: 12px;
+}
+
+.qr-code a {
+  margin-top: 0.5rem;
+  color: var(--ifi-blue-dark);
+  text-decoration: underline;
+  font-size: 1rem;
+}
 /* -------------------------------
    🔘 Buttons (Global)
 --------------------------------*/
@@ -594,7 +632,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 }
 
 .active-rules-header h3 {
-  color: var(--rule);
+  color: var(--ifi-blue-dark);
   margin: 0;
   text-align: center;
 }
@@ -617,14 +655,15 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   border-radius: 10px;
   padding: 0.5rem 1rem;
   color: var(--dark);
-  text-align: left;
+  text-align: center;
   font-family: "Montserrat", sans-serif;
-  
+  min-width: 400px;
 }
 
 .active-rules ul {
   list-style-type: "✔️ ";
-  padding-left: 1.6rem;
+  list-style-position: inside;
+  padding-left: 0rem;
   margin: 0.75rem 0;
 }
 
@@ -714,7 +753,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   overflow-y: auto;
   overflow-x: hidden;
   padding-top: 0.5rem;
-  border: var(--light-pink) 2px solid;
+  border: var(--ifi-gray-blue) 2px solid;
   border-radius: 10px;
   padding: 1rem;
   margin: 0.5rem 0;
@@ -783,8 +822,8 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
   width: 100%;
   max-width: 520px;
   border: 0;
-  border-top: 2px solid var(--light-pink);
-  opacity: 0.25;
+  border-top: 2px solid var(--ifi-blue);
+  opacity: 0;
   margin: 1rem 0;
 }
 
@@ -796,7 +835,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 .select-language {
   width: 100%;
   max-width: 520px;
-  border: 2px solid var(--light-pink);
+  border: 2px solid var(--ifi-gray-blue);
   border-radius: 12px;
   padding: 1rem;
   margin: 0.5rem 0;

@@ -39,5 +39,5 @@ export const categoryColors: Record<CategoryKey, string> = {
   repeal: "#b42a82",
   drinkingbuddy: "#ff5757",
   wildcard: "#ff9800",
-  spotify: "#128139",
+  spotify: "#ff9800",
 };

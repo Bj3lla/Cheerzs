@@ -500,6 +500,9 @@ export default function GamePage({ language }: { language: LanguageCode }) {
           }
           trackUrl={prompt}
           language={language}
+          selectedPlayer={
+            currentCard && 'selectedPlayer' in currentCard ? currentCard.selectedPlayer : null
+          }
         />
       ) : (
         <Card prompt={cardPrompt} />
