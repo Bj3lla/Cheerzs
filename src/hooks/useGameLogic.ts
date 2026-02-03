@@ -138,10 +138,12 @@ export default function useGameLogic(language: LanguageCode) {
     setCategory(cat);
 
     if (cat === "spotify") {
-      const track = getRandomItem(spotifyUrls as { id: string | number; url: string }[]);
+      const track = getRandomItem(spotifyUrls);
       const trackUrl = track?.url || "https://open.spotify.com";
       const selectedPlayer = playersForPrompts.length > 0 ? getRandomItem(playersForPrompts) : null;
 
+      setPrompt(trackUrl);
+      
       if (selectedPlayer) {
         setPlayer(selectedPlayer);
       }
@@ -155,7 +157,6 @@ export default function useGameLogic(language: LanguageCode) {
 
       setCurrentCard(nextCard);
       broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
-      setPrompt(trackUrl);
       return nextCard;
     }
     if (cat === "rule") {

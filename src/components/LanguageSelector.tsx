@@ -85,7 +85,7 @@ export default function LanguageSelector({
                     checked={language === "en"}
                     onChange={() => handleLanguageChange("en")}
                   />
-                  🇬🇧 English
+                  English
                 </label>
                 <label>
                   <input
@@ -95,7 +95,7 @@ export default function LanguageSelector({
                     checked={language === "no"}
                     onChange={() => handleLanguageChange("no")}
                   />
-                  🇳🇴 Norsk
+                  Norsk
                 </label>
               </div>
             </div>

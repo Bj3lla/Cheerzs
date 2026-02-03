@@ -571,11 +571,12 @@ p.waiting-for-host-message {
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .qr-code img {
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   border-radius: 12px;
 }
 

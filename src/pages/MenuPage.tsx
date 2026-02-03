@@ -45,7 +45,7 @@ export default function MenuPage({
               checked={language === "en"}
               onChange={() => onLanguageChange("en")}
             />
-            🇬🇧 English
+            English
           </label>
           <label>
             <input
@@ -55,7 +55,7 @@ export default function MenuPage({
               checked={language === "no"}
               onChange={() => onLanguageChange("no")}
             />
-            🇳🇴 Norsk
+            Norsk
           </label>
         </div>
       </div>
