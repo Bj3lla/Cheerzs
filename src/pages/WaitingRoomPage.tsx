@@ -8,6 +8,7 @@ import { translations } from "../locales/translations";
 import type { LanguageCode } from "../hooks/useLanguage";
 import { IoArrowBack } from "react-icons/io5";
 import LeaveRoomPopup from "../components/LeaveRoomPopup";
+import LanguageSelector from "src/components/LanguageSelector";
 
 export default function WaitingRoomPage({ language = "en" }: { language?: LanguageCode }) {
   const navigate = useNavigate();
