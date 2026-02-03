@@ -6,6 +6,8 @@ import CheerzsRulesPopup from "../components/CheerzsRulesPopup";
 import { useGame } from "../context/GameContext";
 import { translations } from "../locales/translations"; 
 import type { LanguageCode } from "../hooks/useLanguage";
+import { IoArrowBack } from "react-icons/io5";
+import LeaveRoomPopup from "../components/LeaveRoomPopup";
 
 export default function WaitingRoomPage({ language = "en" }: { language?: LanguageCode }) {
   const navigate = useNavigate();
@@ -31,6 +33,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [showRulesPopup, setShowRulesPopup] = useState<boolean>(false);
+  const [showLeaveRoomPopup, setShowLeaveRoomPopup] = useState(false);
 
   const ablyRef = useRef(null);
   const channelRef = useRef(null);
@@ -335,19 +338,35 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
       {showRulesPopup && (
         <CheerzsRulesPopup onClose={() => setShowRulesPopup(false)} />
       )}
+
+      {showLeaveRoomPopup && (
+        <LeaveRoomPopup
+          language={language}
+          onClose={() => setShowLeaveRoomPopup(false)}
+          onConfirm={() => {
+            setShowLeaveRoomPopup(false);
+            void leaveGame();
+          }}
+        />
+      )}
+
       <div className="top-bar">
         <button
           type="button"
           className="dark-border small"
-          onClick={leaveGame}
+          onClick={() => setShowLeaveRoomPopup(true)}
           aria-label={i18n.ui.leaveGame}
           title={i18n.ui.leaveGame}
         >
-          {i18n.ui.leaveGame}
+          <IoArrowBack size={24} />
         </button>
       </div>
 
-      <h2 className="waiting-room-title">{i18n.ui.roomID}{normalizedRoomID || roomId}</h2>
+      <h2 className="waiting-room-title">
+        <span style={{ color: 'var(--dark)' }}>{i18n.ui.roomID}</span>
+        {' '}
+        <span style={{ color: 'var(--pink)' }}>{normalizedRoomID || roomId}</span>
+      </h2>
 
       {loading && <p>{i18n.ui.loading}</p>}
       {error && <p className="error-message">{error}</p>}
