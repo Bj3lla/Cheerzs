@@ -199,8 +199,6 @@ p.error-message {
   max-width: 100vw;
   min-height: 100vh;
   min-height: 100dvh;
-  max-height: 100vh;
-  max-height: 100dvh;
   background: linear-gradient(180deg, var(--ifi-gray) 0%, var(--ifi-gray-blue) 100%);
   background-attachment: fixed;
   overflow-y: auto;
@@ -514,7 +512,7 @@ p.waiting-for-host-message {
    🃏 Cards & Layout
 --------------------------------*/
 .category-header {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   font-family: "Shrikhand", cursive;
   font-size: 2.5rem;
 }
@@ -674,7 +672,7 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
 }
 
 .active-rules ul {
-  list-style-type: "✔️ ";
+  list-style-type: "🍺 ";
   list-style-position: inside;
   padding-left: 0rem;
   margin: 0.75rem 0;
@@ -911,7 +909,10 @@ button.dark-border { background-color: transparent; color: var(--dark); border: 
     padding-top: 0;
   }
 
-  .top-bar { padding: 0.8rem 1rem; }
+  .top-bar { 
+    padding: 0.5rem 0rem;
+    padding-right: 1rem;
+  }
 
   /* Waiting room sits slightly lower on mobile */
   .waiting-room-page { padding-top: calc(2rem + env(safe-area-inset-top, 0px)); }

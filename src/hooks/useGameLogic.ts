@@ -381,6 +381,14 @@ export default function useGameLogic(language: LanguageCode) {
       setCategory(cat);
       setPlayer(selectedPlayer || "");
 
+      // Handle spotify category specially
+      if (cat === "spotify") {
+        const track = spotifyUrls.find((t) => t.id === questionId);
+        const trackUrl = track?.url || "https://open.spotify.com";
+        setPrompt(trackUrl);
+        return;
+      }
+
       const question = (() => {
         if (cat === "truth") return truthOrDare.truth.find((q) => q.id === questionId);
         if (cat === "dare") return truthOrDare.dare.find((q) => q.id === questionId);
