@@ -31,23 +31,24 @@ export default function SpotifyCard({ trackUrl, language, selectedPlayer }: Spot
 
   return (
     <div className="card-container"> 
-        {selectedPlayer && <p className="selected-player">{selectedPlayer}, {i18n.ui.spotifyRules}</p>}
+        {selectedPlayer && <p className="selected-player">{selectedPlayer}. {i18n.ui.spotifyRules}</p>}
+        
+        <div className="qr-code">
+        {qrDataUrl ? (
+            <img src={qrDataUrl} alt="Spotify Track QR Code" className="w-48 h-48" />
+        ) : (
+            <p> {i18n.ui.loadingQr} </p>
+        )} 
+        </div>
+        
         <Button
-            label="Click to play song"
+            label="Play song"
             color="accent"
             onClick={() => window.open(trackUrl, "_blank")}
             size="large"
             disabled={false}
         />
 
-        {/* <div className="qr-code">
-        {/* {qrDataUrl ? (
-            <img src={qrDataUrl} alt="Spotify Track QR Code" className="w-48 h-48" />
-        ) : (
-            <p> {i18n.ui.loadingQr} </p>
-        )} */}
-
-        {/* </div> */}
         
     </div>
   );

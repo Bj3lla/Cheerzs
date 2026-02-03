@@ -61,7 +61,7 @@ export const translations = {
       menu: "Menu",
       loadingQr: "Loading QR...",
       openInSpotify: "Scan QR code to play in Spotify, or click ",
-      spotifyRules: " hand out 5 sips if you guess the song title right. Otherwise, drink 5 sips yourself.",
+      spotifyRules: " Hand out 5 sips if you guess the song correctly, or drink 5 sips yourself.",
 
       gameRulesIntro:
         "Every card has a category, and the rules for each are as follows:",
@@ -159,7 +159,7 @@ export const translations = {
       menu: "Meny",
       loadingQr: "Laster QR...",
       openInSpotify: "Skann QR-koden for å spille i Spotify, eller klikk ",
-      spotifyRules: " del ut 5 slurker hvis du gjetter sangtittelen riktig. Hvis ikke drikker du 5 slurker selv.",
+      spotifyRules: " Del ut 5 slurker hvis du gjetter sangtittelen riktig, eller drikk 5 slurker selv.",
 
       gameRulesIntro:
         "Hvert kort har en kategori, og reglene for hver av dem er som følger:",
