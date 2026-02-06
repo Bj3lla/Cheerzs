@@ -127,13 +127,6 @@ export const newRules = [
     repelNo: "Si 'jeg' uten straff!",
   },
   {
-    id: 19, 
-    en: "Switch seats with someone when you draw this card.",
-    repelEn: "Seat-swapping is over!",
-    no: "Bytt plass med noen når du trekker dette kortet.",
-    repelNo: "Sete-bytte er over!",
-  },
-  {
     id: 20,
     en: "You are not allowed to drink with your right hand.",
     repelEn: "Right-hand drinking is back!",

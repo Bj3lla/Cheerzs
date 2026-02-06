@@ -295,8 +295,8 @@ export const truthOrDare = {
     },
     {
       id: 9,
-      en: "do 10 squats while making eye contact with someone.",
-      no: "gjør 10 knebøy mens du holder øyekontakt med noen."
+      en: "do 5 squats while making eye contact with someone.",
+      no: "gjør 5 knebøy mens du holder øyekontakt med noen."
     },
     {
       id: 10,
@@ -414,11 +414,6 @@ export const truthOrDare = {
       no: "fortell en kort historie med bare lydeffekter og setninger som «og jeg bare», i 20 sekunder."
     },
     {
-      id: 38,
-      en: "make a 'new year, new me' pose and hold it for 10 seconds.",
-      no: "lag en «new year, new me»-pose og hold den i 10 sekunder."
-    },
-    {
       id: 39,
       en: "do an impression of someone ordering drinks at a fancy bar.",
       no: "gjør en imitasjon av noen som bestiller drinker på en fancy bar."
@@ -468,5 +463,15 @@ export const truthOrDare = {
       en: "loudly sing the chorus of any song.",
       no: "syng refrenget til en hvilken som helst sang høyt."
     },
+    {
+      id: 52,
+      en: "demonstrate your favorite sex-position (or drink 7 sips)",
+      no: "demonstrer favoritt sexstillingen din (eller drikk 7 slurker)"
+    }, 
+    {
+      id: 53,
+      en: "take a sip without using your hands.",
+      no: "ta en slurk uten å bruke hendene."
+    }
   ],
 };

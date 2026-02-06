@@ -16,8 +16,8 @@ export const neverHaveIEver = [
   },
   {
     id: 4,
-    en: "thrown up from drinking.",
-    no: "kastet opp av å drikke.",
+    en: "thrown up at a party.",
+    no: "kastet opp på en fest.",
   },
   {
     id: 5,  
@@ -141,13 +141,13 @@ export const neverHaveIEver = [
   },
   {
     id: 33,
-    en: "quit something that wasn’t good for me this year.",
-    no: "sluttet med noe som ikke var bra for meg i år.",
+    en: "quit something that wasn’t good for me.",
+    no: "sluttet med noe som ikke var bra for meg.",
   },
   {
     id: 34,
-    en: "celebrated a promotion, new job, or major work win this year.",
-    no: "feiret en forfremmelse, ny jobb eller en stor jobbseier i år.",
+    en: "gotten a promotion, new job, or major work-related win this year.",
+    no: "fått en forfremmelse, ny jobb eller en stor jobbrelatert seier i år.",
   },
   {
     id: 36,
