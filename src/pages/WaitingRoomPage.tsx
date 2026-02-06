@@ -337,7 +337,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
   return (
     <div className="waiting-room-page">
       {showRulesPopup && (
-        <CheerzsRulesPopup onClose={() => setShowRulesPopup(false)} />
+        <CheerzsRulesPopup onClose={() => setShowRulesPopup(false)} language={language} />
       )}
 
       {showLeaveRoomPopup && (
