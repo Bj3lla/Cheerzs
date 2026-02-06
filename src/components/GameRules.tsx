@@ -11,7 +11,7 @@ export default function GameRules({ language = "en" }: { language?: LanguageCode
   const rules = (Array.isArray(i18n.ui.gameRulesList) ? i18n.ui.gameRulesList : fallback.ui.gameRulesList) as RuleItem[];
 
   return (
-    <div className="cheerzs-rules-content">
+    <div className="cheerzs-rules-content" key={language}>
       <h3>{i18n.ui.gameRules || "Game Rules"}</h3>
       <p>{intro}</p>
       <ul className="cheerzs-rules-list">
