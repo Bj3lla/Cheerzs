@@ -523,5 +523,21 @@ export const neverHaveIEver = [
       id: 114,
       en: "flirted my way out of trouble.",
       no: "flørtet meg ut av problemer.",
-    }
+    },
+    {
+      id: 115,
+      en: "been at IFI Skitur.",
+      no: "vært på IFI Skitur.",
+    }, 
+    {
+      id: 116,
+      en: "been with someone in this room.",
+      no: "vært med noen i dette rommet.",
+    },
+    {
+      id: 117,
+      en: "had a IFI-crush.",
+      no: "hatt en IFI-crush.",
+     },
+     
 ];

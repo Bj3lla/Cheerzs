@@ -127,8 +127,8 @@ export const truthOrDare = {
     },
     {
       id: 26,
-      en: "what’s a weird habit you have?",
-      no: "hva er en rar vane du har?",
+      en: "what’s your biggest turn-on?",
+      no: "hva er din største turn-on?",
     },
     {
       id: 27,
@@ -250,6 +250,11 @@ export const truthOrDare = {
       en: "if you could delete one cringe memory forever, what would it be?",
       no: "hvis du kunne slettet ett pinlig minne for alltid, hvilket ville det vært?",
     },
+    {
+      id: 51,
+      en: "have you ever had a sex-dream about someone in this room? And if so, about who?",
+      no: "har du noen gang hatt en sex-drøm om noen i dette rommet? Og i så fall, omhvem?",
+    }
 
   ],
   dare: [
@@ -419,11 +424,6 @@ export const truthOrDare = {
       no: "gjør en imitasjon av noen som bestiller drinker på en fancy bar."
     },
     {
-      id: 41,
-      en: "do a dramatic slow turn like you just heard the hottest gossip.",
-      no: "gjør en dramatisk slow turn som om du nettopp hørte det villeste sladderet."
-    },
-    {
       id: 42,
       en: "make a 10-second commercial selling the drink you’re holding.",
       no: "lag en 10-sekunders reklame der du selger drikken du holder."
@@ -450,8 +450,8 @@ export const truthOrDare = {
     },
     {
       id: 49,
-      en: "do a dramatic reading of the last text message you sent (no names).",
-      no: "les opp den siste tekstmeldingen du sendte med dramatisk innlevelse (ingen navn)."
+      en: "do a dramatic reading of the last text message you sent, without mentioning names.",
+      no: "les opp den siste tekstmeldingen du sendte med dramatisk innlevelse, uten å nevne navn."
     },
     {
       id: 50,
@@ -472,6 +472,21 @@ export const truthOrDare = {
       id: 53,
       en: "take a sip without using your hands.",
       no: "ta en slurk uten å bruke hendene."
-    }
+    },
+    {
+      id: 54,
+      en: "bark 3 times at the person to your left.",
+      no: "bjeff 3 ganger på personen til venstre for deg."
+    },
+    {
+      id: 55,
+      en: "look deep into the eyes of the person to your right while you give them a sincere compliment.",
+      no: "se dypt inn i øynene til personen til høyre for deg mens du gir dem et ektefølt kompliment."
+    },
+    {
+      id: 56,
+      en: "have a staring contest with the person across from you. Loser drinks.",
+      no: "ha en stirrekonkurranse med personen overfor deg. Taperen drikker."
+    },
   ],
 };

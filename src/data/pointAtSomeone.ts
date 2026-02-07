@@ -82,7 +82,7 @@ export const pointAtSomeone = [
   {
     id: 17,
     en: "spends too much money on something random?",
-    no: "bruker for mye penger på noe tilfeldig?"
+    no: "bruker for mye penger på noe random?"
   },
   {
     id: 18,
@@ -567,7 +567,22 @@ export const pointAtSomeone = [
    },
    {
     id: 116,
-    en: "is the dream of their mother-in-law?",
-    no: "er svigermors drøm?"
+    en: "could you bring home to your parents?",
+    no: "kunne du tatt med hjem til foreldrene dine?"
+   },
+   {
+    id: 117,
+    en: "has been on the most dates?",
+    no: "har vært på flest dates?"
+   },
+   {
+    id: 118,
+    en: "is the biggest party animal?",
+    no: "er den største party-løven?"
+   },
+   {
+    id: 119,
+    en: "can never be single for more than two months?",
+    no: "kan aldri være singel i mer enn to måneder?"
    },
 ];

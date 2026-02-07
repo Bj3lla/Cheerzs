@@ -8,5 +8,5 @@ export const drinkingBuddy = [
         id: 2,
         en: "make a toast! Cheerzs!!",
         no: "tar en skål! Cheerzs!!",
-    }
+    },
 ]
