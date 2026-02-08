@@ -31,12 +31,12 @@ export const pointAtSomeone = [
   },
   {
     id: 7,
-    en: "ends up on reality TV?",
-    no: "ender opp på reality TV?"
+    en: "intimidates you the most in this room?",
+    no: "intimiderer deg mest i dette rommet?"
   },
   {
     id: 8,
-    en: "starts a business?",
+    en: "will probably start their own business?",
     no: 'kommer til å starte egen "business"?'
   },
   {
@@ -492,8 +492,8 @@ export const pointAtSomeone = [
    },
    {
     id: 101,
-    en: "has the best personality?",
-    no: "har den beste personligheten?"
+    en: "is the most extroverted?",
+    no: "er mest utadvendt?"
    },
    {
     id: 102,
@@ -675,5 +675,10 @@ export const pointAtSomeone = [
     en: "chose this study program just for the money?",
     no: "valgte dette studieprogrammet bare for pengenes skyld?"
    },
+    {
+    id: 138,
+    en: "is the most introverted?",
+    no: "er mest innadvendt?"
+    },
 
 ];
