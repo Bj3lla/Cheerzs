@@ -654,5 +654,26 @@ export const pointAtSomeone = [
     id: 133,
     en: "is the biggest player?",
     no: "er den største playeren?"
-   }
+   },
+   {
+    id: 134,
+    en: "had the prettiest eyes?",
+    no: "hadde de fineste øynene?"
+   }, 
+   {
+    id: 135,
+    en: "watches the most porn?",
+    no: "ser mest på porno?"
+   },
+   {
+    id: 136,
+    en: "in this room do you know the least?",
+    no: "i rommet kjenner du minst?"
+   },
+   {
+    id: 137,
+    en: "chose this study program just for the money?",
+    no: "valgte dette studieprogrammet bare for pengenes skyld?"
+   },
+
 ];

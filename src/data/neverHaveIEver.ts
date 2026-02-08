@@ -1,3 +1,5 @@
+import { i } from "node_modules/vite/dist/node/chunks/moduleRunnerTransport";
+
 export const neverHaveIEver = [
   {
     id: 1,
@@ -112,7 +114,7 @@ export const neverHaveIEver = [
   {
     id: 23,
     en: "ghosted someone.",
-    no: '"ghostet" noen.',
+    no: 'ghostet noen.',
   },
   {
     id: 24,
@@ -135,9 +137,9 @@ export const neverHaveIEver = [
     no: "fullført et nyttårsforsett.",
   },
   {
-    id: 32,
-    en: "started a new hobby and stuck with it.",
-    no: "startet med en ny hobby og fortsatt med den.",
+    id: 29,
+    en: "worn a wig on a night out.",
+    no: "hatt på meg en parykk på byen.",
   },
   {
     id: 33,
@@ -151,28 +153,23 @@ export const neverHaveIEver = [
   },
   {
     id: 36,
-    en: "bought an apartment/house this year.",
-    no: "kjøpt en leilighet/hus i år.",
+    en: "bought an apartment or house.",
+    no: "kjøpt en leilighet eller et hus.",
   },
   {
-    id: 37,
-    en: "ran out of motivation halfway through the year and gave up on a goal.",
-    no: "mistet motivasjonen halvveis i året og ga opp på et mål.",
+    Id: 37,
+    en: "been to another continent.",
+    no: "vært på et annet kontinent.",
   },
   {
     id: 38,
-    en: "said ‘yes’ to an invitation and regretted it.",
-    no: "sagt «ja» til en invitasjon og angret på det.",
+    en: "said ‘yes’ to an invitation and regretted it later.",
+    no: "sagt «ja» til en invitasjon og angret på det etterpå.",
   },
   {
     id: 39,
     en: "ghosted a group chat for weeks because I couldn’t keep up.",
-    no: "ignorert en gruppechat i flere uker fordi jeg ikke hang med.",
-  },
-  {
-    id: 40,
-    en: "traveled somewhere new this year.",
-    no: "reist et sted jeg aldri har vært før i år.",
+    no: "ignorert en gruppechat i flere uker fordi jeg ikke klarte å henge med.",
   },
   {
     id: 41,
@@ -192,22 +189,22 @@ export const neverHaveIEver = [
   {
     id: 48,
     en: "lost my friends on a night out, but found them again hours later.",
-    no: "mistet vennene mine på byen, men fant dem igjen.",
+    no: "mistet vennene mine på byen, men funnet dem igjen timer senere.",
   },
   {
     id: 49,
-    en: "waited in a long club line and still thought it was worth it.",
-    no: "stått i en lang kø til et utested og fortsatt syntes det var verdt det.",
+    en: "waited in a club line for an hour and still thought it was worth it.",
+    no: "stått i kø til et utested i en time og fremdeles syntes det var verdt det.",
   },
   {
     id: 50,
-    en: "tried to sneak food into a club or bar.",
-    no: "prøvd å snike med mat inn på et utested eller en bar.",
+    en: "tried to sneak drinks into a club or bar.",
+    no: "prøvd å snike med meg drikke inn på et utested eller en bar.",
   },
   {
     id: 52,
     en: "taken a ‘bathroom break’ just to recharge for a minute.",
-    no: "tatt en ‘dopause’ bare for å hente meg inn litt.",
+    no: "tatt en ‘dopause’ bare for å hente meg inn igjen.",
   },
   {
     id: 53,
@@ -231,8 +228,8 @@ export const neverHaveIEver = [
   },
   {
     id: 57,
-    en: "been kicked out of a bar or club (even if it wasn’t really my fault).",
-    no: "blitt kastet ut av en bar eller et utested (selv om det ikke egentlig var min skyld).",
+    en: "been kicked out of a bar or club.",
+    no: "blitt kastet ut av en bar eller et utested.",
   },
   {
     id: 58,
@@ -581,7 +578,7 @@ export const neverHaveIEver = [
     },
     {
       id: 126,
-      en: "gone to a bedpress just for the free food.",
+      en: "gone to a bedpress just for free food.",
       no: "gått på bedpress bare for gratis mat.",
     },
     {
@@ -593,6 +590,66 @@ export const neverHaveIEver = [
       id: 128,
       en: "never been at IFI Skitur before.",
       no: "aldri vært på IFI Skitur før.",
+    },
+    {
+      id: 129,
+      en: "rage baited someone at Jodel.", 
+      no: "rage baitet noen på Jodel.",
+    },
+    {
+      id: 130,
+      en: "been to Stavkroa",
+      no: "vært på Stavkroa.",
+    },
+    {
+      id: 131,
+      en: "been in the military.",
+      no: "vært i militæret.",
+    },
+    {
+      id: 132,
+      en: "been kicked out of the military.",
+      no: "blitt kastet ut av militæret.",
+    }, 
+    {
+      id: 133,
+      en: "been to a strip club.",
+      no: "vært på et strippeklubb.",
+    },
+    {
+      id: 134,
+      en: "come back to an ex.",
+      no: "gått tilbake til en eks.",
+    },
+    {
+      id: 135, 
+      en: "been in a long-distance relationship.",
+      no: "vært i et langdistanseforhold.",
+    },
+    {
+      id: 136,
+      en: "been in a relationship for more than 3 years.",
+      no: "vært i et forhold i mer enn 3 år.",
+    },
+    {
+      id: 137,
+      en: "studied in Trondheim.",
+      no: "studert i Trondheim.",
+    },
+    {
+      id: 138,
+      en: "held a position in a student organization.",
+      no: "hatt et verv i en studentforening.",
+    },
+    {
+      id: 139,
+      en: "received a pair of IFI-socks.",
+      no: "fått et par med IFI-sokker."
+    },
+    {
+      id: 140,
+      en: "been a student buddy.",
+      no: "vært fadder.",
     }
 
 ];
