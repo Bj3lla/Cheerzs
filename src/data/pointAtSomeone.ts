@@ -82,12 +82,12 @@ export const pointAtSomeone = [
   {
     id: 17,
     en: "spends too much money on something random?",
-    no: "bruker for mye penger på noe tilfeldig?"
+    no: "bruker for mye penger på noe random?"
   },
   {
     id: 18,
-    en: "cries during a movie?",
-    no: "gråter alltid under en film?"
+    en: "always cries during movies?",
+    no: "gråter alltid under filmer?"
   },
   {
     id: 19,
@@ -112,8 +112,8 @@ export const pointAtSomeone = [
   },
   {
     id: 23,
-    en: "learns a new skill this year?",
-    no: "lærer mest sannsynlig en ny ferdighet i år?"
+    en: "is the most indecisive?",
+    no: "er mest ubesluttsom?"
   },
   {
     id: 24,
@@ -157,8 +157,8 @@ export const pointAtSomeone = [
   },
   {
     id: 33,
-    en: "cuts down on doomscrolling?",
-    no: "kommer til å kutte ned på doomscrollingen?"
+    en: "needs to cut down on their doomscrolling?",
+    no: "trenger å kutte ned på doomscrollingen?"
   },
   {
     id: 34,
@@ -325,4 +325,355 @@ export const pointAtSomeone = [
     en: "has the highest standards?",
     no: "har de høyeste standardene?"
   },
+  {
+    id: 68,
+    en: "is the best at chugging?",
+    no: "er den beste til å chugge?"
+   },
+   {
+    id: 69,
+    en: "is the worst driver?",
+    no: "er den dårligste sjåføren?"
+   },
+   {
+    id: 70,
+    en: "is the best at keeping secrets?",
+    no: "er den beste til å holde på hemmeligheter?"
+   },
+   {
+    id: 71,
+    en: "is the worst at keeping secrets?",
+    no: "er den dårligste til å holde på hemmeligheter?"
+   },
+   {
+    id: 72,
+    en: "is the biggest spender when going out?",
+    no: "spanderer mest på byen?"
+   },
+   {
+    id: 73,
+    en: "is the stingiest when going out?",
+    no: "er den mest gjerrige på byen?"
+   },
+   {
+    id: 74,
+    en: "is the most naive?",
+    no: "er den mest naive?"
+   },
+   {
+    id: 75,
+    en: "is the most sarcastic?",
+    no: "er den mest sarkastiske?"
+   },
+   {
+    id: 76,
+    en: "is the biggest lightweight?",
+    no: "tåler minst alkohol?"
+   },
+   {
+    id: 77,
+    en: "can hold their liquor the best?",
+    no: "tåler mest alkohol?"
+   }, 
+   {
+    id: 78,
+    en: "has the best poker face?",
+    no: "har det beste pokerfjeset?"
+   },
+   {
+    id: 79,
+    en: "has the worst poker face?",
+    no: "har det dårligste pokerfjeset?"
+   },
+   {
+    id: 80,
+    en: "has the highest body count?",
+    no: "har høyest body count?"
+   },
+   {
+    id: 81,
+    en: "has the lowest body count?",
+    no: "har lavest body count?" 
+   },
+   {
+    id: 82, 
+    en: "gets married first?",
+    no: "gifter seg først?"
+   },
+   {
+    id: 83,
+    en: "is the best in bed?",
+    no: "er den beste i sengen?"
+   },
+   {
+    id: 84,
+    en: "has the finest ass?",
+    no: "har den fineste rumpa?"
+   },
+   {
+    id: 85,
+    en: "will become parent first?",
+    no: "kommer til å bli forelder først?"
+   },
+   {
+    id: 86, 
+    en: "dies first in a horror movie?",
+    no: "dør først i en skrekkfilm?"
+   },
+   {
+    id: 87,
+    en: "lost their virginity first?",
+    no: "mistet jomfrudommen først?"
+   },
+   {
+    id: 88,
+    en: "is the best wingman?",
+    no: "er den beste wingmanen?"
+   },
+   {
+    id: 89,
+    en: "shreds the hardest?",
+    no: "shredder hardest?"
+   },
+   {
+    id: 90,
+    en: "always asks others for an upper decky?",
+    no: "spør alltid om å bomme?"
+   },
+   {
+    id: 91,
+    en: "has the best sense of fashion?",
+    no: "har best motesans?"
+   },
+   {
+    id: 92,
+    en: "has the memory of a goldfish?",
+    no: "har hukommelsen til en gullfisk?"
+   },
+   {
+    id: 93,
+    en: "is the soarest loser?",
+    no: "er den dårligste taperen?"
+   },
+   {
+    id: 94,
+    en: "who looks the oldest?",
+    no: "ser eldste ut?"
+   },
+   {
+    id: 95,
+    en: "who looks the youngest?",
+    no: "ser yngst ut?"
+   },
+   {
+    id: 96,
+    en: "should not be allowed into Stavkroa?",
+    no: "bør ikke få komme inn på Stavkroa?"
+   },
+   {
+    Id: 97,
+    en: "has been in a fistfight before?",
+    no: "har vært i slosskamp før?"
+   },
+   {
+    id: 98,
+    en: "has done something illegal?",
+    no: "har gjort noe ulovlig?"
+   },
+   {
+    id: 99,
+    en: "needs to drink more? The one with the most fingers pointed at them drinks 8 sips!",
+    no: "trenger å drikke mer? Den med flest pek drikker 8 slurker!"
+   },
+   {
+    id: 100,
+    en: "is the best kisser?",
+    no: "er den beste kysseren?"
+   },
+   {
+    id: 101,
+    en: "has the best personality?",
+    no: "har den beste personligheten?"
+   },
+   {
+    id: 102,
+    en: "has the prettiest smile?",
+    no: "har det fineste smilet?"
+   },
+   {
+    id: 103,
+    en: "is the craziest?",
+    no: "er mest crazy?"
+   },
+   {
+    id: 104,
+    en: "gets the most matches on Tinder?",
+    no: "får flest matcher på Tinder?"
+   },
+   {
+    id: 105,
+    en: "is the most likely to ghost someone?",
+    no: "kommer mest sannsynlig til å ghoste noen?"
+   },
+   {
+    id: 106, 
+    en: "is the most likely to get ghosted?",
+    no: "kommer mest sannsynlig til å bli ghostet?"
+   },
+   {
+    id: 107,
+    en: "is most lazy in bed?",
+    no: "er mest lat i sengen?"
+   },
+   {
+    id: 108,
+    en: "will get the most drunk tonight?",
+    no: "kommer til å bli fullest i kveld?"
+   },
+   {
+    id: 109,
+    en: "will get some tonight?",
+    no: "kommer til å få seg noe i kveld?"
+   },
+   {
+    id: 110,
+    en: "has the best comebacks?",
+    no: "har de beste comebackene?"
+   },
+   {
+    id: 111,
+    en: "has the best game?",
+    no: "har best game?"
+   },
+   {
+    id: 112,
+    en: "worksout the most?",
+    no: "trener mest?"
+   },
+   {
+    id: 113,
+    en: "is the most cocky?",
+    no: "er mest cocky?"
+   }, 
+   {
+    id: 114,
+    en: "calls the most while drunk?",
+    no: "ringer mest i fylla?"
+   },
+   {
+    id: 115,
+    en: "could you bring home tonight?",
+    no: "kunne du tatt med deg hjem i kveld?"
+   },
+   {
+    id: 116,
+    en: "could you bring home to your parents?",
+    no: "kunne du tatt med hjem til foreldrene dine?"
+   },
+   {
+    id: 117,
+    en: "has been on the most dates?",
+    no: "har vært på flest dates?"
+   },
+   {
+    id: 118,
+    en: "is the biggest party animal?",
+    no: "er den største party-løven?"
+   },
+   {
+    id: 119,
+    en: "can never stay single for more than two months?",
+    no: "kan aldri være singel i mer enn to måneder?"
+   },
+   {
+    id: 120,
+    en: "is the most ready for a relationship?",
+    no: "er mest klar for et forhold?"
+   },
+   {
+    id: 121,
+    en: "smells the best tonight?",
+    no: "lukter best i kveld?"
+   },
+   {
+    id: 122,
+    en: "has the most pictures of themselves on their phone?",
+    no: "har flest bilder av seg selv på mobilen sin?"
+   },
+   {
+    id: 123,
+    en: "becomes jealous the quickest?",
+    no: "blir fortest sjalu?"
+   },
+   {
+    id: 124,
+    en: "has the best hair?",
+    no: "har det fineste håret?"
+   },
+   {
+    id: 125,
+    en: "has the best jokes?",
+    no: "har de beste vitsene?"
+   },
+   {
+    id: 126,
+    en: "is the most ready for working life?",
+    no: "er mest klar for arbeidslivet?"
+   },
+   {
+    id: 127,
+    en: "has big dick energy?",
+    no: "har big dick energy?"
+   },
+   {
+    id: 128,
+    en: "is most spontanious?",
+    no: "er mest spontan?"
+   },
+   {
+    id: 129,
+    en: "is most likely to fall asleep at work?",
+    no: "er det mest sannsynlig at sovner på jobb?"
+   },
+   {
+    id: 130,
+    en: "is a sweaty gamer",
+    no: "er en svett gamer"
+   },
+   {
+    id: 131,
+    en: "is most likely to get a tramp-stamp?",
+    no: "er det mest sannsynlig at tar en tramp-stamp?"
+   },
+   {
+    id: 132,
+    en: "is the worst at chugging?",
+    no: "er dårligst til å chugge?"
+   },
+   {
+    id: 133,
+    en: "is the biggest player?",
+    no: "er den største playeren?"
+   },
+   {
+    id: 134,
+    en: "had the prettiest eyes?",
+    no: "hadde de fineste øynene?"
+   }, 
+   {
+    id: 135,
+    en: "watches the most porn?",
+    no: "ser mest på porno?"
+   },
+   {
+    id: 136,
+    en: "in this room do you know the least?",
+    no: "i rommet kjenner du minst?"
+   },
+   {
+    id: 137,
+    en: "chose this study program just for the money?",
+    no: "valgte dette studieprogrammet bare for pengenes skyld?"
+   },
+
 ];
