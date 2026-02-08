@@ -86,8 +86,8 @@ export const pointAtSomeone = [
   },
   {
     id: 18,
-    en: "cries during a movie?",
-    no: "gråter alltid under en film?"
+    en: "always cries during movies?",
+    no: "gråter alltid under filmer?"
   },
   {
     id: 19,
@@ -327,8 +327,8 @@ export const pointAtSomeone = [
   },
   {
     id: 68,
-    en: "is the best chugger?",
-    no: "er den beste chuggeren?"
+    en: "is the best at chugging?",
+    no: "er den beste til å chugge?"
    },
    {
     id: 69,
@@ -582,7 +582,77 @@ export const pointAtSomeone = [
    },
    {
     id: 119,
-    en: "can never be single for more than two months?",
+    en: "can never stay single for more than two months?",
     no: "kan aldri være singel i mer enn to måneder?"
    },
+   {
+    id: 120,
+    en: "is the most ready for a relationship?",
+    no: "er mest klar for et forhold?"
+   },
+   {
+    id: 121,
+    en: "smells the best tonight?",
+    no: "lukter best i kveld?"
+   },
+   {
+    id: 122,
+    en: "has the most pictures of themselves on their phone?",
+    no: "har flest bilder av seg selv på mobilen sin?"
+   },
+   {
+    id: 123,
+    en: "becomes jealous the quickest?",
+    no: "blir fortest sjalu?"
+   },
+   {
+    id: 124,
+    en: "has the best hair?",
+    no: "har det fineste håret?"
+   },
+   {
+    id: 125,
+    en: "has the best jokes?",
+    no: "har de beste vitsene?"
+   },
+   {
+    id: 126,
+    en: "is the most ready for working life?",
+    no: "er mest klar for arbeidslivet?"
+   },
+   {
+    id: 127,
+    en: "has big dick energy?",
+    no: "har big dick energy?"
+   },
+   {
+    id: 128,
+    en: "is most spontanious?",
+    no: "er mest spontan?"
+   },
+   {
+    id: 129,
+    en: "is most likely to fall asleep at work?",
+    no: "er det mest sannsynlig at sovner på jobb?"
+   },
+   {
+    id: 130,
+    en: "is a sweaty gamer",
+    no: "er en svett gamer"
+   },
+   {
+    id: 131,
+    en: "is most likely to get a tramp-stamp?",
+    no: "er det mest sannsynlig at tar en tramp-stamp?"
+   },
+   {
+    id: 132,
+    en: "is the worst at chugging?",
+    no: "er dårligst til å chugge?"
+   },
+   {
+    id: 133,
+    en: "is the biggest player?",
+    no: "er den største playeren?"
+   }
 ];

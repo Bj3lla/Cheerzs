@@ -538,6 +538,61 @@ export const neverHaveIEver = [
       id: 117,
       en: "had a IFI-crush.",
       no: "hatt en IFI-crush.",
-     },
-     
+    },
+    {
+      id: 118,
+      en: "slept with a colleague.",
+      no: "ligget med en kollega.",
+    },
+    {
+      id: 119,
+      en: "dropped out of school.",
+      no: "droppet ut av skolen.",
+    },
+    {
+      id: 120,
+      en: "been able to play an instrument.",
+      no: "kunne spille et instrument.",
+    },
+    {
+      id: 121,
+      en: "googled myself.",
+      no: "googlet meg selv.",
+    },
+    {
+      id: 122,
+      en: "gotten an A in exphil.",
+      no: "fått A i exphil.",
+    },
+    {
+      id: 123,
+      en: "failed an exam.",
+      no: "strøket på en eksamen.",
+    },
+    {
+      id: 124,
+      en: "pulled an all-nighter to finish a mandatory assignment.",
+      no: "vært oppe hele natten for å bli ferdig med en obligatorisk oppgave.",
+    },
+    {
+      id: 125,
+      en: "fallen asleep at IFI.",
+      no: "sovnet på IFI.",
+    },
+    {
+      id: 126,
+      en: "gone to a bedpress just for the free food.",
+      no: "gått på bedpress bare for gratis mat.",
+    },
+    {
+      id: 127,
+      en: "broken a bone.",
+      no: "brukket et bein.",
+    },
+    {
+      id: 128,
+      en: "never been at IFI Skitur before.",
+      no: "aldri vært på IFI Skitur før.",
+    }
+
 ];
