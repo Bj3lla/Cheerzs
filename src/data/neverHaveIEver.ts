@@ -649,7 +649,32 @@ export const neverHaveIEver = [
     {
       id: 140,
       en: "been a student buddy.",
-      no: "vært fadder.",
-    }
+      no: "vært fadder for nye studenter.",
+    },
+    {
+      id: 141,
+      en: "been to a Quizifi quiz.", //or studentpub quiz
+      no: "vært på en Quizifi-quiz."
+    },
+    {
+      id: 142,
+      en: "been a group-teacher",
+      no: "vært gruppelærer.",
+    },
+    {
+      id: 143,
+      en: "retaken the IN1010 exam.",
+      no: "tatt opp IN1010-eksamen.",
+    },
+    {
+      id: 144, 
+      en: "been to a studentpub in Trondheim.",
+      no: "vært på en studentpub i Trondheim.",
+    },
+    {
+      id: 145, 
+      en: "been at Pub-to-Pub.",
+      no: "vært på Pub-to-Pub.",
+    }, 
 
 ];

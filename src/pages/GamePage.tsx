@@ -65,7 +65,9 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   const [lateJoinMessage, setLateJoinMessage] = useState("");
   const [showLateJoinPopup, setShowLateJoinPopup] = useState(false);
   const [showLeaveRoomPopup, setShowLeaveRoomPopup] = useState(false);
+  const [isDrawingCard, setIsDrawingCard] = useState(false);
 
+  const drawCardInFlightRef = useRef(false);
 
   const i18n = translations[language] || translations.en;
   const isRepealCard = Boolean(repelActive || category === "repeal");
@@ -163,19 +165,33 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     if (!state || typeof state !== "object") return;
     if (!state.card) return;
 
+    // Prevent overlapping API calls
+    if (drawCardInFlightRef.current) return;
+
+    drawCardInFlightRef.current = true;
+    setIsDrawingCard(true);
+
     try {
       await fetch("/api/draw-card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ roomID: normalizedRoomID, username, playerId, state }),
       });
+      
+      // Small delay to ensure smooth card transitions
+      await new Promise(resolve => setTimeout(resolve, 300));
     } catch {
       // ignore
+    } finally {
+      drawCardInFlightRef.current = false;
+      setIsDrawingCard(false);
     }
   };
 
   const hostNext = async () => {
     if (!isHost) return;
+    if (drawCardInFlightRef.current) return; // Prevent spam clicks
+    
     generatePrompt();
     await publishCurrentRoomState();
   };
@@ -521,6 +537,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
           color="primary"
           onClick={isRoomGame ? hostNext : generatePrompt}
           size="large"
+          disabled={isRoomGame && isDrawingCard}
         />
       )}
 

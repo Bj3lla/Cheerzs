@@ -5,7 +5,7 @@ export const gameModes = {
     vorspiel: 'Vorspiel', //same as classic but with more sips?
     girlsNight: 'Girls Night', //girls only questions and dares
     forTheBoys: 'For The Boys', //guttastemning
-    spicyMode: 'Spicy Mode',
+    spicyMode: 'Spicy spicy',
     nachspiel: 'Nachspiel',
     reactFast: 'React Fast', //more competitive games 
 
