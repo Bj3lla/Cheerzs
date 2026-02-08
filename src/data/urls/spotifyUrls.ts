@@ -1715,4 +1715,8 @@ export const spotifyUrls = [
     id: 430,
     url: "https://open.spotify.com/track/1QbOvACeYanja5pbnJbAmk?si=AbGE12OCSDiiOXK26L1ceQ",
   },
+  {
+    id: 431,
+    url: "https://open.spotify.com/track/7w5AOd6HrDIHewHfpABEss?si=wZRV77DORRWJJfp67bYxbQ",
+  }
 ];

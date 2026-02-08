@@ -2,8 +2,8 @@ export const truthOrDare = {
   truth: [
     {
       id: 1,
-      en: "what’s your most embarrassing drunk story?",
-      no: "hva er din mest pinlige fyllehistorie?",
+      en: "have you ever had a crush on someone in this room?",
+      no: "har du noen gang hatt et crush på noen i dette rommet?",
     },
     {
       id: 2,
@@ -52,8 +52,8 @@ export const truthOrDare = {
     },
     {
       id: 11,
-      en: "who’s the most dramatic person here?",
-      no: "hvem er den mest dramatiske personen her?",
+      en: "do you have a crush on anyone right now?",
+      no: "har du et crush på noen akkurat nå?",
     },
     {
       id: 12,
@@ -72,8 +72,8 @@ export const truthOrDare = {
     },
     {
       id: 15,
-      en: "what’s the most childish thing you still do?",
-      no: "hva er det mest barnslige du fortsatt gjør?",
+      en: "what’s your love language?",
+      no: "hva er ditt kjærlighetsspråk?",
     },
     {
       id: 16,
@@ -82,8 +82,8 @@ export const truthOrDare = {
     },
     {
       id: 17,
-      en: "have you ever ghosted someone? Why? Storytime!",
-      no: "har du noen gang ghostet noen? Hvorfor? Storytime!",
+      en: "have you ever ghosted someone? And if so, why? Storytime!",
+      no: "har du noen gang ghostet noen? Og i så fall, hvorfor? Storytime!",
     },
     {
       id: 18,
@@ -207,8 +207,8 @@ export const truthOrDare = {
     },
     {
       id: 42,
-      en: "what’s a small win you’re proud of lately?",
-      no: "hva er en liten seier du har hatt nylig som du er stolt av?",
+      en: "what was your first impression of the person to your left?",
+      no: "hva var førsteinntrykket ditt av personen til venstre for deg?",
     },
     {
       id: 43,
@@ -222,8 +222,8 @@ export const truthOrDare = {
     },
     {
       id: 45,
-      en: "what’s the most dramatic thing you’ve done over something small?",
-      no: "hva er det mest dramatiske du har gjort over noe lite?",
+      en: "what’s the strangest thing you've eaten?",
+      no: "hva er det rareste du har spist?",
     },
     {
       id: 46,
@@ -232,13 +232,13 @@ export const truthOrDare = {
     },
     {
       id: 47,
-      en: "what’s your most memorable new year’s moment?",
-      no: "hva er ditt mest minneverdige nyttårsøyeblikk?",
-    },
-    {
-      id: 48,
       en: "what’s the nicest thing someone has done for you recently?",
       no: "hva er det fineste noen har gjort for deg i det siste?",
+    },
+    {
+      Id: 48,
+      en: "what’s a skill you wish you had?",
+      no: "hva er en ferdighet du skulle ønske du hadde?",
     },
     {
       id: 49,
@@ -253,7 +253,32 @@ export const truthOrDare = {
     {
       id: 51,
       en: "have you ever had a sex-dream about someone in this room? And if so, about who?",
-      no: "har du noen gang hatt en sex-drøm om noen i dette rommet? Og i så fall, omhvem?",
+      no: "har du noen gang hatt en sex-drøm om noen i dette rommet? Og i så fall, om hvem?",
+    },
+    {
+      id: 52,
+      en: "what’s the most spontaneous thing you’ve ever done?",
+      no: "hva er det mest spontane du har gjort?",
+    },
+    {
+      id: 53,
+      en: "what's your biggest insecurity about yourself?",
+      no: "hva er du mest usikker på ved deg selv?",
+    },
+    {
+      id: 54,
+      en: "have you ever cheated in an exam? And if so, how did you do it?",
+      no: "har du noen gang jukset på en eksamen? Og i så fall, hvordan gjorde du det?",
+    },
+    {
+      id: 55,
+      en: "what’s the most ridiculous thing you’ve ever bought?",
+      no: "hva er det mest latterlige du har kjøpt?",
+    },
+    {
+      id: 56,
+      en: "if you could be on any reality TV show, which one would it be?",
+      no: "hvis du kunne vært med i et hvilket som helst reality-TV-program, hvilket ville det vært?",
     }
 
   ],
