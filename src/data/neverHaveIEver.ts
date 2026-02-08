@@ -249,7 +249,7 @@ export const neverHaveIEver = [
   {
     id: 61,
     en: "been jealous when someone wasn’t even officially mine.",
-    no: "vært sjalu når noen ikke engang var offisielt min.",
+    no: "vært sjalu når noen ikke engang offisielt var min.",
   },
   {
     id: 62,

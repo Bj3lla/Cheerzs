@@ -231,11 +231,6 @@ export const truthOrDare = {
       no: "hva er en trend du i hemmelighet liker?",
     },
     {
-      id: 47,
-      en: "what’s your most memorable new year’s moment?",
-      no: "hva er ditt mest minneverdige nyttårsøyeblikk?",
-    },
-    {
       id: 48,
       en: "what’s the nicest thing someone has done for you recently?",
       no: "hva er det fineste noen har gjort for deg i det siste?",

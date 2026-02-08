@@ -432,8 +432,8 @@ export const pointAtSomeone = [
    },
    {
     id: 89,
-    en: "shreds the hardest?",
-    no: "shredder hardest?"
+    en: "loves flexing their muscles in the mirror?",
+    no: "elsker å flexe musklene sine i speilet?"
    },
    {
     id: 90,
