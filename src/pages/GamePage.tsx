@@ -66,6 +66,8 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   const [showLateJoinPopup, setShowLateJoinPopup] = useState(false);
   const [showLeaveRoomPopup, setShowLeaveRoomPopup] = useState(false);
   const [isDrawingCard, setIsDrawingCard] = useState(false);
+  const [publishError, setPublishError] = useState("");
+  const [isRetrying, setIsRetrying] = useState(false);
 
   const drawCardInFlightRef = useRef(false);
 
@@ -158,33 +160,65 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, isRoomGame, normalizedRoomID]);
 
-  const publishCurrentRoomState = async () => {
-    if (!normalizedRoomID || !username) return;
+  const publishCurrentRoomState = async (retryCount = 0, isRetryCall = false): Promise<boolean> => {
+    if (!normalizedRoomID || !username) return false;
 
     const state = getRoomBroadcastState();
-    if (!state || typeof state !== "object") return;
-    if (!state.card) return;
+    if (!state || typeof state !== "object") return false;
+    if (!state.card) return false;
 
-    // Prevent overlapping API calls
-    if (drawCardInFlightRef.current) return;
+    // Prevent overlapping API calls (but allow retry calls to proceed)
+    if (!isRetryCall && drawCardInFlightRef.current) return false;
 
     drawCardInFlightRef.current = true;
     setIsDrawingCard(true);
+    if (!isRetryCall) setPublishError(""); // Clear any previous errors only on first attempt
+
+    const maxRetries = 3;
+    const baseDelay = 500; // ms
 
     try {
-      await fetch("/api/draw-card", {
+      const response = await fetch("/api/draw-card", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ roomID: normalizedRoomID, username, playerId, state }),
       });
-      
-      // Small delay to ensure smooth card transitions
+
+      if (!response.ok) {
+        throw new Error(`Server responded with status ${response.status}`);
+      }
+
+      // Success - reset state and add smooth transition delay
+      setIsRetrying(false);
       await new Promise(resolve => setTimeout(resolve, 300));
-    } catch {
-      // ignore
-    } finally {
+      
       drawCardInFlightRef.current = false;
       setIsDrawingCard(false);
+      return true;
+    } catch (error) {
+      console.error(`[publishCurrentRoomState] Attempt ${retryCount + 1} failed:`, error);
+      
+      // If we haven't exceeded max retries, try again with exponential backoff
+      if (retryCount < maxRetries) {
+        setIsRetrying(true);
+        const delay = baseDelay * Math.pow(2, retryCount);
+        console.log(`[publishCurrentRoomState] Retrying in ${delay}ms...`);
+        
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        // Keep the lock held and recursively retry (isRetryCall=true bypasses lock check)
+        return await publishCurrentRoomState(retryCount + 1, true);
+      }
+      
+      // All retries exhausted - show error to host
+      setIsRetrying(false);
+      const errorMsg = i18n.ui.cardPublishError || 
+        "Failed to sync card with other players. They may see a different card. Please try clicking Next again.";
+      setPublishError(errorMsg);
+      
+      drawCardInFlightRef.current = false;
+      setIsDrawingCard(false);
+      return false;
     }
   };
 
@@ -193,7 +227,12 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     if (drawCardInFlightRef.current) return; // Prevent spam clicks
     
     generatePrompt();
-    await publishCurrentRoomState();
+    const success = await publishCurrentRoomState();
+    
+    if (!success) {
+      console.warn("[hostNext] Failed to publish card state after all retries");
+      // The error message is already displayed via setPublishError in publishCurrentRoomState
+    }
   };
 
   const fetchRoomState = async () => {
@@ -448,7 +487,10 @@ export default function GamePage({ language }: { language: LanguageCode }) {
       await fetchGameState();
       if (roomHost && username !== roomHost) return;
       generatePrompt();
-      await publishCurrentRoomState();
+      const success = await publishCurrentRoomState();
+      if (!success) {
+        console.warn("[GamePage] Failed to publish initial card state");
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRoomGame, gameStarted, isHost]);
@@ -532,13 +574,31 @@ export default function GamePage({ language }: { language: LanguageCode }) {
       )}
 
       {(!isRoomGame || isHost) && (
-        <Button
-          label={i18n.ui.next}
-          color="primary"
-          onClick={isRoomGame ? hostNext : generatePrompt}
-          size="large"
-          disabled={isRoomGame && isDrawingCard}
-        />
+        <>
+          {publishError && (
+            <div className="error-message publish-error" style={{ 
+              marginBottom: "1rem", 
+              padding: "0.75rem", 
+              backgroundColor: "rgba(255, 59, 48, 0.1)",
+              border: "1px solid rgba(255, 59, 48, 0.3)",
+              borderRadius: "8px",
+              color: "#ff3b30"
+            }}>
+              {publishError}
+            </div>
+          )}
+          <Button
+            label={
+              isRoomGame && isRetrying 
+                ? (i18n.ui.retrying || "Retrying...") 
+                : i18n.ui.next
+            }
+            color="primary"
+            onClick={isRoomGame ? hostNext : generatePrompt}
+            size="large"
+            disabled={isRoomGame && isDrawingCard}
+          />
+        </>
       )}
 
       {activeRules.length > 0 && (

@@ -62,6 +62,8 @@ export const translations = {
       loadingQr: "Loading QR...",
       openInSpotify: "Scan QR code to play in Spotify, or click ",
       spotifyRules: " Hand out 5 sips if you guess the song correctly, or drink 5 sips yourself.",
+      cardPublishError: "Failed to sync card with other players. They may see a different card. Please try clicking Next again.",
+      retrying: "Retrying...",
 
       gameRulesIntro:
         "Every card has a category, and the rules for each are as follows:",
@@ -160,6 +162,8 @@ export const translations = {
       loadingQr: "Laster QR...",
       openInSpotify: "Skann QR-koden for å spille i Spotify, eller klikk ",
       spotifyRules: " Del ut 5 slurker hvis du gjetter sangtittelen riktig, eller drikk 5 slurker selv.",
+      cardPublishError: "Kunne ikke synkronisere kortet med andre spillere. De kan se et annet kort. Prøv å klikke Neste igjen.",
+      retrying: "Prøver på nytt...",
 
       gameRulesIntro:
         "Hvert kort har en kategori, og reglene for hver av dem er som følger:",
