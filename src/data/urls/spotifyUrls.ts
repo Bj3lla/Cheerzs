@@ -1765,23 +1765,48 @@ export const spotifyUrls = [
   },
   {
     id: 457, // Despacito - Luis Fonsi, Daddy Yankee
-  }
- // Despacito Luis Fonsi, 
- // Shape of You Ed Sheeran, 
- // Happy Pharrell Williams, 
- // Rolling in the Deep Adele, 
- // Call Me Maybe Carly Rae Jepsen, 
- // Blurred Lines Robin Thicke, 
- // Old Town Road Lil Nas X, 
- // See You Again Wiz Khalifa, 
- // Closer The Chainsmokers, 
- // Lean On Major Lazer, 
- // Can't Stop the Feeling Justin Timberlake,
- // Havana Camila Cabello, 
- // Ed Sheeran
-
-
-
+    url: "https://open.spotify.com/track/6habFhsOp2NvshLv26DqMb?si=CRzYhjm8RDOxFgH9Aj5gaA",
+  },
+  {
+    id: 458, // Shape of You - Ed Sheeran
+    url: "https://open.spotify.com/track/7qiZfU4dY1lWllzX7mPBI3?si=Klx7BKXcR0eIZSmlyw28AQ",
+  },
+  {
+    id: 459, // Happy - Pharrell Williams
+    url: "https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH?si=x90VnCGzRwyQMRSMCNW8ZQ",
+  },
+  {
+    id: 460, // Rolling in the Deep - Adele
+    url: "https://open.spotify.com/track/4OSBTYWVwsQhGLF9NHvIbR?si=MPylV6kgSkGOTM7NLpV2Fg",
+  },
+  {
+    id: 461, // Call Me Maybe - Carly Rae Jepsen
+    url: "https://open.spotify.com/track/20I6sIOMTCkB6w7ryavxtO?si=AMyR1umOSa6-GAtPI6MKXQ",
+  },
+  {
+    id: 462, // Blurred Lines - Robin Thicke, T.I., Pharrell Williams
+    url: "https://open.spotify.com/track/0n4bITAu0Y0nigrz3MFJMb?si=rs1ih-JJQaGJKOCySrFekw",
+  },
+  {
+    id: 463, // Old Town Road - Lil Nas X
+    url: "https://open.spotify.com/track/2YpeDb67231RjR0MgVLzsG?si=jMvJlnNfTi2p08qpWKdgIA",
+  },
+  {
+    id: 464, // See You Again - Wiz Khalifa, Charlie Puth
+    url: "https://open.spotify.com/track/66CFbqJScx6zRieGllITcs?si=WwiSP807T_SVvLkTQ_M41Q",
+  },
+  {
+    id: 465, // Lean On - Major Lazer, DJ Snake, MØ
+    url: "https://open.spotify.com/track/4UKJUbcuStnnxLeJmVJsSc?si=V3nZrPQJTLSE57QfpAgcPQ",
+  },
+  {
+    id: 466, // Can't Stop the Feeling - Justin Timberlake
+    url: "https://open.spotify.com/track/6JV2JOEocMgcZxYSZelKcc?si=EyYdAyQkR_C0HhrFnUzfZg",
+  },
+  {
+    id: 467, // Havana - Camila Cabello, Young Thug
+    url: "https://open.spotify.com/track/1rfofaqEpACxVEHIZBJe6W?si=fFb75w7NQSe5G-bht5wsfA",
+  },
 
  
  // Roc Boys, Bausa, GOLF, Soppgirobygget, Broiler, Ballinciaga, 
