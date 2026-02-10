@@ -1663,20 +1663,127 @@ export const spotifyUrls = [
     id: 431, // Wicked Game - Chris Isaak
     url: "https://open.spotify.com/track/7w5AOd6HrDIHewHfpABEss?si=wZRV77DORRWJJfp67bYxbQ",
   },
+  {
+    id: 432, // I Don't Want To Miss A Thing - Aerosmith
+    url: "https://open.spotify.com/track/225xvV8r1yKMHErSWivnow?si=qlWUbdJGRVi31ROyr7aHtA",
+  },
+  {
+    id: 433, // What Makes You Beautiful - One Direction
+    url: "https://open.spotify.com/track/4cluDES4hQEUhmXj6TXkSo?si=wq1AtTTETVSMxXJ2B-6n3w",
+  },
+  {
+    id: 434, // Steal My Girl - One Direction
+    url: "https://open.spotify.com/track/2Bs4jQEGMycglOfWPBqrVG?si=YGIo1FOfQCaA04xCA0YRvg",
+  },
+  {
+    id: 435, // Drag Me Down - One Direction
+    url: "https://open.spotify.com/track/2K87XMYnUMqLcX3zvtAF4G?si=0cnKNDNERg2QglH23ru9fg",
+  },
+  {
+    id: 436, // One Thing - One Direction
+    url: "https://open.spotify.com/track/5G2c6FsfTzgYUzageCmfXY?si=YcQSo7ToSUqflVaMrNC5_g",
+  },
+  {
+    id: 437, // Yeah 3x - Chris Brown
+    url: "https://open.spotify.com/track/2QtxlzvSBONjs1bDC34ixs?si=tMfktHEhS_SeYbc1myUDGg",
+  },
+  {
+    id: 438, // Runaway - Aurora
+    url: "https://open.spotify.com/track/2WZ3zMVFxuC5i20jQrnPyE?si=x0WxeANwQ7eVgmEJ0wN92A"
+  },
+  {
+    id: 439, // Running with the Wolves - Aurora
+    url: "https://open.spotify.com/track/2xAyIArdyX0bV9mQP1vy1a?si=n7Jj4VGARdiHqViYo880bQ",
+  },
+  {
+    id: 440, // Grace Kelly - MIKA
+    url: "https://open.spotify.com/track/2SDx0PooHZI1SQKR0y44bs?si=iQZwsS1_QTWs6VABBLbGvw"
+  },
+  {
+    id: 441, // Relax, Take It Easy - Mika
+    url: "https://open.spotify.com/track/0KM2y796j63t5RHhvRUxld?si=WkLNvEcXRXK7EhlcoECDVQ",
+  },
+  {
+    id: 442, // Lollipop - Mika
+    url: "https://open.spotify.com/track/2NjhV99ncY4A5lSkTHvTtU?si=9U_93tz3TWGU8heq_GmbAQ",
+  },
+  {
+    id: 443, // We No Speak Americano - Yolanda Be Cool and DCUP
+    url: "https://open.spotify.com/track/37dYAkMa4lzRCH6kDbMT1L?si=ZCLog4RuQSS4jKWMR01meg",
+  },
+  {
+    id: 444, // Genre Police - S3RL, Lexi
+    url: "https://open.spotify.com/track/36flWlZzU7ETc40iXFGWzJ?si=-LupCN90Qnuu6TohXdFILg",
+  },
+  {
+    id: 445, // Im Blue - Eiffel 65, Gabry Ponte
+    url: "https://open.spotify.com/track/7lMIJ4EFWRVoAIPDpeGyM3?si=XELSuDfdTRGFwnYVrQ0fpA",
+  },
+  {
+    id: 446, // Bangarang (feat. Sirah) - Skrillex, Sirah
+    url: "https://open.spotify.com/track/6VRhkROS2SZHGlp0pxndbJ?si=0g862svESmSha_p42vqPBQ",
+  },
+  {
+    id: 447, // Scary Monsters and Nice Sprites - Skrillex
+    url: "https://open.spotify.com/track/5q8oybjZelukF4h0CzSUN9?si=1UqOrfLuSLupXVqn21abVg",
+  },
+  {
+    id: 448, // Where Are Ü Now (with Justin Bieber) - Jack Ü, Skrillex, Diplo, Justin Bieber
+    url: "https://open.spotify.com/track/66hayvUbTotekKU3H4ta1f?si=M2ByNn_MRwexGBJoDJvVIQ",
+  },
+  {
+    id: 449, // Hold the Line - Toto
+    url: "https://open.spotify.com/track/4aVuWgvD0X63hcOCnZtNFA?si=NuNNnlasRJ-mr09M1oEO-g",
+  },
+  {
+    id: 450,// Gangnam Style - PSY
+    url: "https://open.spotify.com/track/03UrZgTINDqvnUMbbIMhql?si=AJpeJVavQBaWb1qKWoZuSg",
+  },
+  {
+    id: 451, // Baby - Justin Bieber, Ludacris
+    url: "https://open.spotify.com/track/6epn3r7S14KUqlReYr77hA?si=UQRTzGUGTl2YFxcFPw5ZyA",
+  }, 
+  {
+    id: 452, // M83 - Midnight City
+    url: "https://open.spotify.com/track/6GyFP1nfCDB8lbD2bG0Hq9?si=ua3_bqTdRg-w6Z-i4RXc1Q",
+  },
+  {
+    id: 453, // God's Plan - Drake
+    url: "https://open.spotify.com/track/6DCZcSspjsKoFjzjrWoCdn?si=bFD_lGmtQtqx-CdfVGeE-w",
+  },
+  {
+    id: 454, // One Dance - Drake, Kyla, Wizkid
+    url: "https://open.spotify.com/track/1zi7xx7UVEFkmKfv06H8x0?si=GnkHeb1qTGuazCqny1m7Xg",
+  },
+  {
+    id: 455, // Passionfruit - Drake
+    url: "https://open.spotify.com/track/5mCPDVBb16L4XQwDdbRUpz?si=GTAiIq-mQmC6eTPMTRXwrA",
+  },
+  {
+    id: 456, // Hotline Bling - Drake
+    url: "https://open.spotify.com/track/0wwPcA6wtMf6HUMpIRdeP7?si=Y9EPfaqRRUmAkK1JjC9zxA",
+  },
+  {
+    id: 457, // Despacito - Luis Fonsi, Daddy Yankee
+  }
+ // Despacito Luis Fonsi, 
+ // Shape of You Ed Sheeran, 
+ // Happy Pharrell Williams, 
+ // Rolling in the Deep Adele, 
+ // Call Me Maybe Carly Rae Jepsen, 
+ // Blurred Lines Robin Thicke, 
+ // Old Town Road Lil Nas X, 
+ // See You Again Wiz Khalifa, 
+ // Closer The Chainsmokers, 
+ // Lean On Major Lazer, 
+ // Can't Stop the Feeling Justin Timberlake,
+ // Havana Camila Cabello, 
+ // Ed Sheeran
 
-  //one direction 
-  // skrillex, one direction, Ni**as in Paris av Jay-Z og Kanye West, 21 savage, Post Malone, Travis Scott, Juice WRLD, XXXTentacion, Lil Uzi Vert, Lil Yachty, Lil Baby, DaBaby, Megan Thee Stallion, Cardi B, Doja Cat, Saweetie, City
-  // genre police 
- // I'm blue eric prydz
- // Grenade Bruno Mars, Gangnam Style PSY, Baby Justin Bieber, Despacito Luis Fonsi, Shape of You Ed Sheeran, Uptown Funk Mark Ronson, Happy Pharrell Williams, Rolling in the Deep Adele, Call Me Maybe Carly Rae Jepsen, Blurred Lines Robin Thicke, Old Town Road Lil Nas X, See You Again Wiz Khalifa, Closer The Chainsmokers, Lean On Major Lazer, Can't Stop the Feeling Justin Timberlake, Despacito Remix Luis Fonsi, Havana Camila Cabello, God's Plan Drake, Perfect Ed Sheeran
- // Hideaway - Kiesza
- // Hold the Line - Toto
- //  We No Speak Americano - Yolanda Be Cool and DCUP
- // Yeah x 3 - Chris Brown
- // Runaway - Aurora
- // The Less I Know The Better - Tame Impala
- // MIKA - Grace Kelly
- // Rockboys - Matilda 
- // M83
+
+
+
  
+ // Roc Boys, Bausa, GOLF, Soppgirobygget, Broiler, Ballinciaga, 
+ // Ni**as in Paris av Jay-Z og Kanye West, 21 savage, Post Malone, Travis Scott, Juice WRLD, XXXTentacion, Lil Uzi Vert, Lil Yachty, Lil Baby, DaBaby, Megan Thee Stallion, Cardi B, Doja Cat, Saweetie, City
 ];
