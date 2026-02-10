@@ -173,7 +173,7 @@ export const truthOrDare = {
     {
       id: 35,
       en: "what role do you take in a group chat?",
-      no: "hilken rolle tar du i en gruppechat?",
+      no: "hvilken rolle tar du i en gruppechat?",
     },
     {
       id: 36,
@@ -279,7 +279,7 @@ export const truthOrDare = {
       id: 56,
       en: "if you could be on any reality TV show, which one would it be?",
       no: "hvis du kunne vært med i et hvilket som helst reality-TV-program, hvilket ville det vært?",
-    }
+    },
 
   ],
   dare: [
@@ -337,11 +337,6 @@ export const truthOrDare = {
       id: 11,
       en: "do your best runway walk across the room.",
       no: "gjør din beste runway-walk gjennom rommet."
-    },
-    {
-      id: 12,
-      en: "take a selfie while doing your best 'model' pose.",
-      no: "ta en selfie mens du gjør din beste 'model'-pose."
     },
     {
       id: 13,

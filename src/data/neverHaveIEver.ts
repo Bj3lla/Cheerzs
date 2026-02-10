@@ -568,8 +568,8 @@ export const neverHaveIEver = [
     },
     {
       id: 124,
-      en: "pulled an all-nighter to finish a mandatory assignment.",
-      no: "vært oppe hele natten for å bli ferdig med en obligatorisk oppgave.",
+      en: "stayed up until 23:59 to finish a mandatory assignment.",
+      no: "vært oppe til 23:59 for å bli ferdig med en obligatorisk oppgave.",
     },
     {
       id: 125,
@@ -657,12 +657,12 @@ export const neverHaveIEver = [
       no: "vært på en Quizifi-quiz."
     },
     {
-      id: 142,
+      id: 142, //IFI
       en: "been a group-teacher",
       no: "vært gruppelærer.",
     },
     {
-      id: 143,
+      id: 143, //IFI
       en: "retaken the IN1010 exam.",
       no: "tatt opp IN1010-eksamen.",
     },
@@ -676,5 +676,90 @@ export const neverHaveIEver = [
       en: "been at Pub-to-Pub.",
       no: "vært på Pub-to-Pub.",
     }, 
+    {
+      id: 146,
+      en: "swam in the IFI dam.",
+      no: "svømt i IFI-dammen.",
+    },
+    {
+      id: 147, //IFI
+      en: "stolen something from FK-kiosken.", 
+      no: "stjålet noe fra FK-kiosken.",
+    },
+    {
+      id: 148, //IFI
+      en: "talked to Kirurgen.",
+      no: "snakket med Kirurgen.",
+    },
+    {
+      id: 149, //IFI
+      en: "shared case papers at the IFI Galla.",
+      no: "delt sakspapirer på IFI Gallaen",
+    },
+    {
+      id: 150, //IFI
+      en: "been to the IFI Galla.",
+      no: "vært på IFI Gallaen.",
+    },
+    {
+      id: 151, //IFI
+      en: "been at the party cabin on IFI Skitur.",
+      no: "bodd på partyhytta på IFI Skitur.",
+    },
+    {
+      id: 152, //IFI
+      en: "got the security guards at the doors to my cabin on IFI Skitur.",
+      no: "fått vekterne på døra på hytta på IFI Skitur.",
+    },
+    {
+      id: 153, //IFI
+      en: "taken a shot in the ski lift.",
+      no: "tatt en shot i skiheisen.",
+    },
+    {
+      id: 154, //IFI
+      en: "had the IFI-skitur anthem as my phone ringtone.",
+      no: "hatt IFI-skitur anthem som ringetone på telefonen.",
+    }, 
+    {
+      id: 155, //IFI
+      en: "been at IFI Skitur more than 3 times.",
+      no: "vært på IFI Skitur mer enn 3 ganger.",
+    },
+    {
+      id: 156, //IFI
+      en: "had FK access.",
+      no: "hatt FK-tilgang.",
+    },
+    {
+      id: 157, //IFI
+      en: "received a bong on Dagen.",
+      no: "fått en bong på Dagen",
+    },
+    {
+      id: 158, //IFI
+      en: "stolen alcohol from a cabinet at IFI.",
+      no: "stjålet sprit fra et skap på IFI",
+    },
+    {
+      id: 159, //IFI
+      en: "had a crush on my group teacher.",
+      no: "hatt et crush på gruppelæreren min.",
+    },
+    {
+      id: 160, //IFI
+      no: "had @ ifi as resent visited on Jodel.",
+      en: "hatt @ ifi som ofte besøkt på Jodel.",
+    },
+    {
+      id: 161, //IFI
+      en: "retaken the IN1000 exam.",
+      no: "tatt opp IN1000-eksamen.", 
+    },
+    {
+      id: 162, //IFI
+      en: "seen my group teacher at the same exam as me.",
+      no: "sett gruppelæreren min ta samme eksamen som meg.",
+    },
 
 ];

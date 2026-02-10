@@ -1,134 +1,134 @@
 export const spotifyUrls = [
   {
-    id: 1,
+    id: 1, //Cant hold us - Macklemore and Ray Dalton
     url: "https://open.spotify.com/track/22skzmqfdWrjJylampe0kt?si=PJA-JZc5RqGqtoVeCfzlZA",
   },
   {
-    id: 2,
+    id: 2, //Astronomia - Tony Igy and Vicetone
     url: "https://open.spotify.com/track/665AK0ovB11McZRwfa852G?si=sk8N598oRMCZ7ms2fvS4Rw",
   },
   {
-    id: 3,
+    id: 3, //Beauty and a Beat - Justin Bieber and Nicki Minaj
     url: "https://open.spotify.com/track/6QFCMUUq1T2Vf5sFUXcuQ7?si=QFu0AzJbTy-J0I-bzcPpYw",
   },
   {
-    id: 4,
+    id: 4, //Break Your Heart - Taio Cruz and Ludacris
     url: "https://open.spotify.com/track/7mDCg8XTEyDNPzC5Jdt7mu?si=wN8DdqBJR1ylCp6bQM8fQA",
   },
   {
-    id: 5,
+    id: 5, //Bullet Proof - La Roux
     url: "https://open.spotify.com/track/3kMrazSvILsgcwtidZd1Qd?si=tgJy4b3fRe-DyCid8Eex_w",
   },
   {
-    id: 6,
+    id: 6, //Club Can't Handle Me - Flo Rida and David Guetta
     url: "https://open.spotify.com/track/6ebkx7Q5tTxrCxKq4GYj0Y?si=j2RpsHe0SD-6AqxSfJWexw",
   },
   {
-    id: 7,
+    id: 7, //Dancing Queen - ABBA
     url: "https://open.spotify.com/track/0GjEhVFGZW8afUYGChu3Rr?si=KXvCvHvRSJeIkm9jJNLfYA",
   },
   {
-    id: 8,
+    id: 8, //Danza Kuduro - Don Omar and Lucenzo
     url: "https://open.spotify.com/track/6DXLO8LndZMVOHM0wNbpzg?si=iTYFlkMBTAisOe9brQWBbw",
   },
   {
-    id: 9,
+    id: 9, //Delilah (pull me out of this) - Fred Again and Delilah Montagu
     url: "https://open.spotify.com/track/5w9upngVRHNjdZcRC7Xxr2?si=HHtlkdBeRyuFVE7MgV_fOg",
   },
   {
-    id: 10,
+    id: 10, //Die Young - Ke$ha
     url: "https://open.spotify.com/track/7EQGXaVSyEDsCWKmUcfpLk?si=JZTr_qYCR56MneAFSv8pJg",
   },
   {
-    id: 11,
+    id: 11, //Disturbia - Rihanna
     url: "https://open.spotify.com/track/2VOomzT6VavJOGBeySqaMc?si=b7QQ04LZRI-1Lz4HsSJIUw",
   },
   {
-    id: 12,
+    id: 12, //DJ Got Us Fallin' In Love - Usher and Pitbull
     url: "https://open.spotify.com/track/4356Typ82hUiFAynbLYbPn?si=OnhfqbTqSH2icD60lfta_Q",
   },
   {
-    id: 13,
+    id: 13, //Don't Stop Believin' - Journey
     url: "https://open.spotify.com/track/5RKQ5NdjSh2QzD4MaunT91?si=y20KMtGaRkiYVIXxJSTnpQ",
   },
   {
-    id: 14,
+    id: 14, //Dont Stop Me Now - Queen
     url: "https://open.spotify.com/track/5T8EDUDqKcs6OSOwEsfqG7?si=5grVa44lQce_clZvmqSWMg",
   },
   {
-    id: 15,
+    id: 15, //Don't Stop the Party - Pitbull and TJR
     url: "https://open.spotify.com/track/3Tu7uWBecS6GsLsL8UONKn?si=N2WsuDI6Taq86VKtFmdCMA",
   },
   {
-    id: 16,
+    id: 16, //Don't You Worry Child - Swedish House Mafia and John Martin
     url: "https://open.spotify.com/track/2V65y3PX4DkRhy1djlxd9p?si=52TUGMLKR4-APdwLV4dDDw",
   },
   {
-    id: 17,
+    id: 17, //Dragosta din tei - O-Zone
     url: "https://open.spotify.com/track/52Zr0sinhWTCRrQhRRY4EP?si=q4g2kPk6T26zna-d0OXmzQ",
   },
   {
-    id: 18,
+    id: 18, // Eenie Meenie - Sean Kingston and Justin Bieber
     url: "https://open.spotify.com/track/4vVTI94F9uJ8lHNDWKv0i2?si=dpH8rQlmSFOGUEwfKBqIVA",
   },
   {
-    id: 19,
+    id: 19, // Evacuate the Dancefloor - Cascada
     url: "https://open.spotify.com/track/0fw7GNhguLX3KI0eoLioDS?si=uO6pjUeNQpCWTjnhsHufNg",
   },
   {
-    id: 20,
+    id: 20, // Everytime We Touch - Cascada and Maurice West (remix)
     url: "https://open.spotify.com/track/18rHGxr6QDiPieSTo7cUGL?si=gNEIsz92TJWIGTFe8JH5Bw",
   },
   {
-    id: 21,
+    id: 21, // Feel This Moment - Pitbull and Christina Aguilera
     url: "https://open.spotify.com/track/0Hf4aIJpsN4Os2f0y0VqWl?si=Nsq3pCJ2T-WbOIqPzogm2A",
   },
   {
-    id: 22,
+    id: 22, // Fireball - Pitbull and John Ryan
     url: "https://open.spotify.com/track/4Y7XAxTANhu3lmnLAzhWJW?si=8SqUHFNuS8OCBmJevlbeUg",
   },
   {
-    id: 23,
+    id: 23, // Fire Burning - Sean Kingston
     url: "https://open.spotify.com/track/2oENJa1T33GJ0w8dC167G4?si=MPIfixLiQvWM_mvi4NkI_Q",
   },
   {
-    id: 24,
+    id: 24, // Five More Hours - Deorro and Chris Brown
     url: "https://open.spotify.com/track/3MOECVkNshqHYTPt5DZcdN?si=8CWrVHF2Tq6OjKbXC9Op7g",
   },
   {
-    id: 25,
+    id: 25, // Forever Alone - Kakkmaddafakka
     url: "https://open.spotify.com/track/5d0MNrb8EWHfYJvM0jf4cS?si=wXQpRl0oSx2Yn6gpIFJJzQ",
   },
   {
-    id: 26,
+    id: 26, // Gasolina - Daddy Yankee
     url: "https://open.spotify.com/track/228BxWXUYQPJrJYHDLOHkj?si=VWjKRkVhT5S8LqlJyU4xmg",
   },
   {
-    id: 27,
+    id: 27, // Gimme! Gimme! Gimme! - ABBA
     url: "https://open.spotify.com/track/3vkQ5DAB1qQMYO4Mr9zJN6?si=2VBkEZqDSj6lkJ-gR-kUFQ",
   },
   {
-    id: 28,
+    id: 28, // Give Me Everything - Pitbull, Ne-Yo, Afrojack and Nayer
     url: "https://open.spotify.com/track/4QNpBfC0zvjKqPJcyqBy9W?si=0jWBIUXbQnim5Dd2wFboWg",
   },
   {
-    id: 29,
+    id: 29, // Good Feeling - Flo Rida
     url: "https://open.spotify.com/track/2LEF1A8DOZ9wRYikWgVlZ8?si=ykEVUJutR2OP9fyIwZ4DEQ",
   },
   {
-    id: 30,
+    id: 30, // Händerna mot himlen - Petra Marklund
     url: "https://open.spotify.com/track/14AJI1RloVWTh8bJe9gBPM?si=Qy9xw9fDTS6WaI8dAmc76g",
   },
   {
-    id: 31,
+    id: 31, // Hangover - Taio Cruz and Flo Rida
     url: "https://open.spotify.com/track/5pmL3RzOy3IvGFaSDi4hZL?si=j9Zsh8lQTeiIcIs3kAd12A",
   },
   {
-    id: 32,
-    url: "https://open.spotify.com/track/6FAmtZoa7jq6bH9GBjCRkM?si=D11x_w_xSZ-NvDTOH2dYyw",
+    id: 32, // Heaven Is a Place On Earth - Belinda Carlisle
+    url: "https://open.spotify.com/track/1ryT9eOWD1JuxPD5ew53SJ?si=kdfNDLvmQBSCdhm40ARs6w",
   },
   {
-    id: 33,
+    id: 33, // Heaven Takes You Home - Sweedish House Mafia
     url: "https://open.spotify.com/track/3nEHrvNNtgLv9rneTAYVr4?si=8qJVEfs1S1yoD5voQTHDHw",
   },
   {
@@ -1718,5 +1718,19 @@ export const spotifyUrls = [
   {
     id: 431,
     url: "https://open.spotify.com/track/7w5AOd6HrDIHewHfpABEss?si=wZRV77DORRWJJfp67bYxbQ",
-  }
+  },
+  {
+    id: 432,
+    url: "https://open.spotify.com/track/2jATUzETZL49e6SywauZKE?si=OSCEymncTOOhwGIZ_6kKdA",
+  },
+  {
+    id: 433,
+    url: "https://open.spotify.com/track/360ZhWvMnyXKYFG9Mqsm89?si=BBxqzVsaSda-koTnH2KbSw",
+  },
+
+  //one direction 
+  // skrillex, one direction, Ni**as in Paris av Jay-Z og Kanye West, 21 savage, Post Malone, Travis Scott, Juice WRLD, XXXTentacion, Lil Uzi Vert, Lil Yachty, Lil Baby, DaBaby, Megan Thee Stallion, Cardi B, Doja Cat, Saweetie, City
+  // genre police 
+ // I'm blue eric prydz
+ // Grenade Bruno Mars, Gangnam Style PSY, Baby Justin Bieber, Despacito Luis Fonsi, Shape of You Ed Sheeran, Uptown Funk Mark Ronson, Happy Pharrell Williams, Rolling in the Deep Adele, Call Me Maybe Carly Rae Jepsen, Blurred Lines Robin Thicke, Old Town Road Lil Nas X, See You Again Wiz Khalifa, Closer The Chainsmokers, Lean On Major Lazer, Can't Stop the Feeling Justin Timberlake, Despacito Remix Luis Fonsi, Havana Camila Cabello, God's Plan Drake, Perfect Ed Sheeran
 ];
