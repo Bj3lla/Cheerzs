@@ -65,12 +65,12 @@ export const drawCard = mutation({
     }
 
     // Determine card type randomly
-    // 60% songs, 30% questions, 10% wildcards
+    // 50% songs, 40% questions, 10% wildcards/rules
     const rand = Math.random();
     let cardType: string;
     let card: any;
 
-    if (rand < 0.6) {
+    if (rand < 0.5) {
       // Draw a song
       cardType = "song";
       const songs = await ctx.db
@@ -82,44 +82,115 @@ export const drawCard = mutation({
         throw new Error("No songs available");
       }
 
-      card = songs[Math.floor(Math.random() * songs.length)];
-    } else if (rand < 0.9) {
-      // Draw a question
-      cardType = "question";
-      const questionTypes = room.settings?.questionTypes || [];
-
-      if (questionTypes.length === 0) {
-        throw new Error("No question types selected");
-      }
-
-      // Pick a random category from selected types
-      const category =
-        questionTypes[Math.floor(Math.random() * questionTypes.length)];
-
-      const questions = await ctx.db
-        .query("questions")
-        .withIndex("by_category", (q) => q.eq("category", category))
-        .filter((q) => q.eq(q.field("isActive"), true))
+      // Get played songs for this room
+      const playedSongs = await ctx.db
+        .query("playedCards")
+        .withIndex("by_room_and_type", (q) => 
+          q.eq("roomId", args.roomId).eq("cardType", "song")
+        )
         .collect();
 
-      if (questions.length === 0) {
-        throw new Error("No questions available for selected categories");
+      const playedSongIds = new Set(playedSongs.map(p => p.cardId));
+      const unplayedSongs = songs.filter(s => !playedSongIds.has(s._id as any));
+
+      // If all songs have been played, reset
+      if (unplayedSongs.length === 0) {
+        await resetPlayedCards(ctx, args.roomId, "song");
+        card = songs[Math.floor(Math.random() * songs.length)];
+      } else {
+        card = unplayedSongs[Math.floor(Math.random() * unplayedSongs.length)];
       }
 
-      card = questions[Math.floor(Math.random() * questions.length)];
-    } else {
-      // Draw a wildcard
-      cardType = "wildcard";
-      const wildcards = await ctx.db
-        .query("wildcards")
+      // Track this card as played
+      await ctx.db.insert("playedCards", {
+        roomId: args.roomId,
+        cardType: "song",
+        cardId: card._id as any,
+        playedAt: Date.now(),
+      });
+
+    } else if (rand < 0.9) {
+      // Draw a question from available question types
+      const questionCategories = ["truth", "dare", "neverHaveIEver", "pointingGame", "drinkingBuddy"];
+      const selectedCategory = questionCategories[Math.floor(Math.random() * questionCategories.length)];
+      
+      cardType = selectedCategory;
+      const questions = await ctx.db
+        .query(selectedCategory as any)
         .withIndex("by_active", (q) => q.eq("isActive", true))
         .collect();
 
-      if (wildcards.length === 0) {
-        throw new Error("No wildcards available");
+      if (questions.length === 0) {
+        throw new Error(`No ${selectedCategory} questions available`);
       }
 
-      card = wildcards[Math.floor(Math.random() * wildcards.length)];
+      // Get played questions for this room and category
+      const playedQuestions = await ctx.db
+        .query("playedCards")
+        .withIndex("by_room_and_type", (q) => 
+          q.eq("roomId", args.roomId).eq("cardType", selectedCategory)
+        )
+        .collect();
+
+      const playedQuestionIds = new Set(playedQuestions.map(p => p.cardId));
+      const unplayedQuestions = questions.filter(q => !playedQuestionIds.has(q._id as any));
+
+      // If all questions have been played, reset
+      if (unplayedQuestions.length === 0) {
+        await resetPlayedCards(ctx, args.roomId, selectedCategory);
+        card = questions[Math.floor(Math.random() * questions.length)];
+      } else {
+        card = unplayedQuestions[Math.floor(Math.random() * unplayedQuestions.length)];
+      }
+
+      // Track this card as played
+      await ctx.db.insert("playedCards", {
+        roomId: args.roomId,
+        cardType: selectedCategory,
+        cardId: card._id as any,
+        playedAt: Date.now(),
+      });
+
+    } else {
+      // Draw a wildcard or new rule (50/50 split)
+      const isNewRule = Math.random() < 0.5;
+      cardType = isNewRule ? "newRule" : "wildcard";
+
+      const cards = await ctx.db
+        .query(cardType as any)
+        .withIndex("by_active", (q) => q.eq("isActive", true))
+        .collect();
+
+      if (cards.length === 0) {
+        throw new Error(`No ${cardType} cards available`);
+      }
+
+      // Get played cards for this room and type
+      const playedWildcards = await ctx.db
+        .query("playedCards")
+        .withIndex("by_room_and_type", (q) => 
+          q.eq("roomId", args.roomId).eq("cardType", cardType)
+        )
+        .collect();
+
+      const playedWildcardIds = new Set(playedWildcards.map(p => p.cardId));
+      const unplayedCards = cards.filter(c => !playedWildcardIds.has(c._id as any));
+
+      // If all cards have been played, reset
+      if (unplayedCards.length === 0) {
+        await resetPlayedCards(ctx, args.roomId, cardType);
+        card = cards[Math.floor(Math.random() * cards.length)];
+      } else {
+        card = unplayedCards[Math.floor(Math.random() * unplayedCards.length)];
+      }
+
+      // Track this card as played
+      await ctx.db.insert("playedCards", {
+        roomId: args.roomId,
+        cardType,
+        cardId: card._id as any,
+        playedAt: Date.now(),
+      });
     }
 
     // Update room with current card
@@ -149,6 +220,20 @@ export const drawCard = mutation({
     };
   },
 });
+
+// Helper function to reset played cards for a specific type in a room
+async function resetPlayedCards(ctx: any, roomId: Id<"rooms">, cardType: string) {
+  const playedCards = await ctx.db
+    .query("playedCards")
+    .withIndex("by_room_and_type", (q: any) => 
+      q.eq("roomId", roomId).eq("cardType", cardType)
+    )
+    .collect();
+
+  for (const playedCard of playedCards) {
+    await ctx.db.delete(playedCard._id);
+  }
+}
 
 // End the game
 export const endGame = mutation({
@@ -181,6 +266,16 @@ export const restartGame = mutation({
 
     if (!room) {
       throw new Error("Room not found");
+    }
+
+    // Clear all played cards for this room
+    const playedCards = await ctx.db
+      .query("playedCards")
+      .withIndex("by_room", (q) => q.eq("roomId", args.roomId))
+      .collect();
+
+    for (const playedCard of playedCards) {
+      await ctx.db.delete(playedCard._id);
     }
 
     await ctx.db.patch(args.roomId, {

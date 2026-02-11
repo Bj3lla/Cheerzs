@@ -10,6 +10,7 @@
 
 import type * as crons from "../crons.js";
 import type * as game from "../game.js";
+import type * as migrations from "../migrations.js";
 import type * as questions from "../questions.js";
 import type * as rooms from "../rooms.js";
 import type * as seed from "../seed.js";
@@ -24,6 +25,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   crons: typeof crons;
   game: typeof game;
+  migrations: typeof migrations;
   questions: typeof questions;
   rooms: typeof rooms;
   seed: typeof seed;

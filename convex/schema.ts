@@ -2,6 +2,18 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  players: defineTable({
+    playerId: v.string(), // Unique player identifier
+    name: v.string(),
+    roomId: v.id("rooms"), // Reference to the room they're in
+    isOnline: v.boolean(),
+    lastSeen: v.number(),
+    createdAt: v.number(),
+  })
+    .index("by_playerId", ["playerId"])
+    .index("by_room", ["roomId"])
+    .index("by_room_and_playerId", ["roomId", "playerId"]),
+
   rooms: defineTable({
     code: v.string(),
     hostId: v.string(),
@@ -20,14 +32,7 @@ export default defineSchema({
     ),
     gameState: v.optional(v.any()), // Client-side game state (rules, repels, etc.)
     seq: v.optional(v.number()), // Sequence number for state versioning
-    players: v.array(
-      v.object({
-        id: v.string(),
-        name: v.string(),
-        isOnline: v.boolean(),
-        lastSeen: v.number(),
-      })
-    ),
+    playerIds: v.array(v.string()), // Array of player IDs
     settings: v.optional(
       v.object({
         language: v.string(),
@@ -52,29 +57,70 @@ export default defineSchema({
     .index("by_active", ["isActive"])
     .index("by_gameMode", ["gameModes"]),
 
-  questions: defineTable({
-    category: v.string(), // 'drinking_buddy', 'never_have_i_ever', 'truth_or_dare', etc.
-    questionNo: v.string(),
-    questionEn: v.string(),
-    questionNo_norwegian: v.optional(v.string()), // Norwegian
-    metadata: v.optional(
-      v.object({
-        difficulty: v.optional(v.string()),
-        tags: v.optional(v.array(v.string())),
-      })
-    ),
-    isActive: v.boolean(),
-    createdAt: v.number(),
-  })
-    .index("by_category", ["category"])
-    .index("by_active", ["isActive"]),
-
-  wildcards: defineTable({
-    type: v.string(), // 'new_rule', 'wildcard'
-    content: v.string(),
+  // Separate tables for each question type
+  truth: defineTable({
+    textEn: v.string(),
+    textNo: v.string(),
     isActive: v.boolean(),
     createdAt: v.number(),
   }).index("by_active", ["isActive"]),
+
+  dare: defineTable({
+    textEn: v.string(),
+    textNo: v.string(),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+  }).index("by_active", ["isActive"]),
+
+  neverHaveIEver: defineTable({
+    textEn: v.string(),
+    textNo: v.string(),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+  }).index("by_active", ["isActive"]),
+
+  pointingGame: defineTable({
+    textEn: v.string(),
+    textNo: v.string(),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+  }).index("by_active", ["isActive"]),
+
+  drinkingBuddy: defineTable({
+    textEn: v.string(),
+    textNo: v.string(),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+  }).index("by_active", ["isActive"]),
+
+  wildcard: defineTable({
+    type: v.string(), // 'onePlayer' or 'allPlayers'
+    textEn: v.string(),
+    textNo: v.string(),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+  })
+    .index("by_active", ["isActive"])
+    .index("by_type", ["type"]),
+
+  newRule: defineTable({
+    textEn: v.string(),
+    textNo: v.string(),
+    repelEn: v.string(),
+    repelNo: v.string(),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+  }).index("by_active", ["isActive"]),
+
+  // Track which cards have been played in each room
+  playedCards: defineTable({
+    roomId: v.id("rooms"),
+    cardType: v.string(), // 'truth', 'dare', 'neverHaveIEver', etc.
+    cardId: v.id("truth" as any), // Will be cast to appropriate table type
+    playedAt: v.number(),
+  })
+    .index("by_room", ["roomId"])
+    .index("by_room_and_type", ["roomId", "cardType"]),
 
   // Analytics (optional but useful)
   gameStats: defineTable({

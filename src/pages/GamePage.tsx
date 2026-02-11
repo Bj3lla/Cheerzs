@@ -18,9 +18,12 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   const {
     gameStarted,
     category,
+    setCategory,
     prompt,
+    setPrompt,
     generatePrompt,
     currentCard,
+    setCurrentCard,
     getRoomBroadcastState,
     applyRoomBroadcastState,
     activeRules,
@@ -29,6 +32,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     showActiveRules,
     setShowActiveRules: _setShowActiveRules,
     roomId,
+    playersForPrompts,
     setRoomSession,
     clearRoomSession,
     setGameStarted,
@@ -50,9 +54,9 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   }, [roomId]);
 
   // Convex real-time subscriptions
-  const { room, leaveRoom: leaveRoomMutation, updatePlayerStatus } = useConvexRoom(normalizedRoomID);
+  const { room, players: playerRecords, leaveRoom: leaveRoomMutation, updatePlayerStatus } = useConvexRoom(normalizedRoomID);
   const roomIdTyped = room?._id as Id<"rooms"> | undefined;
-  const { gameState, seq, updateGameState } = useConvexGame(roomIdTyped);
+  const { gameState, seq, updateGameState, drawCard: drawCardFromConvex } = useConvexGame(roomIdTyped);
 
   const [roomHost, setRoomHost] = useState("");
   const isRoomGame = Boolean(roomId);
@@ -192,22 +196,135 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     if (!isHost) return;
     if (drawCardInFlightRef.current) return; // Prevent spam clicks
     
-    generatePrompt();
-    const success = await publishCurrentRoomState();
-    
-    if (!success) {
-      console.warn("[hostNext] Failed to publish card state after all retries");
-      // The error message is already displayed via setPublishError in publishCurrentRoomState
+    // For multiplayer games, draw a card from Convex instead of using local data
+    if (isRoomGame && roomIdTyped) {
+      setIsDrawingCard(true);
+      drawCardInFlightRef.current = true;
+      setPublishError("");
+      
+      try {
+        const result = await drawCardFromConvex();
+        
+        if (!result.success) {
+          setPublishError(result.error || "Failed to draw card from database");
+          drawCardInFlightRef.current = false;
+          setIsDrawingCard(false);
+          return;
+        }
+        
+        // Success - card is now in room.currentCard and will be synced via useEffect
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        drawCardInFlightRef.current = false;
+        setIsDrawingCard(false);
+      } catch (error) {
+        console.error("[hostNext] Failed to draw card:", error);
+        setPublishError("Failed to draw card from database");
+        drawCardInFlightRef.current = false;
+        setIsDrawingCard(false);
+      }
+    } else {
+      // Single player mode - use local generation
+      generatePrompt();
+      const success = await publishCurrentRoomState();
+      
+      if (!success) {
+        console.warn("[hostNext] Failed to publish card state after all retries");
+      }
     }
   };
 
   // Update room session from Convex subscription
   useEffect(() => {
-    if (!room) return;
+    if (!room || !playerRecords) return;
 
-    const nextPlayers = room.players?.map(p => p.name) || [];
+    const nextPlayers = playerRecords.map(p => p.name);
     setRoomSession({ roomID: normalizedRoomID, players: nextPlayers });
-  }, [room, normalizedRoomID, setRoomSession]);
+  }, [room, playerRecords, normalizedRoomID, setRoomSession]);
+
+  // Sync currentCard from Convex to local state (for host and non-host players)
+  useEffect(() => {
+    if (!isRoomGame || !room?.currentCard) return;
+    
+    const convexCard = room.currentCard;
+    const cardData = convexCard.content;
+    
+    if (!cardData) return;
+    
+    // Map Convex card to local format
+    if (convexCard.type === 'song') {
+      setCategory('spotify');
+      setPrompt(cardData.spotifyUrl || '');
+      const selectedPlayer = playersForPrompts.length > 0 ? getRandomItem(playersForPrompts) : null;
+      setCurrentCard({
+        kind: 'question',
+        category: 'spotify',
+        questionId: cardData._id,
+        selectedPlayer,
+      } as any);
+    } else if (['truth', 'dare', 'neverHaveIEver', 'pointingGame', 'drinkingBuddy'].includes(convexCard.type)) {
+      const cat = convexCard.type === 'neverHaveIEver' ? 'never' : 
+                  convexCard.type === 'pointingGame' ? 'point' :
+                  convexCard.type === 'drinkingBuddy' ? 'drinkingbuddy' : convexCard.type;
+      const text = language === 'en' ? cardData.textEn : cardData.textNo;
+      
+      setCategory(cat as any);
+      
+      if (convexCard.type === 'drinkingBuddy') {
+        const { p1, p2 } = pickTwoDifferentPlayers(playersForPrompts);
+        setPrompt(p1 && p2 ? `${p1}${i18n.ui.and}${p2} ${text}` : text);
+        setCurrentCard({ kind: 'drinkingbuddy', p1, p2 } as any);
+      } else {
+        const selectedPlayer = playersForPrompts.length > 0 ? getRandomItem(playersForPrompts) : null;
+        if (selectedPlayer && ['truth', 'dare'].includes(convexCard.type)) {
+          setPrompt(`${selectedPlayer}, ${text}`);
+        } else if (convexCard.type === 'pointingGame') {
+          setPrompt(text); // Text already contains the pointing instruction
+        } else {
+          setPrompt(text);
+        }
+        setCurrentCard({
+          kind: 'question',
+          category: cat,
+          questionId: cardData._id,
+          selectedPlayer,
+        } as any);
+      }
+    } else if (convexCard.type === 'wildcard') {
+      const selectedPlayer = cardData.type === 'onePlayer' && playersForPrompts.length > 0 
+        ? getRandomItem(playersForPrompts) : null;
+      const text = language === 'en' ? cardData.textEn : cardData.textNo;
+      
+      setCategory('wildcard');
+      setPrompt(selectedPlayer ? `${selectedPlayer}, ${text}` : text);
+      setCurrentCard({
+        kind: 'wildcard',
+        questionId: cardData._id,
+        selectedPlayer,
+      } as any);
+    } else if (convexCard.type === 'newRule') {
+      const text = language === 'en' ? cardData.textEn : cardData.textNo;
+      setCategory('rule');
+      setPrompt(text);
+      setCurrentCard({
+        kind: 'rule',
+        ruleId: cardData._id,
+      } as any);
+    }
+  }, [room?.currentCard, isRoomGame, playersForPrompts, language, i18n]);
+  
+  // Helper function to pick two different players
+  const pickTwoDifferentPlayers = (players: string[]) => {
+    if (!Array.isArray(players) || players.length < 2) return { p1: null, p2: null };
+    const p1 = players[Math.floor(Math.random() * players.length)];
+    const remaining = players.filter((p) => p !== p1);
+    const p2 = remaining.length > 0 ? remaining[Math.floor(Math.random() * remaining.length)] : null;
+    return { p1, p2 };
+  };
+  
+  const getRandomItem = <T,>(arr: T[]): T => {
+    return arr[Math.floor(Math.random() * arr.length)];
+  };
 
   const leaveFromGamePage = async () => {
     if (!isRoomGame || !roomIdTyped || !playerId) {
@@ -294,7 +411,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     }
 
     // Player removed from room
-    if (room && playerId && !room.players.some(p => p.id === playerId)) {
+    if (room && playerId && playerRecords && !playerRecords.some(p => p.playerId === playerId)) {
       clearRoomSession();
       setGameStarted(false);
       localStorage.removeItem("playerId");
@@ -302,7 +419,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
       navigate("/join-room", { replace: true });
       return;
     }
-  }, [isRoomGame, room, normalizedRoomID, playerId, clearRoomSession, setGameStarted, navigate]);
+  }, [isRoomGame, room, playerRecords, normalizedRoomID, playerId, clearRoomSession, setGameStarted, navigate]);
 
   useEffect(() => {
     if (!isRoomGame) return;
@@ -355,21 +472,35 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   }, [i18n, isRoomGame, normalizedRoomID, username, isHost, location]);
 
   useEffect(() => {
-    // Host: if game starts and there is no current card stored yet, draw the first card and publish it.
+    // Host: if game starts and there is no current card stored yet, draw the first card.
     if (!isRoomGame) return;
     if (!gameStarted) return;
     if (!isHost) return;
     if (currentCard) return;
+    if (!roomIdTyped) return;
 
     (async () => {
-      generatePrompt();
-      const success = await publishCurrentRoomState();
-      if (!success) {
-        console.warn("[GamePage] Failed to publish initial card state");
+      setIsDrawingCard(true);
+      drawCardInFlightRef.current = true;
+      
+      try {
+        const result = await drawCardFromConvex();
+        
+        if (!result.success) {
+          console.error("[GamePage] Failed to draw initial card:", result.error);
+        }
+        
+        // Wait a moment for Convex subscription to sync the card
+        await new Promise(resolve => setTimeout(resolve, 300));
+      } catch (error) {
+        console.error("[GamePage] Failed to draw initial card:", error);
+      } finally {
+        drawCardInFlightRef.current = false;
+        setIsDrawingCard(false);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRoomGame, gameStarted, isHost]);
+  }, [isRoomGame, gameStarted, isHost, roomIdTyped]);
 
   return (
     <div className="game-screen">

@@ -39,6 +39,7 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
 
     try {
       const result = await createRoom({
+        code: cleanRoomCode,
         hostId: playerId,
         hostName: cleanUsername,
         gameMode: "classic",

@@ -2,58 +2,27 @@ import { v } from "convex/values";
 import { mutation, query, internalMutation } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 
-// Generate a unique 6-character room code
-function generateRoomCode(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Avoiding ambiguous chars
-  let code = "";
-  for (let i = 0; i < 6; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return code;
-}
-
 // Create a new room
 export const createRoom = mutation({
   args: {
+    code: v.string(),
     hostId: v.string(),
     hostName: v.string(),
     gameMode: v.string(),
     language: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const code = generateRoomCode();
+    const code = args.code.toUpperCase().trim();
     const now = Date.now();
 
-    // Check if code already exists (unlikely but possible)
+    // Check if code already exists
     const existing = await ctx.db
       .query("rooms")
       .withIndex("by_code", (q) => q.eq("code", code))
       .first();
 
     if (existing) {
-      // Try again with a new code by generating another one
-      const newCode = generateRoomCode();
-      const roomId = await ctx.db.insert("rooms", {
-        code: newCode,
-        hostId: args.hostId,
-        gameMode: args.gameMode,
-        status: "waiting",
-        players: [
-          {
-            id: args.hostId,
-            name: args.hostName,
-            isOnline: true,
-            lastSeen: now,
-          },
-        ],
-        settings: {
-          language: args.language || "en",
-          questionTypes: [],
-        },
-        createdAt: now,
-        lastActivity: now,
-      });
-      return { roomId, code: newCode };
+      throw new Error("Room code already exists. Please choose a different name.");
     }
 
     const roomId = await ctx.db.insert("rooms", {
@@ -61,20 +30,23 @@ export const createRoom = mutation({
       hostId: args.hostId,
       gameMode: args.gameMode,
       status: "waiting",
-      players: [
-        {
-          id: args.hostId,
-          name: args.hostName,
-          isOnline: true,
-          lastSeen: now,
-        },
-      ],
+      playerIds: [args.hostId],
       settings: {
         language: args.language || "en",
         questionTypes: [], // Will be set when game starts
       },
       createdAt: now,
       lastActivity: now,
+    });
+
+    // Create player entry
+    await ctx.db.insert("players", {
+      playerId: args.hostId,
+      name: args.hostName,
+      roomId,
+      isOnline: true,
+      lastSeen: now,
+      createdAt: now,
     });
 
     return { roomId, code };
@@ -103,30 +75,35 @@ export const joinRoom = mutation({
     }
 
     // Check if player already in room
-    const playerExists = room.players.some((p) => p.id === args.playerId);
+    const existingPlayer = await ctx.db
+      .query("players")
+      .withIndex("by_room_and_playerId", (q) => 
+        q.eq("roomId", room._id).eq("playerId", args.playerId)
+      )
+      .first();
 
-    if (playerExists) {
+    if (existingPlayer) {
       // Player reconnecting - just update online status
+      await ctx.db.patch(existingPlayer._id, {
+        isOnline: true,
+        lastSeen: Date.now(),
+      });
       await ctx.db.patch(room._id, {
-        players: room.players.map((p) =>
-          p.id === args.playerId
-            ? { ...p, isOnline: true, lastSeen: Date.now() }
-            : p
-        ),
         lastActivity: Date.now(),
       });
     } else {
       // New player joining
+      await ctx.db.insert("players", {
+        playerId: args.playerId,
+        name: args.playerName,
+        roomId: room._id,
+        isOnline: true,
+        lastSeen: Date.now(),
+        createdAt: Date.now(),
+      });
+      
       await ctx.db.patch(room._id, {
-        players: [
-          ...room.players,
-          {
-            id: args.playerId,
-            name: args.playerName,
-            isOnline: true,
-            lastSeen: Date.now(),
-          },
-        ],
+        playerIds: [...room.playerIds, args.playerId],
         lastActivity: Date.now(),
       });
     }
@@ -148,11 +125,32 @@ export const leaveRoom = mutation({
       throw new Error("Room not found");
     }
 
-    // Remove player from room
-    const updatedPlayers = room.players.filter((p) => p.id !== args.playerId);
+    // Find and delete player from players table
+    const player = await ctx.db
+      .query("players")
+      .withIndex("by_room_and_playerId", (q) => 
+        q.eq("roomId", args.roomId).eq("playerId", args.playerId)
+      )
+      .first();
 
-    if (updatedPlayers.length === 0) {
-      // No players left, delete the room
+    if (player) {
+      await ctx.db.delete(player._id);
+    }
+
+    // Remove player from room
+    const updatedPlayerIds = room.playerIds.filter((id) => id !== args.playerId);
+
+    if (updatedPlayerIds.length === 0) {
+      // No players left, delete the room and all associated players
+      const allPlayers = await ctx.db
+        .query("players")
+        .withIndex("by_room", (q) => q.eq("roomId", args.roomId))
+        .collect();
+      
+      for (const p of allPlayers) {
+        await ctx.db.delete(p._id);
+      }
+      
       await ctx.db.delete(args.roomId);
       return { deleted: true };
     }
@@ -160,11 +158,11 @@ export const leaveRoom = mutation({
     // If host left, assign new host
     let newHostId = room.hostId;
     if (room.hostId === args.playerId) {
-      newHostId = updatedPlayers[0].id;
+      newHostId = updatedPlayerIds[0];
     }
 
     await ctx.db.patch(args.roomId, {
-      players: updatedPlayers,
+      playerIds: updatedPlayerIds,
       hostId: newHostId,
       lastActivity: Date.now(),
     });
@@ -187,12 +185,22 @@ export const updatePlayerStatus = mutation({
       return;
     }
 
+    // Find and update player
+    const player = await ctx.db
+      .query("players")
+      .withIndex("by_room_and_playerId", (q) => 
+        q.eq("roomId", args.roomId).eq("playerId", args.playerId)
+      )
+      .first();
+
+    if (player) {
+      await ctx.db.patch(player._id, {
+        isOnline: args.isOnline,
+        lastSeen: Date.now(),
+      });
+    }
+
     await ctx.db.patch(args.roomId, {
-      players: room.players.map((p) =>
-        p.id === args.playerId
-          ? { ...p, isOnline: args.isOnline, lastSeen: Date.now() }
-          : p
-      ),
       lastActivity: Date.now(),
     });
   },
@@ -211,7 +219,7 @@ export const startGame = mutation({
       throw new Error("Room not found");
     }
 
-    if (room.players.length < 2) {
+    if (room.playerIds.length < 2) {
       throw new Error("Need at least 2 players to start");
     }
 
@@ -254,6 +262,35 @@ export const getRoomById = query({
   },
 });
 
+// Get players for a room
+export const getRoomPlayers = query({
+  args: { roomId: v.id("rooms") },
+  handler: async (ctx, args) => {
+    const players = await ctx.db
+      .query("players")
+      .withIndex("by_room", (q) => q.eq("roomId", args.roomId))
+      .collect();
+    
+    return players;
+  },
+});
+
+// Get a specific player
+export const getPlayer = query({
+  args: { 
+    roomId: v.id("rooms"),
+    playerId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("players")
+      .withIndex("by_room_and_playerId", (q) => 
+        q.eq("roomId", args.roomId).eq("playerId", args.playerId)
+      )
+      .first();
+  },
+});
+
 // Clean up stale rooms (can be called by a cron job)
 export const cleanupStaleRooms = internalMutation({
   args: {},
@@ -267,6 +304,16 @@ export const cleanupStaleRooms = internalMutation({
       .collect();
 
     for (const room of staleRooms) {
+      // Delete all players in this room
+      const players = await ctx.db
+        .query("players")
+        .withIndex("by_room", (q) => q.eq("roomId", room._id))
+        .collect();
+      
+      for (const player of players) {
+        await ctx.db.delete(player._id);
+      }
+      
       await ctx.db.delete(room._id);
     }
 

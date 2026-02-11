@@ -2,11 +2,17 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
-export function useConvexRoom(roomCode?: string) {
+export function useConvexRoom(roomCode?: string, roomId?: Id<"rooms">) {
   // Get room by code
   const room = useQuery(
     api.rooms.getRoomByCode,
     roomCode ? { code: roomCode.toUpperCase() } : "skip"
+  );
+
+  // Get players for room
+  const players = useQuery(
+    api.rooms.getRoomPlayers,
+    roomId ? { roomId } : room?._id ? { roomId: room._id } : "skip"
   );
 
   // Mutations
@@ -18,11 +24,13 @@ export function useConvexRoom(roomCode?: string) {
 
   // Helper functions
   const createRoom = async ({
+    code,
     hostId,
     hostName,
     gameMode = "classic",
     language = "en",
   }: {
+    code: string;
     hostId: string;
     hostName: string;
     gameMode?: string;
@@ -30,6 +38,7 @@ export function useConvexRoom(roomCode?: string) {
   }) => {
     try {
       const result = await createRoomMutation({
+        code,
         hostId,
         hostName,
         gameMode,
@@ -104,6 +113,7 @@ export function useConvexRoom(roomCode?: string) {
 
   return {
     room,
+    players,
     createRoom,
     joinRoom,
     leaveRoom,

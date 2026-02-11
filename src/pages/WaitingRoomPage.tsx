@@ -30,7 +30,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
   }, []);
 
   // Convex real-time subscription
-  const { room, leaveRoom, updatePlayerStatus, startGame: startGameMutation } = useConvexRoom(normalizedRoomID);
+  const { room, players: playerRecords, leaveRoom, updatePlayerStatus, startGame: startGameMutation } = useConvexRoom(normalizedRoomID);
 
   const [error, setError] = useState<string>("");
   const [showRulesPopup, setShowRulesPopup] = useState<boolean>(false);
@@ -38,9 +38,9 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
   const [isStarting, setIsStarting] = useState(false);
 
   const isHost = room?.hostId === playerId;
-  const players = room?.players?.map(p => p.name) || [];
-  const host = room?.players?.find(p => p.id === room?.hostId)?.name || "";
-  const loading = room === undefined;
+  const players = playerRecords?.map(p => p.name) || [];
+  const host = playerRecords?.find(p => p.playerId === room?.hostId)?.name || "";
+  const loading = room === undefined || playerRecords === undefined;
 
   // Redirect if no room or not logged in
   useEffect(() => {
@@ -62,25 +62,22 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
 
   // Update local game context when room data changes
   useEffect(() => {
-    if (room && room.status !== "finished") {
+    if (room && room.status !== "finished" && playerRecords) {
       setRoomSession({ 
         roomID: normalizedRoomID, 
-        players: room.players.map(p => p.name) 
+        players: playerRecords.map(p => p.name) 
       });
     }
-  }, [room, normalizedRoomID, setRoomSession]);
+  }, [room, playerRecords, normalizedRoomID, setRoomSession]);
 
-  // Handle game started state
+  // Handle game started state - navigate all players when status changes to "playing"
   useEffect(() => {
     if (room?.status === "playing") {
-      // If non-host and game has started, redirect to game page
-      if (!isHost) {
-        setGameStarted(true);
-        navigate("/game");
-        return;
-      }
+      // All players (including host) navigate when game starts
+      setGameStarted(true);
+      navigate("/game");
     }
-  }, [room?.status, isHost, setGameStarted, navigate]);
+  }, [room?.status, setGameStarted, navigate]);
 
   // Update player online status (heartbeat)
   useEffect(() => {
@@ -160,35 +157,37 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
 
       if (!result.success) {
         setError(result.error || i18n.ui.failedToStartGame);
+        setIsStarting(false);
         return;
       }
 
-      setGameStarted(true);
+      // Store session info (navigation will happen via useEffect when room status updates)
       try {
         sessionStorage.setItem("joinedBeforeStartRoomId", normalizedRoomID);
       } catch {
         // ignore
       }
-      navigate("/game");
+      
+      // Don't navigate here - let the useEffect handle it when room status updates
+      // This ensures all players navigate together
     } catch (err) {
       console.error("[WaitingRoom] start-game failed", err);
       setError(i18n.ui.failedToStartGame);
-    } finally {
       setIsStarting(false);
     }
   };
 
   const handleRemovePlayer = async (targetUsername: string) => {
-    if (!room?._id || !playerId || !isHost || !targetUsername) return;
+    if (!room?._id || !playerId || !isHost || !targetUsername || !playerRecords) return;
 
     setError("");
 
     try {
       // Find the player's ID
-      const targetPlayer = room.players.find(p => p.name === targetUsername);
+      const targetPlayer = playerRecords.find(p => p.name === targetUsername);
       if (!targetPlayer) return;
 
-      const result = await leaveRoom(room._id, targetPlayer.id);
+      const result = await leaveRoom(room._id, targetPlayer.playerId);
 
       if (!result.success) {
         setError(result.error || i18n.ui.failedToRemovePlayer);

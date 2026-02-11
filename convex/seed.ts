@@ -33,14 +33,12 @@ export const seedSongs = internalMutation({
   },
 });
 
-export const seedQuestions = internalMutation({
+export const seedTruth = internalMutation({
   args: {
-    category: v.string(),
     questions: v.array(
       v.object({
-        no: v.string(),
         en: v.string(),
-        no_text: v.optional(v.string()),
+        no: v.string(),
       })
     ),
   },
@@ -48,11 +46,9 @@ export const seedQuestions = internalMutation({
     let inserted = 0;
 
     for (const q of args.questions) {
-      await ctx.db.insert("questions", {
-        category: args.category,
-        questionNo: q.no,
-        questionEn: q.en,
-        questionNo_norwegian: q.no_text,
+      await ctx.db.insert("truth", {
+        textEn: q.en,
+        textNo: q.no,
         isActive: true,
         createdAt: Date.now(),
       });
@@ -63,12 +59,117 @@ export const seedQuestions = internalMutation({
   },
 });
 
-export const seedWildcards = internalMutation({
+export const seedDare = internalMutation({
+  args: {
+    questions: v.array(
+      v.object({
+        en: v.string(),
+        no: v.string(),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    let inserted = 0;
+
+    for (const q of args.questions) {
+      await ctx.db.insert("dare", {
+        textEn: q.en,
+        textNo: q.no,
+        isActive: true,
+        createdAt: Date.now(),
+      });
+      inserted++;
+    }
+
+    return { inserted };
+  },
+});
+
+export const seedNeverHaveIEver = internalMutation({
+  args: {
+    questions: v.array(
+      v.object({
+        en: v.string(),
+        no: v.string(),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    let inserted = 0;
+
+    for (const q of args.questions) {
+      await ctx.db.insert("neverHaveIEver", {
+        textEn: q.en,
+        textNo: q.no,
+        isActive: true,
+        createdAt: Date.now(),
+      });
+      inserted++;
+    }
+
+    return { inserted };
+  },
+});
+
+export const seedPointingGame = internalMutation({
+  args: {
+    questions: v.array(
+      v.object({
+        en: v.string(),
+        no: v.string(),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    let inserted = 0;
+
+    for (const q of args.questions) {
+      await ctx.db.insert("pointingGame", {
+        textEn: q.en,
+        textNo: q.no,
+        isActive: true,
+        createdAt: Date.now(),
+      });
+      inserted++;
+    }
+
+    return { inserted };
+  },
+});
+
+export const seedDrinkingBuddy = internalMutation({
+  args: {
+    questions: v.array(
+      v.object({
+        en: v.string(),
+        no: v.string(),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    let inserted = 0;
+
+    for (const q of args.questions) {
+      await ctx.db.insert("drinkingBuddy", {
+        textEn: q.en,
+        textNo: q.no,
+        isActive: true,
+        createdAt: Date.now(),
+      });
+      inserted++;
+    }
+
+    return { inserted };
+  },
+});
+
+export const seedWildcard = internalMutation({
   args: {
     wildcards: v.array(
       v.object({
         type: v.string(),
-        content: v.string(),
+        en: v.string(),
+        no: v.string(),
       })
     ),
   },
@@ -76,9 +177,40 @@ export const seedWildcards = internalMutation({
     let inserted = 0;
 
     for (const wildcard of args.wildcards) {
-      await ctx.db.insert("wildcards", {
+      await ctx.db.insert("wildcard", {
         type: wildcard.type,
-        content: wildcard.content,
+        textEn: wildcard.en,
+        textNo: wildcard.no,
+        isActive: true,
+        createdAt: Date.now(),
+      });
+      inserted++;
+    }
+
+    return { inserted };
+  },
+});
+
+export const seedNewRule = internalMutation({
+  args: {
+    rules: v.array(
+      v.object({
+        en: v.string(),
+        no: v.string(),
+        repelEn: v.string(),
+        repelNo: v.string(),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    let inserted = 0;
+
+    for (const rule of args.rules) {
+      await ctx.db.insert("newRule", {
+        textEn: rule.en,
+        textNo: rule.no,
+        repelEn: rule.repelEn,
+        repelNo: rule.repelNo,
         isActive: true,
         createdAt: Date.now(),
       });
@@ -99,16 +231,52 @@ export const clearAllData = internalMutation({
       await ctx.db.delete(song._id);
     }
 
-    // Delete all questions
-    const questions = await ctx.db.query("questions").collect();
-    for (const question of questions) {
-      await ctx.db.delete(question._id);
+    // Delete all truth questions
+    const truths = await ctx.db.query("truth").collect();
+    for (const truth of truths) {
+      await ctx.db.delete(truth._id);
+    }
+
+    // Delete all dare questions
+    const dares = await ctx.db.query("dare").collect();
+    for (const dare of dares) {
+      await ctx.db.delete(dare._id);
+    }
+
+    // Delete all neverHaveIEver questions
+    const neverHaveIEvers = await ctx.db.query("neverHaveIEver").collect();
+    for (const nhi of neverHaveIEvers) {
+      await ctx.db.delete(nhi._id);
+    }
+
+    // Delete all pointingGame questions
+    const pointingGames = await ctx.db.query("pointingGame").collect();
+    for (const pg of pointingGames) {
+      await ctx.db.delete(pg._id);
+    }
+
+    // Delete all drinkingBuddy questions
+    const drinkingBuddies = await ctx.db.query("drinkingBuddy").collect();
+    for (const db of drinkingBuddies) {
+      await ctx.db.delete(db._id);
     }
 
     // Delete all wildcards
-    const wildcards = await ctx.db.query("wildcards").collect();
+    const wildcards = await ctx.db.query("wildcard").collect();
     for (const wildcard of wildcards) {
       await ctx.db.delete(wildcard._id);
+    }
+
+    // Delete all newRules
+    const newRules = await ctx.db.query("newRule").collect();
+    for (const rule of newRules) {
+      await ctx.db.delete(rule._id);
+    }
+
+    // Delete all playedCards
+    const playedCards = await ctx.db.query("playedCards").collect();
+    for (const card of playedCards) {
+      await ctx.db.delete(card._id);
     }
 
     // Delete all rooms

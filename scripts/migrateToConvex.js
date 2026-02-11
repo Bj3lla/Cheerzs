@@ -174,13 +174,17 @@ async function migrate() {
       path.join(__dirname, '../src/data/neverHaveIEver.ts'),
       'neverHaveIEver'
     );
+    const pointAtSomeone = extractExport(
+      path.join(__dirname, '../src/data/pointAtSomeone.ts'),
+      'pointAtSomeone'
+    );
     const truthOrDare = extractExport(
       path.join(__dirname, '../src/data/truthOrDare.ts'),
       'truthOrDare'
     );
-    const newRule = extractExport(
+    const newRules = extractExport(
       path.join(__dirname, '../src/data/newRule.ts'),
-      'newRule'
+      'newRules'
     );
     const wildcard = extractExport(
       path.join(__dirname, '../src/data/wildcard.ts'),
@@ -199,68 +203,84 @@ async function migrate() {
     const songsResult = runConvexMutation('seed:seedSongs', { songs });
     console.log(`✅ Inserted ${songsResult.inserted} songs\n`);
 
-    // 2. Migrate Drinking Buddy Questions
-    console.log("🍺 Migrating Drinking Buddy questions...");
-    const dbQuestions = drinkingBuddy.map((q) => ({
-      no: q.no,
+    // 2. Migrate Truth Questions
+    console.log("🎲 Migrating Truth questions...");
+    const truthQuestions = truthOrDare.truth.map((q) => ({
       en: q.en,
-      no_text: q.no,
+      no: q.no,
     }));
-    const dbResult = runConvexMutation('seed:seedQuestions', {
-      category: "drinking_buddy",
-      questions: dbQuestions,
+    const truthResult = runConvexMutation('seed:seedTruth', {
+      questions: truthQuestions,
     });
-    console.log(`✅ ${isDryRun ? 'Would insert' : 'Inserted'} ${dbResult.inserted} Drinking Buddy questions\n`);
+    console.log(`✅ ${isDryRun ? 'Would insert' : 'Inserted'} ${truthResult.inserted} Truth questions\n`);
 
-    // 3. Migrate Never Have I Ever Questions
+    // 3. Migrate Dare Questions
+    console.log("🎯 Migrating Dare questions...");
+    const dareQuestions = truthOrDare.dare.map((q) => ({
+      en: q.en,
+      no: q.no,
+    }));
+    const dareResult = runConvexMutation('seed:seedDare', {
+      questions: dareQuestions,
+    });
+    console.log(`✅ ${isDryRun ? 'Would insert' : 'Inserted'} ${dareResult.inserted} Dare questions\n`);
+
+    // 4. Migrate Never Have I Ever Questions
     console.log("🙊 Migrating Never Have I Ever questions...");
     const nhieQuestions = neverHaveIEver.map((q) => ({
-      no: q.no,
       en: q.en,
-      no_text: q.no,
+      no: q.no,
     }));
-    const nhieResult = runConvexMutation('seed:seedQuestions', {
-      category: "never_have_i_ever",
+    const nhieResult = runConvexMutation('seed:seedNeverHaveIEver', {
       questions: nhieQuestions,
     });
     console.log(`✅ ${isDryRun ? 'Would insert' : 'Inserted'} ${nhieResult.inserted} Never Have I Ever questions\n`);
 
-    // 4. Migrate Truth or Dare Questions
-    console.log("🎲 Migrating Truth or Dare questions...");
-    const truthQuestions = truthOrDare.truth.map((q) => ({
-      no: q.no,
+    // 5. Migrate Pointing Game Questions
+    console.log("👉 Migrating Pointing Game questions...");
+    const pointingQuestions = pointAtSomeone.map((q) => ({
       en: q.en,
-      no_text: q.no,
-    }));
-    const dareQuestions = truthOrDare.dare.map((q) => ({
       no: q.no,
-      en: q.en,
-      no_text: q.no,
     }));
-    
-    const truthResult = runConvexMutation('seed:seedQuestions', {
-      category: "truth",
-      questions: truthQuestions,
+    const pointingResult = runConvexMutation('seed:seedPointingGame', {
+      questions: pointingQuestions,
     });
-    const dareResult = runConvexMutation('seed:seedQuestions', {
-      category: "dare",
-      questions: dareQuestions,
-    });
-    console.log(`✅ ${isDryRun ? 'Would insert' : 'Inserted'} ${truthResult.inserted} Truth questions`);
-    console.log(`✅ ${isDryRun ? 'Would insert' : 'Inserted'} ${dareResult.inserted} Dare questions\n`);
+    console.log(`✅ ${isDryRun ? 'Would insert' : 'Inserted'} ${pointingResult.inserted} Pointing Game questions\n`);
 
-    // 5. Migrate Wildcards and New Rules
+    // 6. Migrate Drinking Buddy Questions
+    console.log("🍺 Migrating Drinking Buddy questions...");
+    const dbQuestions = drinkingBuddy.map((q) => ({
+      en: q.en,
+      no: q.no,
+    }));
+    const dbResult = runConvexMutation('seed:seedDrinkingBuddy', {
+      questions: dbQuestions,
+    });
+    console.log(`✅ ${isDryRun ? 'Would insert' : 'Inserted'} ${dbResult.inserted} Drinking Buddy questions\n`);
+
+    // 7. Migrate Wildcards
     console.log("🃏 Migrating wildcards...");
     const allWildcards = [
-      ...newRule.map((r) => ({ type: "new_rule", content: r.en })),
-      ...wildcard.onePlayer.map((w) => ({ type: "wildcard_one", content: w.en })),
-      ...wildcard.allPlayers.map((w) => ({ type: "wildcard_all", content: w.en })),
+      ...wildcard.onePlayer.map((w) => ({ type: "onePlayer", en: w.en, no: w.no })),
+      ...wildcard.allPlayers.map((w) => ({ type: "allPlayers", en: w.en, no: w.no })),
     ];
-
-    const wildcardsResult = runConvexMutation('seed:seedWildcards', {
+    const wildcardsResult = runConvexMutation('seed:seedWildcard', {
       wildcards: allWildcards,
     });
     console.log(`✅ ${isDryRun ? 'Would insert' : 'Inserted'} ${wildcardsResult.inserted} wildcards\n`);
+
+    // 8. Migrate New Rules
+    console.log("📜 Migrating New Rules...");
+    const rules = newRules.map((r) => ({
+      en: r.en,
+      no: r.no,
+      repelEn: r.repelEn,
+      repelNo: r.repelNo,
+    }));
+    const rulesResult = runConvexMutation('seed:seedNewRule', {
+      rules: rules,
+    });
+    console.log(`✅ ${isDryRun ? 'Would insert' : 'Inserted'} ${rulesResult.inserted} New Rules\n`);
 
     if (isDryRun) {
       console.log("✅ Dry run completed successfully! All data validated.");
@@ -271,11 +291,13 @@ async function migrate() {
     }
     console.log("\nSummary:");
     console.log(`  - Songs: ${songsResult.inserted}`);
-    console.log(`  - Drinking Buddy: ${dbResult.inserted}`);
-    console.log(`  - Never Have I Ever: ${nhieResult.inserted}`);
     console.log(`  - Truth: ${truthResult.inserted}`);
     console.log(`  - Dare: ${dareResult.inserted}`);
+    console.log(`  - Never Have I Ever: ${nhieResult.inserted}`);
+    console.log(`  - Pointing Game: ${pointingResult.inserted}`);
+    console.log(`  - Drinking Buddy: ${dbResult.inserted}`);
     console.log(`  - Wildcards: ${wildcardsResult.inserted}`);
+    console.log(`  - New Rules: ${rulesResult.inserted}`);
   } catch (error) {
     console.error("❌ Migration failed:", error.message);
     if (error.stderr) {

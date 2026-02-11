@@ -1,26 +1,36 @@
 import { v } from "convex/values";
 import { query } from "./_generated/server";
 
-// Get all questions by category
-export const getQuestionsByCategory = query({
-  args: { category: v.string() },
+// Get all questions from a specific table
+export const getQuestionsByTable = query({
+  args: { tableName: v.string() },
   handler: async (ctx, args) => {
+    const validTables = ["truth", "dare", "neverHaveIEver", "pointingGame", "drinkingBuddy", "wildcard", "newRule"];
+    
+    if (!validTables.includes(args.tableName)) {
+      throw new Error(`Invalid table name: ${args.tableName}`);
+    }
+
     return await ctx.db
-      .query("questions")
-      .withIndex("by_category", (q) => q.eq("category", args.category))
-      .filter((q) => q.eq(q.field("isActive"), true))
+      .query(args.tableName as any)
+      .withIndex("by_active", (q: any) => q.eq("isActive", true))
       .collect();
   },
 });
 
-// Get random question from category
+// Get random question from a specific table
 export const getRandomQuestion = query({
-  args: { category: v.string() },
+  args: { tableName: v.string() },
   handler: async (ctx, args) => {
+    const validTables = ["truth", "dare", "neverHaveIEver", "pointingGame", "drinkingBuddy", "wildcard", "newRule"];
+    
+    if (!validTables.includes(args.tableName)) {
+      throw new Error(`Invalid table name: ${args.tableName}`);
+    }
+
     const questions = await ctx.db
-      .query("questions")
-      .withIndex("by_category", (q) => q.eq("category", args.category))
-      .filter((q) => q.eq(q.field("isActive"), true))
+      .query(args.tableName as any)
+      .withIndex("by_active", (q: any) => q.eq("isActive", true))
       .collect();
 
     if (questions.length === 0) {
@@ -31,40 +41,29 @@ export const getRandomQuestion = query({
   },
 });
 
-// Get all question categories
-export const getCategories = query({
+// Get all available question table names
+export const getAvailableTables = query({
   args: {},
   handler: async (ctx) => {
-    const questions = await ctx.db
-      .query("questions")
-      .withIndex("by_active", (q) => q.eq("isActive", true))
-      .collect();
-
-    // Get unique categories
-    const categories = new Set(questions.map((q) => q.category));
-    return Array.from(categories);
+    return ["truth", "dare", "neverHaveIEver", "pointingGame", "drinkingBuddy", "wildcard", "newRule"];
   },
 });
 
-// Get question count by category
+// Get question count for a specific table
 export const getQuestionCount = query({
-  args: { category: v.optional(v.string()) },
+  args: { tableName: v.string() },
   handler: async (ctx, args) => {
-    if (args.category) {
-      const questions = await ctx.db
-        .query("questions")
-        .withIndex("by_category", (q) => q.eq("category", args.category!))
-        .filter((q) => q.eq(q.field("isActive"), true))
-        .collect();
-
-      return questions.length;
-    } else {
-      const questions = await ctx.db
-        .query("questions")
-        .withIndex("by_active", (q) => q.eq("isActive", true))
-        .collect();
-
-      return questions.length;
+    const validTables = ["truth", "dare", "neverHaveIEver", "pointingGame", "drinkingBuddy", "wildcard", "newRule"];
+    
+    if (!validTables.includes(args.tableName)) {
+      throw new Error(`Invalid table name: ${args.tableName}`);
     }
+
+    const questions = await ctx.db
+      .query(args.tableName as any)
+      .withIndex("by_active", (q: any) => q.eq("isActive", true))
+      .collect();
+
+    return questions.length;
   },
 });
