@@ -1807,8 +1807,366 @@ export const spotifyUrls = [
     id: 467, // Havana - Camila Cabello, Young Thug
     url: "https://open.spotify.com/track/1rfofaqEpACxVEHIZBJe6W?si=fFb75w7NQSe5G-bht5wsfA",
   },
-
- 
- // Roc Boys, Bausa, GOLF, Soppgirobygget, Broiler, Ballinciaga, 
- // Ni**as in Paris av Jay-Z og Kanye West, 21 savage, Post Malone, Travis Scott, Juice WRLD, XXXTentacion, Lil Uzi Vert, Lil Yachty, Lil Baby, DaBaby, Megan Thee Stallion, Cardi B, Doja Cat, Saweetie, City
+  {
+    id: 468, // Forever - Chris Brown
+    url: "https://open.spotify.com/track/3NZJlJemX3mzjf56MqC5ML?si=hGBpnGmcTEeyzE8B36dbUQ",
+  },
+  {
+    id: 469, // Next To You - Chris Brown, Justin Bieber
+    url: "https://open.spotify.com/track/7gd01LMH2gBcoDngSt8sq9?si=uH4-3Pe3S3anF92TjviKEQ",
+  },
+  {
+    id: 470, // It Girl - Jason Derulo
+    url: "https://open.spotify.com/track/4fINc8dnfcz7AdhFYVA4i7?si=Nv-kjyRWSpaf6r2df9vNqQ",
+  },
+  {
+    id: 471, // Ridin Solo - Jason Derulo
+    url: "https://open.spotify.com/track/6OEolOOk9Gh9bqkdpfIOl0?si=AILwujLdQ4GoXx8tmHn8vg",
+  },
+  {
+    id: 472, // Whatcha Say - Jason Derulo
+    url: "https://open.spotify.com/track/7xkQdy0cy5ymoWT7nedvLz?si=o7v2xJoCRw-k7JoLze3TSw",
+  },
+  {
+    id: 473, // Talk Dirty (feat. 2 Chainz) - Jason Derulo, 2 Chainz
+    url: "https://open.spotify.com/track/31JwK4iHCf75rnQWoMPU5t?si=2PFMpx_yS2GwmMVRSebGNw",
+  },
+  {
+    id: 474, // Want to Want Me - Jason Derulo
+    url: "https://open.spotify.com/track/6zKrj4SomgfbvsfuTAuElE?si=Zcq4PzwsS6Kt-tJDtSGvfg",
+  },
+  {
+    id: 475, // Swalla - Jason Derulo, Nicky Minaj, Ty Dolla $ign
+    url: "https://open.spotify.com/track/5DswHXvXDUmgwP5zcRL5Hv?si=sXorGgmxTJyNAbETy1DzHQ",
+  },
+  {
+    id: 476, // Under The Influence - Chris Brown
+    url: "https://open.spotify.com/track/5IgjP7X4th6nMNDh4akUHb?si=4TbDNPEBTbuQQtdbPl_UiQ",
+  },
+  {
+    id: 477, // Mood (feat. Iann Dior) - 24kGoldn, Iann Dior
+    url: "https://open.spotify.com/track/4jPy3l0RUwlUI9T5XHBW2m?si=DLjGABnLSR-dFpWEQ9grCQ",
+  },
+  {
+    id: 478, // CITY OF ANGELS - 24kGoldn
+    url: "https://open.spotify.com/track/6ap9lSRJ0iLriGLqoJ44cq?si=HogDoDsJR6-FTPauPdidQg",
+  },
+  {
+    id: 479, // Hate Me - Ellie Goulding, Juice WRLD
+    url: "https://open.spotify.com/track/15og0pCEcTFWEXOFKdcJlU?si=PErnFGkgRkGyvtCpEgL9iQ",
+  },
+  {
+    id: 480, // Lucid Dreams - Juice WRLD
+    url: "https://open.spotify.com/track/285pBltuF7vW8TeWk8hdRR?si=pQIg_FrISNGDJpfKWbmA7Q",
+  },
+  {
+    id: 481, // All Girls Are The Same - Juice WRLD
+    url: "https://open.spotify.com/track/4VXIryQMWpIdGgYR4TrjT1?si=s83BPvsYT-yFTSt1w12qwA",
+  },
+  {
+    id: 482, // Come & Go (with Marshmello)
+    url: "https://open.spotify.com/track/2Y0wPrPQBrGhoLn14xRYCG?si=Of7doqJmRlG-7LhW8QA2hw",
+  },
+  {
+    id: 483, // Wishing Well - Juice WRLD
+    url: "https://open.spotify.com/track/2U5WueTLIK5WJLD7mvDODv?si=GrZac7Z5SlmU6qoNnrzH-g",
+  },
+  {
+    id: 484, // Happier - Marshmello, Bastille
+    url: "https://open.spotify.com/track/7BqHUALzNBTanL6OvsqmC1?si=cZLYgMaXSiK3Mrx02Hlzrg",
+  },
+  {
+    id: 485, // Silence - Marshmello, Khalid
+    url: "https://open.spotify.com/track/7vGuf3Y35N4wmASOKLUVVU?si=SD_I_UodRxCWbig-TmQ-xA",
+  },
+  {
+    id: 486, // Pompei - Bastille
+    url: "https://open.spotify.com/track/4Ub8UsjWuewQrPhuepfVpd?si=Gpp1K-NxQzesxOZgtu99CA",
+  },
+  {
+    id: 487, // Cold Water - Major Lazar, Justin Bieber, MØ
+    url: "https://open.spotify.com/track/6Bjtr3tPdto5nyuLYf61sN?si=lT0_jTP7Qc6biAzkoZzVOw",
+  },
+  {
+    id: 488, // In the Name of Love - Martin Garrix, Bebe Rexha
+    url: "https://open.spotify.com/track/23L5CiUhw2jV1OIMwthR3S?si=nuSxpT5jRlGwWzfdoA80yA",
+  },
+  {
+    id: 489, // Me, Myself & I - G-Easy, Bebe Rehxa
+    url: "https://open.spotify.com/track/40YcuQysJ0KlGQTeGUosTC?si=jQnKRIL_Rmecsh2ouN3kpw",
+  },
+  {
+    id: 490, // Counting Stars - OneRepublic
+    url: "https://open.spotify.com/track/2tpWsVSb9UEmDRxAl1zhX1?si=TmbnNt8eSu2SyzKzS_qUgA",
+  },
+  {
+    id: 491, // House of Memories - Panic! At The Disco
+    url: "https://open.spotify.com/track/2DgdHcjWmO3qd50RzuBLgZ?si=vAEAK2GnRNW9ElbvmvVn-Q",
+  },
+  {
+    id: 492, // Use Somebody - Kings of Leon
+    url: "https://open.spotify.com/track/5VGlqQANWDKJFl0MBG3sg2?si=iBieo9LzSAaWiI9tc6nu_w&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 493, // Shadow of the Day - Linkin Park
+    url: "https://open.spotify.com/track/0OYcEfskah1egYHjYRvbg1?si=uHhUrvaEShuTZvz3u8Vh9g&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 494, // Suddenly I See - KT Thunstall
+    url: "https://open.spotify.com/track/5p9XWUdvbUzmPCukOmwoU3?si=186TkYq9S-qkGnRfmr2COA&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 495, // Sk8er Boi - Avril Lavigne
+    url: "https://open.spotify.com/track/00Mb3DuaIH1kjrwOku9CGU?si=ooRwLd60QDasUO9KPKuk3g&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 496, // Waiting On the World to Change - John Mayer
+    url: "https://open.spotify.com/track/1lRmQ9D6oNYiuCXdGlKCs0?si=SzD3A_8STIOI8QfqIYzKbw&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 497, // Upside Down - Jack Johnson
+    url: "https://open.spotify.com/track/0aJrYfARfCKzv6gXjhs4SZ?si=1BxUtxDUSxi4lH5H45qlyQ&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 498, // Sex on Fire - Kings of Leon
+    url: "https://open.spotify.com/track/0ntQJM78wzOLVeCUAW7Y45?si=4BG-Ky2oQfOTtMPH0Wtgrw&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 499, // Leave Out All The Rest - Linkin Park
+    url: "https://open.spotify.com/track/0sp00HSXkQyqTa6QqM0O8V?si=DmrYT_EeS-64Uw5jeKumWg&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 500, // So What - Pink!
+    url: "https://open.spotify.com/track/0JiY190vktuhSGN6aqJdrt?si=rAeJBcl0T4-mJZIstMralw",
+  },
+  {
+    id: 501, // Raise Your Glass - Pink!
+    url: "https://open.spotify.com/track/1gv4xPanImH17bKZ9rOveR?si=pNWw3FrgQ2GuPlfkRrVq6w",
+  },
+  {
+    id: 502, // R U Mine? - Arctic Monkeys
+    url: "https://open.spotify.com/track/2AT8iROs4FQueDv2c8q2KE?si=vZp6ORtNRz-hTbP4axCIyw",
+  },
+  {
+    id: 503, // Why’d You Only Call Me When You’re High? - Arctic Monkeys
+    url: "https://open.spotify.com/track/086myS9r57YsLbJpU0TgK9?si=-EMI2euMQa2rEgNGP-Cffg",
+  },
+  {
+    id: 504, // What I’ve Done - Linkin Park
+    url: "https://open.spotify.com/track/18lR4BzEs7e3qzc0KVkTpU?si=5-IVI9TxTYO9d4P8ndva_w&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 505, // Hey, Soul Sister - Train
+    url: "https://open.spotify.com/track/4HlFJV71xXKIGcU3kRyttv?si=T1RwMQpUR-q-kz8kNqVLpw&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 506, // Stacy’s Mom - Fountains Of Wayne
+    url: "https://open.spotify.com/track/27L8sESb3KR79asDUBu8nW?si=9xvZUaIaRoq20ZusItkWig&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 507, // Take Me Out - Franz Ferdinand
+    url: "https://open.spotify.com/track/20I8RduZC2PWMWTDCZuuAN?si=2sEeUzoqSLGA5NdilXRnfw&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 508, // I’m A Believer - Smash Mouth
+    url: "https://open.spotify.com/track/0C9jZPUv4SuaXkuEQw6L40?si=2UQG3sb3SgWvH7JNW1mtUw&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
+  },
+  {
+    id: 509, // Crush - David Archuleta
+    url: "https://open.spotify.com/track/4wCD0qOFNRu1Q6O3N6ycm4?si=3CeW8Yb6QdqEexpZSkW6Iw",
+  },
+  {
+    id: 510, // Can’t Stop - Red Hot Chili Peppers
+    url: "https://open.spotify.com/track/3ZOEytgrvLwQaqXreDs2Jx?si=OT6hC7fHStW8iwq0vybcjA",
+  },
+  {
+    id: 511, // How You Remind Me - Nickleback
+    url: "https://open.spotify.com/track/0gmbgwZ8iqyMPmXefof8Yf?si=4bIpZkhrSdu_tTx51fZqpg",
+  },
+  {
+    id: 512, // Photograph - Nickleback
+    url: "https://open.spotify.com/track/3bYrSlgvWacP1LZV44pfzp?si=Bst24MeaQiC_1baacBCRrw",
+  },
+  {
+    id: 513, // Burn It to the Ground - Nickelback
+    url: "https://open.spotify.com/track/1jq28NGw6wdtFKx8MBPy6C?si=vAdpFppnTZWvv5lrXnEWyw",
+  },
+  {
+    id: 514, // Rockstar - Nickleback
+    url: "https://open.spotify.com/track/05tlUh0E6IFks9sCQguQKN?si=IdxW_cl5SK-KtFKhoyJkTA",
+  },
+  {
+    id: 515, // Who’s That Chick? (feat. Rihanna) - David Guetta, Rihanna
+    url: "https://open.spotify.com/track/3FrX3mx8qq7SZX2NYbzDoj?si=YJgg6szHQeOsZkVYp4I5Zw",
+  },
+  {
+    id: 516, // Hall of Fame (feat. will.i.am) - The Script, will.i.am
+    url: "https://open.spotify.com/track/7wMq5n8mYSKlQIGECKUgTX?si=xA-DO1FGT3K6uFZA0PeL2w",
+  },
+  {
+    id: 517, // Don’t Look Down (feat. Usher) - Martin Garrix, Usher
+    url: "https://open.spotify.com/track/5M9jOReAKGZ2AttVefFjTY?si=cx9UsWDCQkW8MdJQ_F4lAg",
+  },
+  {
+    id: 518, // Life is a Highway - Rascal Flatts
+    url: "https://open.spotify.com/track/02SjT88MukDOa9KuuRuODY?si=hfnqri8bTWG9V3paw7Txag",
+  },
+  {
+    id: 519, // Stronger - Kanye West
+    url: "https://open.spotify.com/track/4y6c5vMzKKM3KsMbHtjKx5?si=l0qoSckjQzee5dMQOSZKIQ",
+  },
+  {
+    id: 520, // Do It Again - Pia Mia, Chris Brown, Tyga
+    url: "https://open.spotify.com/track/1PTqbs9FV8hSJCS7OOF5OC?si=9GojqB7sSuex2g0d5DmKDA",
+  },
+  {
+    id: 521, // Black Widow - Iggy Azalea, Rita Ora
+    url: "https://open.spotify.com/track/2pyhJF2s7myJiXP9ceczB9?si=CORK-aT3Shy-36eth604Hw",
+  },
+  {
+    id: 522, // Fancy - Iggy Azalea
+    url: "https://open.spotify.com/track/3W3KtDwAIg3mAruSpnfG3Q?si=krs4CfvvQeGQvOyNX9ZlBQ",
+  },
+  {
+    id: 523, // Worth It (feat. Kid Ink) - Fifth Harmony, Kid Ink
+    url: "https://open.spotify.com/track/41Fflg7qHiVOD6dEPvsCzO?si=h3HvkzijT2CdOPrRBmWL7w",
+  },
+  {
+    id: 524, // Good Time - Owl City, Carly Rae Jepsen
+    url: "https://open.spotify.com/track/5w6TVvv71F8px5cObg2xnx?si=JyLvYfvqTp-zNC8N4IOmEw",
+  },
+  {
+    id: 525, // King - Years & Years (Olly Alexander)
+    url: "https://open.spotify.com/track/3AeicLnm55RqcXGBKYQolM?si=M7dBQe4mSFKnsGfdkuMpPg",
+  },
+  {
+    id: 526, // Heartless - Kanye West
+    url: "https://open.spotify.com/track/53gcDgFyqqpvCzXWrnFZpH?si=zzstQ8FNRWGydV5heYlJsw",
+  },
+  {
+    id: 527, // Flashing Lights - Kanye West
+    url: "https://open.spotify.com/track/5TRPicyLGbAF2LGBFbHGvO?si=Py_oYP3YQwCPEytzCrM_qQ",
+  },
+  {
+    id: 528, // Runaway - Kanye West
+    url: "https://open.spotify.com/track/3DK6m7It6Pw857FcQftMds?si=Jxw4zYBbQbyF2Pe_4CMCxQ",
+  },
+  {
+    id: 529, // All Falls Down - Kanye West
+    url: "https://open.spotify.com/track/5SkRLpaGtvYPhw02vZhQQ9?si=kO4h-K7aRpGUxGUbymcPsw",
+  },
+  {
+    id: 530, // Ni**as In Paris - JAY-Z, Kanye West
+    url: "https://open.spotify.com/track/1auxYwYrFRqZP7t3s7w4um?si=axIS-RseQOO46vYoWyT_tQ",
+  },
+  {
+    id: 531, // Empire State Of Mind - JAY-Z, Alicia Keys
+    url: "https://open.spotify.com/track/2igwFfvr1OAGX9SKDCPBwO?si=THDVEDO9Rm2da2Wpq5mjsQ",
+  },
+  {
+    id: 532, // Run This Town - JAY-Z, Rihanna, Kanye West
+    url: "https://open.spotify.com/track/7LR85XLWw2yXqKBSI5brbG?si=G2_vBIwgRzmntXQ5LA0DOw",
+  },
+  {
+    id: 533, // Numb / Encore - JAY-Z, Linkin Park
+    url: "https://open.spotify.com/track/5sNESr6pQfIhL3krM8CtZn?si=hq1GSDD7TM2MYWChESI7Ow",
+  },
+  {
+    id: 534, // Can’t Tell Me Nothing - Kanye West
+    url: "https://open.spotify.com/track/0mEdbdeRFQwBhN4xfyIeUM?si=l3hFZa9QT12oaTAnii2zAw",
+  },
+  {
+    id: 535, // Homecoming - Kanye West, Chris Martin
+    url: "https://open.spotify.com/track/4iz9lGMjU1lXS51oPmUmTe?si=ytjTffL-TPyDOqq0hAIZYg",
+  },
+  {
+    id: 536, // I Wonder - Kanye West
+    url: "https://open.spotify.com/track/7rbECVPkY5UODxoOUVKZnA?si=UpLGyr7vSYOQXmCwrDiSFA",
+  },
+  {
+    id: 537, // Somebody To You - The Vamps
+    url: "https://open.spotify.com/track/6VrLYoQKdhu1Jruei06t65?si=wp0C6XDgSGiIcs4SKu2ttA",
+  },
+  {
+    id: 538, // All Night - The Vamps, Matoma
+    url: "https://open.spotify.com/track/0dXNQ8dckG4eYfEtq9zcva?si=BlsgzQTqS0W7GLmy3CF99Q",
+  },
+  {
+    id: 539, // New Way Home - Isac Elliot
+    url: "https://open.spotify.com/track/4cdYcmajml2Z7ru7ubaHCb?si=cnSFpPnZTDyRn9b820eZcA",
+  },
+  {
+    id: 540, // All Time Low - Jon Bellion
+    url: "https://open.spotify.com/track/1CnPYaKxTVb4LWOtiGOm0m?si=AKIrDXmMRguPWjgkSOzccg",
+  },
+  {
+    id: 541, // Believer - Imagine Dragons
+    url: "https://open.spotify.com/track/0pqnGHJpmpxLKifKRmU6WP?si=hnlXTPKEQvWkdXccOJpMpQ",
+  },
+  {
+    id: 542, // Demons - Imagine Dragons
+    url: "https://open.spotify.com/track/5qaEfEh1AtSdrdrByCP7qR?si=dhpXPrYBT_WEppZueqDgUQ",
+  },
+  {
+    id: 543, // Thunder - Imagine Dragons
+    url: "https://open.spotify.com/track/1zB4vmk8tFRmM9UULNzbLB?si=_7jYU7yoQvSZ-K--VvVpOw",
+  },
+  {
+    id: 544, // Radioactive - Imagine Dragons
+    url: "https://open.spotify.com/track/62yJjFtgkhUrXktIoSjgP2?si=oiy_lGI6Q4axIOxer08KsA",
+  },
+  {
+    id: 545, // Enemy (with JID, from Arcane) - Imagine Dragons, JID
+    url: "https://open.spotify.com/track/3CIyK1V4JEJkg02E4EJnDl?si=o2gjyHhtQiSu7Lmj5pz4Aw",
+  },
+  {
+    id: 546, // Thinking Out Loud - Ed Sheeran
+    url: "https://open.spotify.com/track/34gCuhDGsG4bRPIf9bb02f?si=LN9zMlHyRAOcjTQ8n673UQ",
+  },
+  {
+    id: 547, // Bad Habits - Ed Sheeran
+    url: "https://open.spotify.com/track/3rmo8F54jFF8OgYsqTxm5d?si=zdZ2O2xhSGGrSBxMx13V3Q",
+  },
+  {
+    id: 548, // I Knew You Were Trouble - Taylor Swift
+    url: "https://open.spotify.com/track/72jCZdH0Lhg93z6Z4hBjgj?si=-sq2mB-LRYmnQroqpSq1JA&context=spotify%3Aplaylist%3A37i9dQZF1DX5KpP2LN299J",
+  },
+  {
+    id: 549, // Blank Space - Taylor Swift
+    url: "https://open.spotify.com/track/1u8c2t2Cy7UBoG4ArRcF5g?si=QiouXeKWRIqb_bIprjxp7A",
+  },
+  {
+    id: 550, // Cruel Summer - Taylor Swift
+    url: "https://open.spotify.com/track/1BxfuPKGuaTgP7aM0Bbdwr?si=svS3beWIQMimNtj31-k6eQ",
+  },
+  {
+    id: 551, // Shake It Off - Taylor Swift
+    url: "https://open.spotify.com/track/0cqRj7pUJDkTCEsJkx8snD?si=NvXelSdpSxiKEZx9k4Jw9w&context=spotify%3Aplaylist%3A37i9dQZF1DX5KpP2LN299J",
+  },
+  {
+    id: 552, // We Are Never Ever Getting Back Together - Taylor Swift
+    url: "https://open.spotify.com/track/7AEAGTc8cReDqcbPoY9gwo?si=X5Hq6gE_R7iGkfph7NJwmw&context=spotify%3Aplaylist%3A37i9dQZF1DX5KpP2LN299J",
+  },
+  {
+    id: 553, // Love Story - Taylor Swift
+    url: "https://open.spotify.com/track/1D4PL9B8gOg78jiHg3FvBb?si=FLWexUzwRjW7dZc-hjtucw",
+  },
+  {
+    id: 554, // Smack That - Akon, Eminem
+    url: "https://open.spotify.com/track/2kQuhkFX7uSVepCD3h29g5?si=g7QBjqiXTEO9Y3NAARQClA",
+  },
+  {
+    id: 555, // Lonely - Akon
+    url: "https://open.spotify.com/track/4v7DCN09hgXkKazefkznDQ?si=pR_7OpIOT7CVsJ66bbh45A",
+  },
+  {
+    id: 556, // Party In The U.S.A - Miley Cyrus
+    url: "https://open.spotify.com/track/3E7dfMvvCLUddWissuqMwr?si=PNP2IxwcRhaBD8NEwIZWcg",
+  },
+  {
+    id: 557, // Burn - Ellie Goulding
+    url: "https://open.spotify.com/track/5lF0pHbsJ0QqyIrLweHJPW?si=h8U_oBIET-aJ5t5Itc4GuQ",
+  },
+  // Roc Boys, Bausa, GOLF, Soppgirobygget, Broiler, Ballinciaga, Haien kommer, 
+  // Ni**as in Paris av Jay-Z og Kanye West, 21 savage, Post Malone, Travis Scott, Juice WRLD, XXXTentacion, Lil Uzi Vert, Lil Yachty, Lil Baby, DaBaby, Megan Thee Stallion, Cardi B, Doja Cat, Saweetie, City
 ];
