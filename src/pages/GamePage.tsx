@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Ably from "ably";
 import { IoArrowBack } from "react-icons/io5";
 import Button from "../components/Button";
 import Card from "../components/Card";
@@ -11,6 +10,9 @@ import { categoryColors } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 import type { LanguageCode } from "../hooks/useLanguage";
 import SpotifyCard from "../components/SpotifyCard";
+import { useConvexRoom } from "../hooks/useConvexRoom";
+import { useConvexGame } from "../hooks/useConvexGame";
+import type { Id } from "../../convex/_generated/dataModel";
 
 export default function GamePage({ language }: { language: LanguageCode }) {
   const {
@@ -43,22 +45,23 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     return localStorage.getItem("playerId") || "";
   }, []);
 
-  const [roomHost, setRoomHost] = useState("");
-  const isRoomGame = Boolean(roomId);
-  const isHost = Boolean(isRoomGame && username && roomHost && username === roomHost);
-
   const normalizedRoomID = useMemo(() => {
     return typeof roomId === "string" ? roomId.trim().toUpperCase() : "";
   }, [roomId]);
 
-  const isSyncing = Boolean(isRoomGame && !currentCard);
+  // Convex real-time subscriptions
+  const { room, leaveRoom: leaveRoomMutation, updatePlayerStatus } = useConvexRoom(normalizedRoomID);
+  const roomIdTyped = room?._id as Id<"rooms"> | undefined;
+  const { gameState, seq, updateGameState } = useConvexGame(roomIdTyped);
 
-  const ablyRef = useRef(null);
-  const channelRef = useRef(null);
+  const [roomHost, setRoomHost] = useState("");
+  const isRoomGame = Boolean(roomId);
+  const isHost = Boolean(isRoomGame && playerId && room?.hostId && playerId === room.hostId);
+
+  const isSyncing = Boolean(isRoomGame && !currentCard);
 
   const lastSeqRef = useRef(0);
   const lastAppliedLanguageRef = useRef(language);
-  const fetchGameStateInFlightRef = useRef(false);
   const initialLanguageRef = useRef(language);
   const startedAtRef = useRef("");
 
@@ -105,63 +108,30 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     }
   }, [isRoomGame, gameStarted, prompt, generatePrompt]);
 
-  const fetchGameState = async () => {
-    if (!normalizedRoomID) return;
-
-    if (fetchGameStateInFlightRef.current) return;
-    fetchGameStateInFlightRef.current = true;
-
-    try {
-      const res = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
-      const data = await res.json().catch(() => null);
-
-      if (res.status === 404) {
-        clearRoomSession();
-        setGameStarted(false);
-        navigate("/");
-        return;
-      }
-
-      if (!res.ok) return;
-
-      setRoomHost(data?.host || "");
-
-      const nextSeq = Number(data?.seq || 0);
-      const isNewer = Number.isFinite(nextSeq) && nextSeq > lastSeqRef.current;
-      const isSameButNewLanguage =
-        Number.isFinite(nextSeq) &&
-        nextSeq === lastSeqRef.current &&
-        language !== lastAppliedLanguageRef.current;
-
-      if ((isNewer || isSameButNewLanguage) && data?.state) {
-        if (isNewer) lastSeqRef.current = nextSeq;
-        lastAppliedLanguageRef.current = language;
-
-        const startedAt = typeof data.state?.startedAt === "string" ? data.state.startedAt : "";
-        if (startedAt) startedAtRef.current = startedAt;
-
-        applyRoomBroadcastState(data.state, language);
-      }
-    } catch {
-      // ignore
-    } finally {
-      fetchGameStateInFlightRef.current = false;
-    }
-  };
-
   useEffect(() => {
     if (!isRoomGame) return;
-    if (!normalizedRoomID) return;
+    if (!gameState) return;
 
-    // When language changes mid-game, re-apply current state (same seq is OK).
-    if (language === initialLanguageRef.current) return;
-    initialLanguageRef.current = language;
-    void fetchGameState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language, isRoomGame, normalizedRoomID]);
+    const nextSeq = seq ?? 0;
+    const isNewer = Number.isFinite(nextSeq) && nextSeq > lastSeqRef.current;
+    const isSameButNewLanguage =
+      Number.isFinite(nextSeq) &&
+      nextSeq === lastSeqRef.current &&
+      language !== lastAppliedLanguageRef.current;
+
+    if ((isNewer || isSameButNewLanguage) && gameState) {
+      if (isNewer) lastSeqRef.current = nextSeq;
+      lastAppliedLanguageRef.current = language;
+
+      const startedAt = typeof gameState?.startedAt === "string" ? gameState.startedAt : "";
+      if (startedAt) startedAtRef.current = startedAt;
+
+      applyRoomBroadcastState(gameState, language);
+    }
+  }, [isRoomGame, gameState, seq, language, applyRoomBroadcastState]);
 
   const publishCurrentRoomState = async (retryCount = 0, isRetryCall = false): Promise<boolean> => {
-    if (!normalizedRoomID || !username) return false;
+    if (!playerId || !roomIdTyped) return false;
 
     const state = getRoomBroadcastState();
     if (!state || typeof state !== "object") return false;
@@ -178,14 +148,10 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     const baseDelay = 500; // ms
 
     try {
-      const response = await fetch("/api/draw-card", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId, state }),
-      });
+      const result = await updateGameState(playerId, state);
 
-      if (!response.ok) {
-        throw new Error(`Server responded with status ${response.status}`);
+      if (!result.success) {
+        throw new Error(result.error || "Failed to update game state");
       }
 
       // Success - reset state and add smooth transition delay
@@ -235,29 +201,16 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     }
   };
 
-  const fetchRoomState = async () => {
-    if (!normalizedRoomID) return;
+  // Update room session from Convex subscription
+  useEffect(() => {
+    if (!room) return;
 
-    try {
-      const res = await fetch(`/api/room-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
-      const data = await res.json().catch(() => null);
-      if (res.status === 404) {
-        clearRoomSession();
-        setGameStarted(false);
-        navigate("/");
-        return;
-      }
-      if (!res.ok) return;
-
-      const nextPlayers = Array.isArray(data?.players) ? data.players : [];
-      setRoomSession({ roomID: data?.roomID || normalizedRoomID, players: nextPlayers });
-    } catch {
-      // ignore (room sync is best-effort)
-    }
-  };
+    const nextPlayers = room.players?.map(p => p.name) || [];
+    setRoomSession({ roomID: normalizedRoomID, players: nextPlayers });
+  }, [room, normalizedRoomID, setRoomSession]);
 
   const leaveFromGamePage = async () => {
-    if (!isRoomGame || !normalizedRoomID || !username) {
+    if (!isRoomGame || !roomIdTyped || !playerId) {
       setGameStarted(false);
       navigate("/join-room");
       return;
@@ -272,13 +225,9 @@ export default function GamePage({ language }: { language: LanguageCode }) {
 
     // Non-host: actually leave the room/game.
     try {
-      await fetch("/api/leave-room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      });
-    } catch {
-      // ignore
+      await leaveRoomMutation(roomIdTyped, playerId);
+    } catch (err) {
+      console.error("[leaveFromGamePage] Failed to leave room:", err);
     } finally {
       clearRoomSession();
       setGameStarted(false);
@@ -288,132 +237,72 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     }
   };
 
-  const heartbeat = async () => {
-    if (!normalizedRoomID || !username) return;
-
-    try {
-      await fetch("/api/heartbeat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      });
-    } catch {
-      // ignore
-    }
-  };
-
-  const sendLeaveBeacon = () => {
-    if (!normalizedRoomID || !username) return;
-
-    try {
-      const blob = new Blob([JSON.stringify({ roomID: normalizedRoomID, username, playerId })], {
-        type: "application/json",
-      });
-      navigator.sendBeacon("/api/leave-room", blob);
-    } catch {
-      // ignore
-    }
-  };
-
+  // Update player online status (heartbeat)
   useEffect(() => {
-    if (!normalizedRoomID) return;
+    if (!roomIdTyped || !playerId) return;
 
-    // Load existing current card (supports reconnect / late join)
-    fetchGameState();
-    fetchRoomState();
-    heartbeat();
+    // Mark as online when joining
+    updatePlayerStatus(roomIdTyped, playerId, true);
 
-    const intervalId = window.setInterval(heartbeat, 5 * 60 * 1000);
-    const onVisibilityChange = () => {
-      if (!document.hidden) heartbeat();
-    };
+    // Heartbeat interval
+    const heartbeatInterval = setInterval(() => {
+      updatePlayerStatus(roomIdTyped, playerId, true);
+    }, 30 * 1000); // Every 30 seconds
 
-    document.addEventListener("visibilitychange", onVisibilityChange);
-    window.addEventListener("pagehide", sendLeaveBeacon);
-
-    return () => {
-      window.clearInterval(intervalId);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-      window.removeEventListener("pagehide", sendLeaveBeacon);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedRoomID, username]);
-
-  useEffect(() => {
-    if (!normalizedRoomID) return;
-
-    const ably = new Ably.Realtime({
-      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}&playerId=${encodeURIComponent(playerId)}`,
-    });
-    ablyRef.current = ably;
-
-    const channel = ably.channels.get(`room-${normalizedRoomID}`);
-    channelRef.current = channel;
-
-    const refetch = () => {
-      fetchRoomState();
-    };
-
-    channel.subscribe("player-joined", refetch);
-    channel.subscribe("player-left", refetch);
-    channel.subscribe("player-removed", (msg) => {
-      const removedUsername = msg?.data?.removedUsername;
-
-      // If you were removed by the host, force you out of the room immediately.
-      if (removedUsername && removedUsername === username) {
-        clearRoomSession();
-        setGameStarted(false);
-        localStorage.removeItem("playerId");
-        localStorage.removeItem("playerRoomId");
-        navigate("/join-room", { replace: true });
-        return;
+    // Handle visibility change
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        updatePlayerStatus(roomIdTyped, playerId, true);
       }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
-      refetch();
-    });
-
-    channel.subscribe("card-updated", (msg) => {
-      const nextSeq = Number(msg?.data?.seq || 0);
-      const hasNewerSeq = Number.isFinite(nextSeq) && nextSeq > lastSeqRef.current;
-
-      // Fast path: apply the authoritative server-published state immediately.
-      if (hasNewerSeq && msg?.data?.state && typeof msg.data.state === "object") {
-        lastSeqRef.current = nextSeq;
-        lastAppliedLanguageRef.current = language;
-
-        if (typeof msg.data.state?.startedAt === "string") {
-          startedAtRef.current = msg.data.state.startedAt;
+    // Beacon on page unload
+    const handleBeforeUnload = () => {
+      if (!isHost) {
+        try {
+          // Use sendBeacon for reliable delivery on page close
+          navigator.sendBeacon(
+            `/api/leave-room`,
+            JSON.stringify({ roomID: normalizedRoomID, username, playerId })
+          );
+        } catch {
+          // ignore
         }
-
-        applyRoomBroadcastState(msg.data.state, language);
-        return;
       }
+    };
+    window.addEventListener("pagehide", handleBeforeUnload);
 
-      // Fallback: DB is still the source of truth.
-      void fetchGameState();
-    });
+    // Cleanup
+    return () => {
+      clearInterval(heartbeatInterval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pagehide", handleBeforeUnload);
+    };
+  }, [roomIdTyped, playerId, updatePlayerStatus, isHost, normalizedRoomID, username]);
 
-    channel.subscribe("room-deleted", () => {
+  // Redirect if room deleted or player removed
+  useEffect(() => {
+    if (!isRoomGame) return;
+
+    // Room deleted
+    if (room === null && normalizedRoomID) {
       clearRoomSession();
       setGameStarted(false);
       navigate("/");
-    });
+      return;
+    }
 
-    return () => {
-      channel.unsubscribe();
-      try {
-        channel.detach();
-      } catch {
-        // ignore
-      }
-      try {
-        ably.close();
-      } catch {
-        // ignore
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedRoomID, username, language]);
+    // Player removed from room
+    if (room && playerId && !room.players.some(p => p.id === playerId)) {
+      clearRoomSession();
+      setGameStarted(false);
+      localStorage.removeItem("playerId");
+      localStorage.removeItem("playerRoomId");
+      navigate("/join-room", { replace: true });
+      return;
+    }
+  }, [isRoomGame, room, normalizedRoomID, playerId, clearRoomSession, setGameStarted, navigate]);
 
   useEffect(() => {
     if (!isRoomGame) return;
@@ -466,16 +355,6 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   }, [i18n, isRoomGame, normalizedRoomID, username, isHost, location]);
 
   useEffect(() => {
-    if (!isRoomGame) return;
-    if (!gameStarted) return;
-    if (isHost) return;
-    if (prompt) return;
-
-    void fetchGameState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRoomGame, gameStarted, isHost, prompt]);
-
-  useEffect(() => {
     // Host: if game starts and there is no current card stored yet, draw the first card and publish it.
     if (!isRoomGame) return;
     if (!gameStarted) return;
@@ -483,9 +362,6 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     if (currentCard) return;
 
     (async () => {
-      // Ensure we have host info (from DB) before drawing.
-      await fetchGameState();
-      if (roomHost && username !== roomHost) return;
       generatePrompt();
       const success = await publishCurrentRoomState();
       if (!success) {

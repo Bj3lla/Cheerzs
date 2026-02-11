@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Button from "./Button";
 import { translations } from "../locales/translations";
 import type { LanguageCode } from "../hooks/useLanguage";
+import { useConvexRoom } from "../hooks/useConvexRoom";
 
 type JoinRoomProps = {
   onRoomJoined: (args: {
@@ -21,6 +22,7 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const i18n = translations[language] || translations.en;
+  const { joinRoom } = useConvexRoom();
 
   useEffect(() => {
     setLocalUsername(username || "");
@@ -49,77 +51,55 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
     setLoading(true);
     setError("");
 
-    console.groupCollapsed("[JoinRoom] POST /api/join-room");
     try {
       const normalizedRoomID = roomID.trim().toUpperCase();
-      const payload: Record<string, string> = { roomID: normalizedRoomID, username: name };
 
-      // Only send playerId when re-joining the same room with the same username.
+      // Determinewhich player ID to use
+      let playerId = "";
       if (
         storedPlayerId &&
         storedPlayerRoomId &&
         storedPlayerRoomId === normalizedRoomID &&
         (localStorage.getItem("playerName") || "").trim() === name
       ) {
-        (payload as Record<string, string | undefined>).playerId = storedPlayerId;
+        // Re-joining the same room with the same name
+        playerId = storedPlayerId;
+      } else {
+        // New player or different room
+        playerId = `player_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
       }
-      console.log("payload", payload);
 
-      const res = await fetch("/api/join-room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      const result = await joinRoom({
+        code: normalizedRoomID,
+        playerId,
+        playerName: name,
       });
 
-      const contentType = res.headers.get("content-type") || "";
-      const vercelError = res.headers.get("x-vercel-error") || "";
-      const vercelId = res.headers.get("x-vercel-id") || "";
-
-      const rawText = await res.text();
-      let data: Record<string, unknown> | null = null;
-      if (rawText) {
-        try {
-          data = JSON.parse(rawText) as Record<string, unknown>;
-        } catch {
-          data = null;
-        }
-      }
-
-      console.log("status", res.status);
-      console.log("content-type", contentType);
-      if (vercelError) console.log("x-vercel-error", vercelError);
-      if (vercelId) console.log("x-vercel-id", vercelId);
-      console.log("parsed response", data);
-      if (!data && rawText) console.log("raw response", rawText);
-
-      if (res.ok) {
-        const playerId = (data as Record<string, unknown>)?.playerId;
-        if (playerId) {
-          localStorage.setItem("playerId", String(playerId));
-          localStorage.setItem("playerRoomId", normalizedRoomID);
-        }
+      if (result.success && result.roomId) {
+        // Store player session
+        localStorage.setItem("playerId", playerId);
+        localStorage.setItem("playerRoomId", normalizedRoomID);
         localStorage.setItem("playerName", name);
+
         onRoomJoined({
           roomID: normalizedRoomID,
           username: name,
-          gameStarted: Boolean((data as Record<string, unknown>)?.gameStarted),
-          startedAt: (typeof (data as Record<string, unknown>)?.startedAt === "string" ? (data as Record<string, unknown>).startedAt : null) as string | null,
+          gameStarted: result.gameStarted || false,
+          startedAt: null, // Convex doesn't return this yet, can be added if needed
         });
       } else {
-        const code = (data as Record<string, unknown>)?.code;
-        if (res.status === 409 && code === "USERNAME_TAKEN") {
+        // Check if it's a username taken error
+        if (result.error && result.error.includes("already in use")) {
           setShowUsernameInput(true);
           setError(i18n.ui.usernameTaken || "The username is already taken");
         } else {
-          const errorMsg = typeof (data as Record<string, unknown>)?.error === "string" ? (data as Record<string, unknown>).error as string : i18n.ui.networkError || "Network error";
-          setError(errorMsg);
+          setError(result.error || i18n.ui.networkError || "Failed to join room");
         }
       }
     } catch (err) {
       console.error("[JoinRoom] request failed", err);
       setError(i18n.ui.networkError || "Network error");
     } finally {
-      console.groupEnd();
       setLoading(false);
     }
   };

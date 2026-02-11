@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Ably from "ably";
 import Button from "../components/Button";
 import CheerzsRulesPopup from "../components/CheerzsRulesPopup";
 import { useGame } from "../context/GameContext";
@@ -8,7 +7,8 @@ import { translations } from "../locales/translations";
 import type { LanguageCode } from "../hooks/useLanguage";
 import { IoArrowBack } from "react-icons/io5";
 import LeaveRoomPopup from "../components/LeaveRoomPopup";
-import LanguageSelector from "src/components/LanguageSelector";
+import { useConvexRoom } from "../hooks/useConvexRoom";
+import type { Id } from "../../convex/_generated/dataModel";
 
 export default function WaitingRoomPage({ language = "en" }: { language?: LanguageCode }) {
   const navigate = useNavigate();
@@ -29,88 +29,90 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
     return localStorage.getItem("playerId") || "";
   }, []);
 
-  const [host, setHost] = useState<string>("");
-  const [players, setPlayers] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  // Convex real-time subscription
+  const { room, leaveRoom, updatePlayerStatus, startGame: startGameMutation } = useConvexRoom(normalizedRoomID);
+
   const [error, setError] = useState<string>("");
   const [showRulesPopup, setShowRulesPopup] = useState<boolean>(false);
   const [showLeaveRoomPopup, setShowLeaveRoomPopup] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
 
-  const ablyRef = useRef(null);
-  const channelRef = useRef(null);
-  const gameStateFetchInFlightRef = useRef(false);
+  const isHost = room?.hostId === playerId;
+  const players = room?.players?.map(p => p.name) || [];
+  const host = room?.players?.find(p => p.id === room?.hostId)?.name || "";
+  const loading = room === undefined;
 
-  const isHost = Boolean(username) && Boolean(host) && username === host;
-
+  // Redirect if no room or not logged in
   useEffect(() => {
     if (!normalizedRoomID || !username) {
       clearRoomSession();
       setGameStarted(false);
       navigate("/", { replace: true });
+      return;
     }
-  }, [clearRoomSession, navigate, normalizedRoomID, setGameStarted, username]);
 
-  const fetchRoomState = async () => {
-    if (!normalizedRoomID) return;
+    // Room not found (deleted or invalid)
+    if (room === null) {
+      clearRoomSession();
+      setGameStarted(false);
+      navigate("/", { replace: true });
+      return;
+    }
+  }, [clearRoomSession, navigate, normalizedRoomID, setGameStarted, username, room]);
 
-    setLoading(true);
-    setError("");
+  // Update local game context when room data changes
+  useEffect(() => {
+    if (room && room.status !== "finished") {
+      setRoomSession({ 
+        roomID: normalizedRoomID, 
+        players: room.players.map(p => p.name) 
+      });
+    }
+  }, [room, normalizedRoomID, setRoomSession]);
 
-    try {
-      const res = await fetch(`/api/room-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
-      const data = await res.json().catch(() => null);
-
-      if (res.status === 404) {
-        // Room deleted (likely host left). Kick back to Home.
-        clearRoomSession();
-        setGameStarted(false);
-        navigate("/");
+  // Handle game started state
+  useEffect(() => {
+    if (room?.status === "playing") {
+      // If non-host and game has started, redirect to game page
+      if (!isHost) {
+        setGameStarted(true);
+        navigate("/game");
         return;
       }
-
-      if (!res.ok) {
-        setError((data && data.error) || i18n.ui.failedToLoadRoom);
-        setPlayers([]);
-        setHost("");
-        return;
-      }
-
-      const nextHost = data.host || "";
-      const nextIsHost = Boolean(username) && Boolean(nextHost) && username === nextHost;
-
-      setHost(nextHost);
-      const nextPlayers = Array.isArray(data.players) ? data.players : [];
-      setPlayers(nextPlayers);
-      setRoomSession({ roomID: data?.roomID || normalizedRoomID, players: nextPlayers });
-
-      // If someone opens the waiting room after the host already started the game,
-      // skip straight to the game page.
-      try {
-        const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
-        const gsData = await gsRes.json().catch(() => null);
-        const started = Boolean(gsData?.state?.started);
-        // If someone opens the waiting room after the host already started the game,
-        // only non-hosts should be forced into the game.
-        if (gsRes.ok && started && !nextIsHost) {
-          setGameStarted(true);
-          navigate("/game");
-          return;
-        }
-      } catch {
-        // ignore
-      }
-    } catch (err) {
-      console.error("[WaitingRoom] room-state failed", err);
-      setError(i18n.ui.failedToLoadRoom);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [room?.status, isHost, setGameStarted, navigate]);
 
-  const leaveGame = async () => {
+  // Update player online status (heartbeat)
+  useEffect(() => {
+    if (!room?._id || !playerId) return;
+
+    // Mark as online when joining
+    updatePlayerStatus(room._id, playerId, true);
+
+    // Heartbeat interval
+    const heartbeatInterval = setInterval(() => {
+      updatePlayerStatus(room._id, playerId, true);
+    }, 30 * 1000); // Every 30 seconds
+
+    // Handle visibility change
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        updatePlayerStatus(room._id, playerId, true);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      clearInterval(heartbeatInterval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [room?._id, playerId, updatePlayerStatus]);
+
+  const handleLeaveRoom = async () => {
     const destination = isHost ? "/create-room" : "/join-room";
 
-    if (!normalizedRoomID || !username) {
+    if (!room?._id || !playerId) {
       clearRoomSession();
       setGameStarted(false);
       navigate(destination);
@@ -120,15 +122,10 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
     setError("");
 
     try {
-      const res = await fetch("/api/leave-room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      });
-
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        setError((data && data.error) || i18n.ui.failedToLeaveRoom);
+      const result = await leaveRoom(room._id, playerId);
+      
+      if (!result.success) {
+        setError(result.error || i18n.ui.failedToLeaveRoom);
         return;
       }
 
@@ -151,164 +148,21 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
     }
   };
 
-  const heartbeat = async () => {
-    if (!normalizedRoomID || !username) return;
+  const handleStartGame = async () => {
+    if (!room?._id || !playerId || !isHost) return;
+
+    setIsStarting(true);
+    setError("");
 
     try {
-      await fetch("/api/heartbeat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      });
-    } catch (err) {
-      console.warn("[WaitingRoom] heartbeat failed", err);
-    }
-  };
+      const questionTypes = ["truth", "dare", "never_have_i_ever", "drinking_buddy", "wildcard"];
+      const result = await startGameMutation(room._id, questionTypes);
 
-  const startGame = async () => {
-    if (!normalizedRoomID || !username) return;
-
-    try {
-      const res = await fetch("/api/start-game", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      });
-
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        setError((data && data.error) || i18n.ui.failedToStartGame);
+      if (!result.success) {
+        setError(result.error || i18n.ui.failedToStartGame);
         return;
       }
 
-      // Host will also receive the Ably event, but this removes perceived latency.
-      // Pull latest players into game state before entering /game.
-      await fetchRoomState();
-      setGameStarted(true);
-      navigate("/game");
-    } catch (err) {
-      console.error("[WaitingRoom] start-game failed", err);
-      setError(i18n.ui.failedToStartGame);
-    }
-  };
-
-  const removePlayer = async (targetUsername) => {
-    if (!normalizedRoomID || !username) return;
-    if (!isHost) return;
-    if (!targetUsername) return;
-
-    try {
-      const res = await fetch("/api/remove-player", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, targetUsername, playerId }),
-      });
-
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        setError((data && data.error) || i18n.ui.failedToRemovePlayer);
-        return;
-      }
-
-      await fetchRoomState();
-    } catch (err) {
-      console.error("[WaitingRoom] remove-player failed", err);
-      setError(i18n.ui.failedToRemovePlayer);
-    }
-  };
-
-  useEffect(() => {
-    fetchRoomState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedRoomID]);
-
-  useEffect(() => {
-    // Presence handling
-    heartbeat();
-    const intervalId = window.setInterval(heartbeat, 5 * 60 * 1000);
-
-    const onVisibilityChange = () => {
-      if (!document.hidden) heartbeat();
-    };
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
-    return () => {
-      window.clearInterval(intervalId);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedRoomID, username]);
-
-  useEffect(() => {
-    if (!normalizedRoomID) return;
-
-    const ably = new Ably.Realtime({
-      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}&playerId=${encodeURIComponent(playerId)}`,
-    });
-    ablyRef.current = ably;
-
-    const channel = ably.channels.get(`room-${normalizedRoomID}`);
-    channelRef.current = channel;
-
-    const refetch = () => {
-      fetchRoomState();
-    };
-
-    channel.subscribe("player-joined", refetch);
-    channel.subscribe("player-left", refetch);
-    channel.subscribe("player-removed", (msg) => {
-      const removedUsername = msg?.data?.removedUsername;
-
-      // If you were removed by the host, force you out of the room immediately.
-      if (removedUsername && removedUsername === username) {
-        clearRoomSession();
-        setGameStarted(false);
-        localStorage.removeItem("playerId");
-        localStorage.removeItem("playerRoomId");
-        navigate("/join-room", { replace: true });
-        return;
-      }
-
-      refetch();
-    });
-    channel.subscribe("room-created", refetch);
-
-    channel.subscribe("card-updated", async (msg) => {
-      // If the host is already in-game, redirect non-hosts.
-      const startedFromEvent = Boolean(msg?.data?.state?.started);
-      if (startedFromEvent && !isHost) {
-        setGameStarted(true);
-        navigate("/game");
-        return;
-      }
-
-      // Fallback for older events that don't include state.
-      if (gameStateFetchInFlightRef.current) return;
-      gameStateFetchInFlightRef.current = true;
-      try {
-        const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
-        const gsData = await gsRes.json().catch(() => null);
-        const started = Boolean(gsData?.state?.started);
-        if (gsRes.ok && started && !isHost) {
-          setGameStarted(true);
-          navigate("/game");
-        }
-      } catch {
-        // ignore
-      } finally {
-        gameStateFetchInFlightRef.current = false;
-      }
-    });
-
-    channel.subscribe("room-deleted", () => {
-      clearRoomSession();
-      setGameStarted(false);
-      navigate("/");
-    });
-
-    channel.subscribe("game-started", async () => {
-      await fetchRoomState();
       setGameStarted(true);
       try {
         sessionStorage.setItem("joinedBeforeStartRoomId", normalizedRoomID);
@@ -316,23 +170,34 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
         // ignore
       }
       navigate("/game");
-    });
+    } catch (err) {
+      console.error("[WaitingRoom] start-game failed", err);
+      setError(i18n.ui.failedToStartGame);
+    } finally {
+      setIsStarting(false);
+    }
+  };
 
-    return () => {
-      channel.unsubscribe();
-      try {
-        channel.detach();
-      } catch {
-        // ignore
+  const handleRemovePlayer = async (targetUsername: string) => {
+    if (!room?._id || !playerId || !isHost || !targetUsername) return;
+
+    setError("");
+
+    try {
+      // Find the player's ID
+      const targetPlayer = room.players.find(p => p.name === targetUsername);
+      if (!targetPlayer) return;
+
+      const result = await leaveRoom(room._id, targetPlayer.id);
+
+      if (!result.success) {
+        setError(result.error || i18n.ui.failedToRemovePlayer);
       }
-      try {
-        ably.close();
-      } catch {
-        // ignore
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedRoomID, username]);
+    } catch (err) {
+      console.error("[WaitingRoom] remove-player failed", err);
+      setError(i18n.ui.failedToRemovePlayer);
+    }
+  };
 
   return (
     <div className="waiting-room-page">
@@ -346,7 +211,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
           onClose={() => setShowLeaveRoomPopup(false)}
           onConfirm={() => {
             setShowLeaveRoomPopup(false);
-            void leaveGame();
+            void handleLeaveRoom();
           }}
         />
       )}
@@ -382,7 +247,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
                   <button
                     type="button"
                     className="remove-btn"
-                    onClick={() => removePlayer(name)}
+                    onClick={() => handleRemovePlayer(name)}
                     aria-label={`Remove ${name}`}
                   >
                     ×
@@ -404,8 +269,9 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
               <Button
                 label={i18n.ui.startGame}
                 color="primary"
-                onClick={startGame}
+                onClick={handleStartGame}
                 size="large"
+                disabled={isStarting}
               />
             ) : (
               <p className="waiting-for-host-message">
