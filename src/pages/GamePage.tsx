@@ -21,7 +21,6 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     setCategory,
     prompt,
     setPrompt,
-    generatePrompt,
     currentCard,
     setCurrentCard,
     getRoomBroadcastState,
@@ -36,6 +35,9 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     setRoomSession,
     clearRoomSession,
     setGameStarted,
+    // Card queue
+    prefillCardQueue,
+    advanceCardQueue,
   } = useGame();
 
   const navigate = useNavigate();
@@ -108,9 +110,11 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   useEffect(() => {
     if (isRoomGame) return;
     if (gameStarted && !prompt) {
-      generatePrompt();
+      // Single-player: prefill queue and show first card
+      prefillCardQueue(7);
+      advanceCardQueue();
     }
-  }, [isRoomGame, gameStarted, prompt, generatePrompt]);
+  }, [isRoomGame, gameStarted, prompt, prefillCardQueue, advanceCardQueue]);
 
   useEffect(() => {
     if (!isRoomGame) return;
@@ -204,16 +208,15 @@ export default function GamePage({ language }: { language: LanguageCode }) {
       return;
     }
     
-    // Use useGameLogic's generatePrompt for ALL modes (single + multiplayer).
-    // generatePrompt() handles: category selection, question picking from local decks,
-    // rule management (expiry/repeal), player assignment, and broadcastStateRef update.
-    console.log("[GamePage] hostNext: calling generatePrompt()");
-    generatePrompt();
+    // Pop the next pre-generated card from the queue and display it instantly.
+    // advanceCardQueue() also generates one replacement card to keep the buffer full.
+    console.log("[GamePage] hostNext: popping next card from queue");
+    const snap = advanceCardQueue();
     
-    // For room games, publish the state to Convex so non-host players get the update
-    // via the gameState subscription → applyRoomBroadcastState flow.
+    // For room games, publish the state to Convex so non-host players get the update.
     if (isRoomGame && roomIdTyped) {
       console.log("[GamePage] hostNext: publishing state to Convex for multiplayer sync");
+      // broadcastStateRef was already set by advanceCardQueue → _applySnapshot
       const success = await publishCurrentRoomState();
       if (!success) {
         console.warn("[GamePage] hostNext: failed to publish card state after all retries");
@@ -386,18 +389,19 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   }, [i18n, isRoomGame, normalizedRoomID, username, isHost, location]);
 
   useEffect(() => {
-    // Host: if game starts and there is no current card stored yet, draw the first card
-    // using the same generatePrompt → publishCurrentRoomState flow as hostNext.
+    // Host: if game starts and there is no current card stored yet,
+    // prefill the card queue and display the first card.
     if (!isRoomGame) return;
     if (!gameStarted) return;
     if (!isHost) return;
     if (currentCard) return;
     if (!roomIdTyped) return;
 
-    console.log("[GamePage] Drawing initial card via generatePrompt");
-    generatePrompt();
+    console.log("[GamePage] Prefilling card queue (7 cards) and showing first card");
+    prefillCardQueue(7);
+    const snap = advanceCardQueue();
     
-    // Publish immediately for multiplayer sync
+    // Publish the first card for multiplayer sync
     (async () => {
       const success = await publishCurrentRoomState();
       if (!success) {
@@ -506,7 +510,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
                 : i18n.ui.next
             }
             color="primary"
-            onClick={isRoomGame ? hostNext : generatePrompt}
+            onClick={isRoomGame ? hostNext : () => advanceCardQueue()}
             size="large"
             disabled={isRoomGame && isDrawingCard}
           />

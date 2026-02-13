@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { getRandomItem, getRandomCategory, type CategoryKey } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 import useQuestionState from "./useQuestionState";
@@ -46,8 +46,10 @@ export default function useGameLogic(language: LanguageCode) {
   const {
     availableRules,
     activeRules,
+    activeRulesRef,
     repelMessage,
     repelActive,
+    repelActiveRef,
     updateActiveRules,
     addRule,
     clearRepel,
@@ -76,6 +78,7 @@ export default function useGameLogic(language: LanguageCode) {
     setPrompt("");
     setCurrentCard(null);
     broadcastStateRef.current = null;
+    cardQueueRef.current = [];
     setPlayer("");
     setShowActiveRules(true);
 
@@ -117,6 +120,213 @@ export default function useGameLogic(language: LanguageCode) {
     if (player && !roomPlayers.includes(player)) setPlayer("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, roomPlayers]);
+
+  // ─── Card Queue (FIFO buffer) ───────────────────────────────────────────
+  // We keep a ref-based queue of pre-generated card snapshots so the UI can
+  // serve the next card instantly while a replacement is generated.
+
+  interface CardSnapshot {
+    card: CardDescriptor;
+    category: CategoryKey | "repeal" | null;
+    prompt: string;
+    player: string;
+    broadcastState: any;
+  }
+
+  const cardQueueRef = useRef<CardSnapshot[]>([]);
+  // Keep a ref to playersForPrompts so _generateCardSnapshot reads the latest value.
+  const playersForPromptsRef = useRef(playersForPrompts);
+  playersForPromptsRef.current = playersForPrompts;
+
+  /**
+   * Generate a card snapshot WITHOUT touching display state. Uses refs for
+   * deck & rule state so it can be called multiple times synchronously.
+   * Returns a self-contained snapshot that can be applied to the UI later.
+   */
+  const _generateCardSnapshot = (): CardSnapshot => {
+    const players = playersForPromptsRef.current;
+    const i18n = translations[language] || translations.en;
+
+    // Handle repeal (clear it for the queue – each snapshot is independent).
+    if (repelActiveRef.current) {
+      clearRepel();
+    }
+
+    // Tick active rules (reads from ref, writes back to ref + state).
+    const tick = updateActiveRules();
+    const activeAfterTick = tick?.activeRules ?? activeRulesRef.current;
+
+    if (tick?.expiredRule) {
+      const card: CardDescriptor = { kind: "repeal", ruleId: tick.expiredRule.id };
+      const rule = newRules.find((r) => r.id === tick.expiredRule.id);
+      const promptText = rule
+        ? (language === "en" ? rule.repelEn : rule.repelNo)
+        : i18n.ui.pressNext;
+      return {
+        card,
+        category: "repeal",
+        prompt: promptText,
+        player: "",
+        broadcastState: { card, activeRules: activeAfterTick, started: true },
+      };
+    }
+
+    const cat = getRandomCategory();
+
+    if (cat === "spotify") {
+      const track = getRandomItem(spotifyUrls);
+      const trackUrl = track?.url || "https://open.spotify.com";
+      const selectedPlayer = players.length > 0 ? getRandomItem(players) : null;
+      const card: CardDescriptor = { kind: "question", category: "spotify", questionId: track?.id, selectedPlayer };
+      return {
+        card,
+        category: "spotify",
+        prompt: trackUrl,
+        player: selectedPlayer || "",
+        broadcastState: { card, activeRules: activeAfterTick, started: true },
+      };
+    }
+
+    if (cat === "rule") {
+      const remainingRules = newRules.filter(
+        (r) => !activeAfterTick.some((a: any) => a.id === r.id)
+      );
+      if (remainingRules.length === 0) {
+        const card: CardDescriptor = { kind: "wildcard", questionId: undefined };
+        return {
+          card,
+          category: "wildcard",
+          prompt: i18n.ui.noMoreRules,
+          player: "",
+          broadcastState: { card, activeRules: activeAfterTick, started: true },
+        };
+      }
+      const picked = getRandomItem(remainingRules);
+      const addResult = addRule(picked);
+      const nextActiveRules = addResult?.activeRules ?? activeAfterTick;
+      const card: CardDescriptor = { kind: "rule", ruleId: picked.id };
+      return {
+        card,
+        category: "rule",
+        prompt: picked[language],
+        player: "",
+        broadcastState: { card, activeRules: nextActiveRules, started: true },
+      };
+    }
+
+    if (cat === "drinkingbuddy") {
+      const questionObj = pickQuestion("drinkingbuddy");
+      const { p1, p2 } = pickTwoDifferentPlayers(players);
+      const suffix = questionObj?.[language] || "";
+      const promptText = p1 && p2
+        ? `${p1}${i18n.ui.and}${p2} ${suffix}`
+        : `${i18n.ui.you}${i18n.ui.and}${i18n.ui.i} ${suffix}`;
+      const card: CardDescriptor = { kind: "drinkingbuddy", p1: p1 || null, p2: p2 || null };
+      return {
+        card,
+        category: "drinkingbuddy",
+        prompt: promptText,
+        player: "",
+        broadcastState: { card, activeRules: activeAfterTick, started: true },
+      };
+    }
+
+    if (cat === "wildcard") {
+      const wildcardType = Math.random() < 0.5 ? "onePlayer" : "allPlayers";
+      const deckKey = wildcardType === "onePlayer" ? "wildcardOne" : "wildcardAll";
+      const questionObj = pickQuestion(deckKey);
+      const selectedPlayer =
+        wildcardType === "onePlayer" && players.length > 0 ? getRandomItem(players) : null;
+      const text = questionObj?.[language] || "";
+      const promptText = selectedPlayer ? `${selectedPlayer}, ${text}` : text;
+      const card: CardDescriptor = { kind: "wildcard", questionId: questionObj.id, selectedPlayer };
+      return {
+        card,
+        category: "wildcard",
+        prompt: promptText,
+        player: selectedPlayer || "",
+        broadcastState: { card, activeRules: activeAfterTick, started: true },
+      };
+    }
+
+    // truth, dare, never, point
+    const questionObj = pickQuestion(cat);
+    const text = questionObj[language];
+
+    if ((cat === "truth" || cat === "dare") && players.length > 0) {
+      const selectedPlayer = getRandomItem(players);
+      const card: CardDescriptor = { kind: "question", category: cat, questionId: questionObj.id, selectedPlayer };
+      return {
+        card,
+        category: cat,
+        prompt: `${selectedPlayer}, ${text}`,
+        player: selectedPlayer,
+        broadcastState: { card, activeRules: activeAfterTick, started: true },
+      };
+    }
+
+    const card: CardDescriptor = { kind: "question", category: cat, questionId: questionObj.id, selectedPlayer: undefined };
+    return {
+      card,
+      category: cat,
+      prompt: text,
+      player: "",
+      broadcastState: { card, activeRules: activeAfterTick, started: true },
+    };
+  };
+
+  /** Apply a snapshot to the UI display state. */
+  const _applySnapshot = (snap: CardSnapshot) => {
+    setCategory(snap.category as CategoryKey);
+    setPrompt(snap.prompt);
+    setPlayer(snap.player);
+    setCurrentCard(snap.card);
+    broadcastStateRef.current = snap.broadcastState;
+  };
+
+  /**
+   * Fill the queue up to `target` cards (default 7).
+   * Generates cards synchronously using ref-based state.
+   */
+  const prefillCardQueue = useCallback((target = 7) => {
+    const needed = target - cardQueueRef.current.length;
+    for (let i = 0; i < needed; i++) {
+      cardQueueRef.current.push(_generateCardSnapshot());
+    }
+    console.log(`[useGameLogic] Queue prefilled to ${cardQueueRef.current.length} cards`);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
+
+  /**
+   * Pop the next card from the queue, apply it to the UI, and generate
+   * one replacement card to keep the buffer full.  Returns the snapshot
+   * so the caller can publish it (multiplayer).
+   *
+   * If the queue is empty (shouldn't happen), falls back to generating
+   * a card on the spot.
+   */
+  const advanceCardQueue = useCallback((): CardSnapshot => {
+    let snap: CardSnapshot;
+    if (cardQueueRef.current.length > 0) {
+      snap = cardQueueRef.current.shift()!;
+    } else {
+      console.warn("[useGameLogic] Queue empty – generating card on the fly");
+      snap = _generateCardSnapshot();
+    }
+
+    // Apply popped card to UI
+    _applySnapshot(snap);
+
+    // Generate one replacement to refill the buffer
+    cardQueueRef.current.push(_generateCardSnapshot());
+    console.log(`[useGameLogic] Queue advanced. Remaining: ${cardQueueRef.current.length}`);
+
+    return snap;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
+
+  /** How many cards are currently buffered. */
+  const getQueueLength = () => cardQueueRef.current.length;
 
   const generatePrompt = () => {
     if (repelActive) {
@@ -472,5 +682,9 @@ export default function useGameLogic(language: LanguageCode) {
     showActiveRules,
     setShowActiveRules,
     translations,
+    // Card queue API
+    prefillCardQueue,
+    advanceCardQueue,
+    getQueueLength,
   };
 }

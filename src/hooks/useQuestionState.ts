@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { truthOrDare } from "../data/truthOrDare";
 import { neverHaveIEver } from "../data/neverHaveIEver";
 import { pointAtSomeone } from "../data/pointAtSomeone";
@@ -25,31 +25,46 @@ export default function useQuestionState() {
   });
 
   const makeInitialRead = () => ({
-    truth: [],
-    dare: [],
-    never: [],
-    point: [],
-    drinkingbuddy: [],
-    wildcardOne: [],
-    wildcardAll: [],
+    truth: [] as Question[],
+    dare: [] as Question[],
+    never: [] as Question[],
+    point: [] as Question[],
+    drinkingbuddy: [] as Question[],
+    wildcardOne: [] as Question[],
+    wildcardAll: [] as Question[],
   });
 
   const [unread, setUnread] = useState(makeInitialUnread);
   const [read, setRead] = useState(makeInitialRead);
 
+  // Refs mirror state for synchronous access (needed for card queue pre-generation)
+  const unreadRef = useRef(makeInitialUnread());
+  const readRef = useRef(makeInitialRead());
+
   type CategoryKey = keyof typeof unread;
 
+  // Sync both React state and refs together
+  const syncUnread = (next: ReturnType<typeof makeInitialUnread>) => {
+    unreadRef.current = next;
+    setUnread(next);
+  };
+
+  const syncRead = (next: ReturnType<typeof makeInitialRead>) => {
+    readRef.current = next;
+    setRead(next);
+  };
+
   const pickQuestion = (categoryKey: CategoryKey): Question => {
-    let categoryUnread = [...(unread[categoryKey] as Question[])];
-    let categoryRead = [...(read[categoryKey] as Question[])];
+    let categoryUnread = [...(unreadRef.current[categoryKey] as Question[])];
+    let categoryRead = [...(readRef.current[categoryKey] as Question[])];
 
     if (categoryUnread.length > 0) {
       const questionObj = getRandomItem(categoryUnread);
       categoryUnread = categoryUnread.filter((q) => q.id !== questionObj.id);
       categoryRead.push(questionObj);
 
-      setUnread((prev) => ({ ...prev, [categoryKey]: categoryUnread }));
-      setRead((prev) => ({ ...prev, [categoryKey]: categoryRead }));
+      syncUnread({ ...unreadRef.current, [categoryKey]: categoryUnread });
+      syncRead({ ...readRef.current, [categoryKey]: categoryRead });
 
       return questionObj;
     }
@@ -60,15 +75,19 @@ export default function useQuestionState() {
     const newUnread = resetUnread.filter((q) => q.id !== questionObj.id);
     const newRead = [questionObj];
 
-    setUnread((prev) => ({ ...prev, [categoryKey]: newUnread }));
-    setRead((prev) => ({ ...prev, [categoryKey]: newRead }));
+    syncUnread({ ...unreadRef.current, [categoryKey]: newUnread });
+    syncRead({ ...readRef.current, [categoryKey]: newRead });
 
     return questionObj;
   };
 
   const resetAllQuestions = () => {
-    setUnread(makeInitialUnread());
-    setRead(makeInitialRead());
+    const freshUnread = makeInitialUnread();
+    const freshRead = makeInitialRead();
+    unreadRef.current = freshUnread;
+    readRef.current = freshRead;
+    setUnread(freshUnread);
+    setRead(freshRead);
   };
 
   return {
