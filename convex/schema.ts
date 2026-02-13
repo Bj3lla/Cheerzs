@@ -116,7 +116,7 @@ export default defineSchema({
   playedCards: defineTable({
     roomId: v.id("rooms"),
     cardType: v.string(), // 'truth', 'dare', 'neverHaveIEver', etc.
-    cardId: v.id("truth" as any), // Will be cast to appropriate table type
+    cardId: v.string(), // String ID that can reference any table type
     playedAt: v.number(),
   })
     .index("by_room", ["roomId"])

@@ -81,7 +81,7 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
           className={`${error ? "error " : ""}room-code-input`}
         />
       </div>
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="error-message">{"Room already exists."}</p>}
       <div className="create-room-button">
         <Button
           label={loading ? i18n.ui.loading : i18n.ui.createRoom}

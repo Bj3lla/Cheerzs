@@ -219,8 +219,8 @@ export const startGame = mutation({
       throw new Error("Room not found");
     }
 
-    if (room.playerIds.length < 2) {
-      throw new Error("Need at least 2 players to start");
+    if (room.playerIds.length < 1) {
+      throw new Error("Need at least 1 player to start");
     }
 
     await ctx.db.patch(args.roomId, {

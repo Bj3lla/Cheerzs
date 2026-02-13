@@ -54,6 +54,8 @@ export const drawCard = mutation({
     roomId: v.id("rooms"),
   },
   handler: async (ctx, args) => {
+    console.log("[Convex] drawCard START", { roomId: args.roomId });
+    
     const room = await ctx.db.get(args.roomId);
 
     if (!room) {
@@ -69,14 +71,19 @@ export const drawCard = mutation({
     const rand = Math.random();
     let cardType: string;
     let card: any;
+    
+    console.log("[Convex] drawCard random value:", rand);
 
     if (rand < 0.5) {
       // Draw a song
       cardType = "song";
+      console.log("[Convex] drawCard selecting SONG");
       const songs = await ctx.db
         .query("songs")
         .withIndex("by_active", (q) => q.eq("isActive", true))
         .collect();
+
+      console.log("[Convex] drawCard found", songs.length, "active songs");
 
       if (songs.length === 0) {
         throw new Error("No songs available");
@@ -91,7 +98,7 @@ export const drawCard = mutation({
         .collect();
 
       const playedSongIds = new Set(playedSongs.map(p => p.cardId));
-      const unplayedSongs = songs.filter(s => !playedSongIds.has(s._id as any));
+      const unplayedSongs = songs.filter(s => !playedSongIds.has(s._id));
 
       // If all songs have been played, reset
       if (unplayedSongs.length === 0) {
@@ -105,7 +112,7 @@ export const drawCard = mutation({
       await ctx.db.insert("playedCards", {
         roomId: args.roomId,
         cardType: "song",
-        cardId: card._id as any,
+        cardId: card._id,
         playedAt: Date.now(),
       });
 
@@ -115,10 +122,13 @@ export const drawCard = mutation({
       const selectedCategory = questionCategories[Math.floor(Math.random() * questionCategories.length)];
       
       cardType = selectedCategory;
+      console.log("[Convex] drawCard selecting QUESTION from category:", selectedCategory);
       const questions = await ctx.db
         .query(selectedCategory as any)
         .withIndex("by_active", (q) => q.eq("isActive", true))
         .collect();
+
+      console.log("[Convex] drawCard found", questions.length, "active", selectedCategory, "questions");
 
       if (questions.length === 0) {
         throw new Error(`No ${selectedCategory} questions available`);
@@ -133,7 +143,7 @@ export const drawCard = mutation({
         .collect();
 
       const playedQuestionIds = new Set(playedQuestions.map(p => p.cardId));
-      const unplayedQuestions = questions.filter(q => !playedQuestionIds.has(q._id as any));
+      const unplayedQuestions = questions.filter(q => !playedQuestionIds.has(q._id));
 
       // If all questions have been played, reset
       if (unplayedQuestions.length === 0) {
@@ -147,7 +157,7 @@ export const drawCard = mutation({
       await ctx.db.insert("playedCards", {
         roomId: args.roomId,
         cardType: selectedCategory,
-        cardId: card._id as any,
+        cardId: card._id,
         playedAt: Date.now(),
       });
 
@@ -156,10 +166,13 @@ export const drawCard = mutation({
       const isNewRule = Math.random() < 0.5;
       cardType = isNewRule ? "newRule" : "wildcard";
 
+      console.log("[Convex] drawCard selecting", cardType.toUpperCase());
       const cards = await ctx.db
         .query(cardType as any)
         .withIndex("by_active", (q) => q.eq("isActive", true))
         .collect();
+
+      console.log("[Convex] drawCard found", cards.length, "active", cardType, "cards");
 
       if (cards.length === 0) {
         throw new Error(`No ${cardType} cards available`);
@@ -174,7 +187,7 @@ export const drawCard = mutation({
         .collect();
 
       const playedWildcardIds = new Set(playedWildcards.map(p => p.cardId));
-      const unplayedCards = cards.filter(c => !playedWildcardIds.has(c._id as any));
+      const unplayedCards = cards.filter(c => !playedWildcardIds.has(c._id));
 
       // If all cards have been played, reset
       if (unplayedCards.length === 0) {
@@ -188,12 +201,13 @@ export const drawCard = mutation({
       await ctx.db.insert("playedCards", {
         roomId: args.roomId,
         cardType,
-        cardId: card._id as any,
+        cardId: card._id,
         playedAt: Date.now(),
       });
     }
 
     // Update room with current card
+    console.log("[Convex] drawCard updating room with card:", { type: cardType, cardId: card._id, cardSample: cardType === 'song' ? card.title : (card.textEn || '').substring(0, 50) });
     await ctx.db.patch(args.roomId, {
       currentCard: {
         type: cardType,
@@ -214,6 +228,8 @@ export const drawCard = mutation({
       timestamp: Date.now(),
     });
 
+    console.log("[Convex] drawCard SUCCESS - card drawn and stored:", { type: cardType, cardId: card._id });
+    
     return {
       type: cardType,
       card,

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery } from "convex/react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/Button";
 import CheerzsRulesPopup from "../components/CheerzsRulesPopup";
@@ -8,6 +9,7 @@ import type { LanguageCode } from "../hooks/useLanguage";
 import { IoArrowBack } from "react-icons/io5";
 import LeaveRoomPopup from "../components/LeaveRoomPopup";
 import { useConvexRoom } from "../hooks/useConvexRoom";
+import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
 export default function WaitingRoomPage({ language = "en" }: { language?: LanguageCode }) {
@@ -16,6 +18,9 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
   const { setGameStarted, setRoomSession, clearRoomSession } = useGame();
 
   const i18n = translations[language] || translations.en;
+
+  // Log that component mounted
+  console.log("[WaitingRoom] Component rendered, roomId from URL:", roomId);
 
   const normalizedRoomID = useMemo(() => {
     return typeof roomId === "string" ? roomId.trim().toUpperCase() : "";
@@ -30,14 +35,48 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
   }, []);
 
   // Convex real-time subscription
-  const { room, players: playerRecords, leaveRoom, updatePlayerStatus, startGame: startGameMutation } = useConvexRoom(normalizedRoomID);
+  const { room, players: playerRecords, leaveRoom, updatePlayerStatus } = useConvexRoom(normalizedRoomID);
+  
+  // Direct mutation calls for operations the hook doesn't provide
+  const startGameDirectMutation = useMutation(api.rooms.startGame);
 
   const [error, setError] = useState<string>("");
   const [showRulesPopup, setShowRulesPopup] = useState<boolean>(false);
   const [showLeaveRoomPopup, setShowLeaveRoomPopup] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
 
+  // Debug - check if api.rooms.startGame exists
+  useEffect(() => {
+    console.log("[WaitingRoom] API available:", {
+      hasStartGame: api.rooms && "startGame" in api.rooms,
+    });
+  }, []);
+
   const isHost = room?.hostId === playerId;
+
+  // Debug the isHost calculation
+  useEffect(() => {
+    console.log("[WaitingRoom] isHost calculation:", {
+      roomHostId: room?.hostId,
+      currentPlayerId: playerId,
+      isHost: isHost,
+      comparison: `"${room?.hostId}" === "${playerId}"`,
+    });
+  }, [room?.hostId, playerId, isHost]);
+
+  // Debug logging
+  useEffect(() => {
+    console.log("[WaitingRoom] Hook values updated:", {
+      normalizedRoomID,
+      roomId: roomId,
+      room: room ? { _id: room._id, status: room.status, playerIds: room.playerIds } : "null",
+      playersCount: playerRecords?.length || 0,
+      isHost,
+      playerId: playerId ? "set" : "not set",
+      username: username ? `"${username}"` : "not set",
+      startGameDirectMutation: typeof startGameDirectMutation,
+    });
+  }, [normalizedRoomID, roomId, room, playerRecords, isHost, playerId, username, startGameDirectMutation]);
   const players = playerRecords?.map(p => p.name) || [];
   const host = playerRecords?.find(p => p.playerId === room?.hostId)?.name || "";
   const loading = room === undefined || playerRecords === undefined;
@@ -61,18 +100,26 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
   }, [clearRoomSession, navigate, normalizedRoomID, setGameStarted, username, room]);
 
   // Update local game context when room data changes
+  const playersArray = useMemo(() => {
+    return playerRecords?.map(p => p.name) || [];
+  }, [playerRecords]);
+
+  const roomStatus = room?.status;
+  
   useEffect(() => {
-    if (room && room.status !== "finished" && playerRecords) {
+    if (room && roomStatus !== "finished" && playersArray.length > 0) {
       setRoomSession({ 
         roomID: normalizedRoomID, 
-        players: playerRecords.map(p => p.name) 
+        players: playersArray 
       });
     }
-  }, [room, playerRecords, normalizedRoomID, setRoomSession]);
+  }, [roomStatus, normalizedRoomID, playersArray]);
 
   // Handle game started state - navigate all players when status changes to "playing"
   useEffect(() => {
+    console.log("[WaitingRoom] room.status effect triggered", { roomStatus: room?.status, shouldNavigate: room?.status === "playing" });
     if (room?.status === "playing") {
+      console.log("[WaitingRoom] NAVIGATING TO GAME - room status is playing");
       // All players (including host) navigate when game starts
       setGameStarted(true);
       navigate("/game");
@@ -107,25 +154,31 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
   }, [room?._id, playerId, updatePlayerStatus]);
 
   const handleLeaveRoom = async () => {
-    const destination = isHost ? "/create-room" : "/join-room";
-
+    console.log("[WaitingRoom] handleLeaveRoom START", { room: room?._id, playerId, hasUser: !!username });
+    
     if (!room?._id || !playerId) {
+      console.log("[WaitingRoom] handleLeaveRoom: missing room or playerId, navigating to home");
       clearRoomSession();
       setGameStarted(false);
-      navigate(destination);
+      navigate("/", { replace: true });
       return;
     }
 
     setError("");
+    console.log("[WaitingRoom] handleLeaveRoom: calling leaveRoom mutation");
 
     try {
+      console.log("[WaitingRoom] handleLeaveRoom: executing leaveRoom with", { roomId: room._id, playerId });
       const result = await leaveRoom(room._id, playerId);
+      console.log("[WaitingRoom] handleLeaveRoom: leaveRoom result", result);
       
       if (!result.success) {
+        console.error("[WaitingRoom] handleLeaveRoom: mutation failed with error", result.error);
         setError(result.error || i18n.ui.failedToLeaveRoom);
         return;
       }
 
+      console.log("[WaitingRoom] handleLeaveRoom: clearing session and local storage");
       clearRoomSession();
       setGameStarted(false);
 
@@ -138,41 +191,73 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
       localStorage.removeItem("playerId");
       localStorage.removeItem("playerRoomId");
 
-      navigate(destination);
+      console.log("[WaitingRoom] handleLeaveRoom: navigating to home");
+      navigate("/", { replace: true });
     } catch (err) {
-      console.error("[WaitingRoom] leave-room failed", err);
+      console.error("[WaitingRoom] handleLeaveRoom: caught exception", err);
       setError(i18n.ui.failedToLeaveRoom);
     }
   };
 
   const handleStartGame = async () => {
-    if (!room?._id || !playerId || !isHost) return;
+    console.log("[WaitingRoom] handleStartGame START", { room: room?._id, playerId, isHost, startGameDirect: typeof startGameDirectMutation });
+    
+    if (!room?._id) {
+      console.error("[WaitingRoom] handleStartGame: no room._id");
+      setError("Error: Room not found");
+      return;
+    }
+    if (!playerId) {
+      console.error("[WaitingRoom] handleStartGame: no playerId");
+      setError("Error: Player not found");
+      return;
+    }
+    if (!isHost) {
+      console.error("[WaitingRoom] handleStartGame: current user is not host");
+      setError("Error: Only host can start game");
+      return;
+    }
 
+    console.log("[WaitingRoom] handleStartGame: validation passed, setting isStarting=true");
     setIsStarting(true);
     setError("");
 
     try {
       const questionTypes = ["truth", "dare", "never_have_i_ever", "drinking_buddy", "wildcard"];
-      const result = await startGameMutation(room._id, questionTypes);
+      console.log("[WaitingRoom] handleStartGame: calling startGameDirectMutation", { roomId: room._id, questionTypes });
+      
+      if (!startGameDirectMutation) {
+        console.error("[WaitingRoom] handleStartGame: startGameDirectMutation is UNDEFINED!");
+        setError("Error: Start game function not available");
+        setIsStarting(false);
+        return;
+      }
+      
+      const result = await startGameDirectMutation({ roomId: room._id, questionTypes });
+      
+      console.log("[WaitingRoom] handleStartGame: mutation response", result);
 
-      if (!result.success) {
-        setError(result.error || i18n.ui.failedToStartGame);
+      if (!result?.success) {
+        console.error("[WaitingRoom] handleStartGame: mutation returned success=false or no result", result);
+        setError((result as any)?.error || i18n.ui.failedToStartGame);
         setIsStarting(false);
         return;
       }
 
-      // Store session info (navigation will happen via useEffect when room status updates)
+      console.log("[WaitingRoom] handleStartGame: storing session info");
       try {
         sessionStorage.setItem("joinedBeforeStartRoomId", normalizedRoomID);
       } catch {
         // ignore
       }
       
-      // Don't navigate here - let the useEffect handle it when room status updates
-      // This ensures all players navigate together
+      console.log("[WaitingRoom] handleStartGame: mutation succeeded, resetting isStarting and waiting for room.status change");
+      setIsStarting(false);
     } catch (err) {
-      console.error("[WaitingRoom] start-game failed", err);
-      setError(i18n.ui.failedToStartGame);
+      console.error("[WaitingRoom] handleStartGame: exception thrown", err);
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error("[WaitingRoom] handleStartGame: error message:", errorMsg);
+      setError(errorMsg || i18n.ui.failedToStartGame);
       setIsStarting(false);
     }
   };
@@ -209,6 +294,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
           language={language}
           onClose={() => setShowLeaveRoomPopup(false)}
           onConfirm={() => {
+            console.log("[WaitingRoom] LEAVE ROOM POPUP CONFIRMED!");
             setShowLeaveRoomPopup(false);
             void handleLeaveRoom();
           }}
@@ -219,7 +305,10 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
         <button
           type="button"
           className="button"
-          onClick={() => setShowLeaveRoomPopup(true)}
+          onClick={() => {
+            console.log("[WaitingRoom] LEAVE BUTTON IN TOP BAR CLICKED!");
+            setShowLeaveRoomPopup(true);
+          }}
           aria-label={i18n.ui.leaveGame}
           title={i18n.ui.leaveGame}
         >
@@ -264,19 +353,30 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
               size="large"
             />
 
-            {isHost ? (
-              <Button
-                label={i18n.ui.startGame}
-                color="primary"
-                onClick={handleStartGame}
-                size="large"
-                disabled={isStarting}
-              />
-            ) : (
-              <p className="waiting-for-host-message">
-                {i18n.ui.waitingForHostToStart || "Waiting for the host to start the game."}
-              </p>
-            )}
+            {(() => {
+              if (isHost) {
+                return (
+                  <div>
+                    <Button
+                      label={i18n.ui.startGame}
+                      color="primary"
+                      onClick={() => {
+                        console.log("[WaitingRoom] START GAME BUTTON CLICKED!");
+                        void handleStartGame();
+                      }}
+                      size="large"
+                      disabled={isStarting}
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <p className="waiting-for-host-message">
+                    {i18n.ui.waitingForHostToStart || "Waiting for the host to start the game."}
+                  </p>
+                );
+              }
+            })()}
           </div>
         </>
       )}

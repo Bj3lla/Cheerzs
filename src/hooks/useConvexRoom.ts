@@ -75,11 +75,14 @@ export function useConvexRoom(roomCode?: string, roomId?: Id<"rooms">) {
   };
 
   const leaveRoom = async (roomId: Id<"rooms">, playerId: string) => {
+    console.log("[useConvexRoom] leaveRoom called", { roomId, playerId });
     try {
-      await leaveRoomMutation({ roomId, playerId });
+      console.log("[useConvexRoom] calling leaveRoomMutation");
+      const result = await leaveRoomMutation({ roomId, playerId });
+      console.log("[useConvexRoom] leaveRoomMutation completed", result);
       return { success: true };
     } catch (error) {
-      console.error("Failed to leave room:", error);
+      console.error("[useConvexRoom] leaveRoom failed:", error);
       return { success: false, error: String(error) };
     }
   };
@@ -89,11 +92,14 @@ export function useConvexRoom(roomCode?: string, roomId?: Id<"rooms">) {
     playerId: string,
     isOnline: boolean
   ) => {
+    console.log("[useConvexRoom] updatePlayerStatus called", { roomId, playerId, isOnline });
     try {
-      await updatePlayerStatusMutation({ roomId, playerId, isOnline });
+      console.log("[useConvexRoom] calling updatePlayerStatusMutation");
+      const result = await updatePlayerStatusMutation({ roomId, playerId, isOnline });
+      console.log("[useConvexRoom] updatePlayerStatusMutation completed", result);
       return { success: true };
     } catch (error) {
-      console.error("Failed to update player status:", error);
+      console.error("[useConvexRoom] updatePlayerStatus failed:", error);
       return { success: false, error: String(error) };
     }
   };
