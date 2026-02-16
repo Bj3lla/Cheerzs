@@ -74,7 +74,7 @@ export const joinRoom = mutation({
       throw new Error("Game has already finished");
     }
 
-    // Check if player already in room
+    // Check if player already in room (by playerId — reconnect scenario)
     const existingPlayer = await ctx.db
       .query("players")
       .withIndex("by_room_and_playerId", (q) => 
@@ -92,6 +92,19 @@ export const joinRoom = mutation({
         lastActivity: Date.now(),
       });
     } else {
+      // Check for duplicate player name in the same room (case-insensitive)
+      const playersInRoom = await ctx.db
+        .query("players")
+        .withIndex("by_room", (q) => q.eq("roomId", room._id))
+        .collect();
+
+      const nameTaken = playersInRoom.some(
+        (p) => p.name.toLowerCase() === args.playerName.toLowerCase()
+      );
+      if (nameTaken) {
+        throw new Error("Name already in use in this room");
+      }
+
       // New player joining
       await ctx.db.insert("players", {
         playerId: args.playerId,

@@ -38,6 +38,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     // Card queue
     prefillCardQueue,
     advanceCardQueue,
+    getQueueLength,
   } = useGame();
 
   const navigate = useNavigate();
@@ -117,6 +118,14 @@ export default function GamePage({ language }: { language: LanguageCode }) {
       advanceCardQueue();
     }
   }, [isRoomGame, gameStarted, prompt, prefillCardQueue, advanceCardQueue]);
+
+  // Keep the FIFO queue topped up to 7 after every card advance (single-player)
+  useEffect(() => {
+    if (isRoomGame) return;
+    if (!gameStarted) return;
+    if (getQueueLength() >= 7) return;
+    prefillCardQueue(7);
+  }, [isRoomGame, gameStarted, currentCard, getQueueLength, prefillCardQueue]);
 
   useEffect(() => {
     if (!isRoomGame) return;
@@ -214,6 +223,11 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     // advanceCardQueue() also generates one replacement card to keep the buffer full.
     console.log("[GamePage] hostNext: popping next card from queue");
     const snap = advanceCardQueue();
+
+    // Refill queue back to 7 if it dropped below
+    if (getQueueLength() < 7) {
+      prefillCardQueue(7);
+    }
     
     // For room games, publish the state to Convex so non-host players get the update.
     if (isRoomGame && roomIdTyped) {
@@ -359,13 +373,15 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     const minutesLate = Math.max(0, Math.floor((Date.now() - startedAtMs) / 60000));
 
     const penalty =
-      minutesLate < 5
-        ? i18n.ui.penalty3 || "drink 3 sips"
-        : minutesLate < 7
-          ? i18n.ui.penalty5 || "drink 5 sips"
-          : minutesLate < 10
-            ? i18n.ui.penalty7 || "drink 7 sips"
-            : i18n.ui.penaltyShot || "take a shot";
+      minutesLate < 3
+        ? i18n.ui.penalty1 || "drink 1 sip"
+        : minutesLate < 5
+          ? i18n.ui.penalty3 || "drink 3 sips"
+          : minutesLate < 7
+            ? i18n.ui.penalty5 || "drink 5 sips"
+            : minutesLate < 10
+              ? i18n.ui.penalty7 || "drink 7 sips"
+              : i18n.ui.penaltyShot || "take a shot";
 
     const shownKey = `latePenaltyShown:${normalizedRoomID}:${username}`;
     try {
@@ -517,7 +533,10 @@ export default function GamePage({ language }: { language: LanguageCode }) {
                 : i18n.ui.next
             }
             color="primary"
-            onClick={isRoomGame ? hostNext : () => advanceCardQueue()}
+            onClick={isRoomGame ? hostNext : () => {
+              advanceCardQueue();
+              if (getQueueLength() < 7) prefillCardQueue(7);
+            }}
             size="large"
             disabled={isRoomGame && isDrawingCard}
           />
