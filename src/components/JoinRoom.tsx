@@ -98,7 +98,15 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
       }
     } catch (err) {
       console.error("[JoinRoom] request failed", err);
-      setError(i18n.ui.networkError || "Network error");
+      // Extract the actual error message, handling Convex error format
+      const errorMessage = err?.message || String(err);
+      if (errorMessage.includes("Room not found")) {
+        setError("Room not found. Please check the room ID.");
+      } else if (errorMessage.includes("Game has already finished")) {
+        setError("This game has already finished.");
+      } else {
+        setError(i18n.ui.networkError || "Network error");
+      }
     } finally {
       setLoading(false);
     }

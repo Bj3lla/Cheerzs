@@ -72,7 +72,17 @@ export default function useGameLogic(language: LanguageCode) {
   const [roomId, setRoomId] = useState<string | null>(null);
   const [roomPlayers, setRoomPlayers] = useState<PlayerName[]>([]);
 
-  const resetGameState = () => {
+  // Refs for unstable callbacks so memoized functions always call the latest version
+  const replaceFriendsRef = useRef(replaceFriends);
+  replaceFriendsRef.current = replaceFriends;
+  const resetAllQuestionsRef = useRef(resetAllQuestions);
+  resetAllQuestionsRef.current = resetAllQuestions;
+  const resetRulesRef = useRef(resetRules);
+  resetRulesRef.current = resetRules;
+  const roomIdRef = useRef(roomId);
+  roomIdRef.current = roomId;
+
+  const resetGameState = useCallback(() => {
     setGameStarted(false);
     setCategory(null);
     setPrompt("");
@@ -83,17 +93,17 @@ export default function useGameLogic(language: LanguageCode) {
     setShowActiveRules(true);
 
     // Local mode state should never leak between rooms or sessions.
-    replaceFriends([]);
+    replaceFriendsRef.current([]);
     setFriendInput("");
 
     // Reset decks/rules so a new room is always a fresh game.
-    resetAllQuestions();
-    resetRules();
-  };
+    resetAllQuestionsRef.current();
+    resetRulesRef.current();
+  }, [setPlayer, setFriendInput]);
 
   const playersForPrompts = roomId ? roomPlayers : friends;
 
-  const setRoomSession = ({
+  const setRoomSession = useCallback(({
     roomID,
     players,
   }: {
@@ -101,18 +111,18 @@ export default function useGameLogic(language: LanguageCode) {
     players?: PlayerName[];
   }) => {
     const nextRoomId = roomID || null;
-    if (nextRoomId !== roomId) {
+    if (nextRoomId !== roomIdRef.current) {
       resetGameState();
     }
     setRoomId(nextRoomId);
     setRoomPlayers(Array.isArray(players) ? players : []);
-  };
+  }, [resetGameState]);
 
-  const clearRoomSession = () => {
+  const clearRoomSession = useCallback(() => {
     resetGameState();
     setRoomId(null);
     setRoomPlayers([]);
-  };
+  }, [resetGameState]);
 
   useEffect(() => {
     // If current selected player left the room, clear it.

@@ -58,7 +58,13 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
       }
     } catch (err) {
       console.error("[CreateRoom] request failed", err);
-      setError(i18n.ui.networkError || "Network error");
+      // Extract the actual error message, handling Convex error format
+      const errorMessage = err?.message || String(err);
+      if (errorMessage.includes("Room code already exists")) {
+        setError("Room code already exists. Please choose a different name.");
+      } else {
+        setError(i18n.ui.networkError || "Network error");
+      }
     } finally {
       setLoading(false);
     }
@@ -81,7 +87,7 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
           className={`${error ? "error " : ""}room-code-input`}
         />
       </div>
-      {error && <p className="error-message">{"Room already exists."}</p>}
+      {error && <p className="error-message">{error}</p>}
       <div className="create-room-button">
         <Button
           label={loading ? i18n.ui.loading : i18n.ui.createRoom}

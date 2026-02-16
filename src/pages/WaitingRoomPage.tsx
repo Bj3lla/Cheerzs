@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/Button";
@@ -44,6 +44,9 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
   const [showRulesPopup, setShowRulesPopup] = useState<boolean>(false);
   const [showLeaveRoomPopup, setShowLeaveRoomPopup] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
+  
+  // Ref to track heartbeat interval so we can clear it before leaving
+  const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Debug - check if api.rooms.startGame exists
   useEffect(() => {
@@ -90,7 +93,8 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
       return;
     }
 
-    // Room not found (deleted or invalid)
+    // room === undefined means still loading – do nothing yet.
+    // room === null means the query completed and the room was not found.
     if (room === null) {
       clearRoomSession();
       setGameStarted(false);
@@ -113,7 +117,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
         players: playersArray 
       });
     }
-  }, [roomStatus, normalizedRoomID, playersArray]);
+  }, [room, roomStatus, normalizedRoomID, playersArray, setRoomSession]);
 
   // Handle game started state - navigate all players when status changes to "playing"
   useEffect(() => {
@@ -134,7 +138,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
     updatePlayerStatus(room._id, playerId, true);
 
     // Heartbeat interval
-    const heartbeatInterval = setInterval(() => {
+    heartbeatIntervalRef.current = setInterval(() => {
       updatePlayerStatus(room._id, playerId, true);
     }, 30 * 1000); // Every 30 seconds
 
@@ -148,7 +152,10 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
 
     // Cleanup
     return () => {
-      clearInterval(heartbeatInterval);
+      if (heartbeatIntervalRef.current) {
+        clearInterval(heartbeatIntervalRef.current);
+        heartbeatIntervalRef.current = null;
+      }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [room?._id, playerId, updatePlayerStatus]);
@@ -162,6 +169,12 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
       setGameStarted(false);
       navigate("/", { replace: true });
       return;
+    }
+
+    // Stop heartbeat to prevent write conflicts with leaveRoom mutation
+    if (heartbeatIntervalRef.current) {
+      clearInterval(heartbeatIntervalRef.current);
+      heartbeatIntervalRef.current = null;
     }
 
     setError("");
