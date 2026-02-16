@@ -155,16 +155,16 @@ export const leaveRoom = mutation({
       return { deleted: true };
     }
 
-    // If host left, assign new host
+    // If host left, assign a new host randomly from remaining players
     let newHostId = room.hostId;
     if (room.hostId === args.playerId) {
-      newHostId = updatedPlayerIds[0];
+      const randomIndex = Math.floor(Math.random() * updatedPlayerIds.length);
+      newHostId = updatedPlayerIds[randomIndex];
     }
 
     await ctx.db.patch(args.roomId, {
       playerIds: updatedPlayerIds,
       hostId: newHostId,
-      lastActivity: Date.now(),
     });
 
     return { deleted: false };
@@ -179,13 +179,8 @@ export const updatePlayerStatus = mutation({
     isOnline: v.boolean(),
   },
   handler: async (ctx, args) => {
-    const room = await ctx.db.get(args.roomId);
-
-    if (!room) {
-      return;
-    }
-
-    // Find and update player
+    // Update player directly without reading room document (avoids OCC conflicts
+    // with leaveRoom which also patches the room document concurrently)
     const player = await ctx.db
       .query("players")
       .withIndex("by_room_and_playerId", (q) => 
@@ -199,10 +194,6 @@ export const updatePlayerStatus = mutation({
         lastSeen: Date.now(),
       });
     }
-
-    await ctx.db.patch(args.roomId, {
-      lastActivity: Date.now(),
-    });
   },
 });
 
@@ -296,15 +287,18 @@ export const cleanupStaleRooms = internalMutation({
   args: {},
   handler: async (ctx) => {
     const now = Date.now();
-    const twoHoursAgo = now - 2 * 60 * 60 * 1000; // 2 hours
+    const threeHoursAgo = now - 3 * 60 * 60 * 1000; // 3 hours since last card drawn
 
     const staleRooms = await ctx.db
       .query("rooms")
-      .withIndex("by_lastActivity", (q) => q.lt("lastActivity", twoHoursAgo))
+      .withIndex("by_lastActivity", (q) => q.lt("lastActivity", threeHoursAgo))
       .collect();
 
     for (const room of staleRooms) {
-      // Delete all players in this room
+      // Mark room as inactive
+      await ctx.db.patch(room._id, { status: "finished" });
+
+      // Delete all players in this room first
       const players = await ctx.db
         .query("players")
         .withIndex("by_room", (q) => q.eq("roomId", room._id))
@@ -314,6 +308,7 @@ export const cleanupStaleRooms = internalMutation({
         await ctx.db.delete(player._id);
       }
       
+      // Then delete the room
       await ctx.db.delete(room._id);
     }
 

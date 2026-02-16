@@ -101,7 +101,17 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
       navigate("/", { replace: true });
       return;
     }
-  }, [clearRoomSession, navigate, normalizedRoomID, setGameStarted, username, room]);
+
+    // Player was removed from the room by the host
+    if (room && playerId && playerRecords && !playerRecords.some(p => p.playerId === playerId)) {
+      clearRoomSession();
+      setGameStarted(false);
+      localStorage.removeItem("playerId");
+      localStorage.removeItem("playerRoomId");
+      navigate("/", { replace: true });
+      return;
+    }
+  }, [clearRoomSession, navigate, normalizedRoomID, setGameStarted, username, room, playerId, playerRecords]);
 
   // Update local game context when room data changes
   const playersArray = useMemo(() => {

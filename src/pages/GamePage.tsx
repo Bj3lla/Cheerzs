@@ -70,6 +70,8 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   const lastAppliedLanguageRef = useRef(language);
   const initialLanguageRef = useRef(language);
   const startedAtRef = useRef("");
+  const prevIsHostRef = useRef(false);
+  const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const [lateJoinMessage, setLateJoinMessage] = useState("");
   const [showLateJoinPopup, setShowLateJoinPopup] = useState(false);
@@ -243,38 +245,30 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   // → which updates room.gameState → all clients sync via applyRoomBroadcastState.
 
   const leaveFromGamePage = async () => {
-    console.log("[GamePage] leaveFromGamePage START", { isRoomGame, isHost, roomId: roomIdTyped, playerId });
-    
+    // Stop heartbeat to prevent write conflicts with leaveRoom mutation
+    if (heartbeatIntervalRef.current) {
+      clearInterval(heartbeatIntervalRef.current);
+      heartbeatIntervalRef.current = null;
+    }
+
     if (!isRoomGame || !roomIdTyped || !playerId) {
-      console.log("[GamePage] leaveFromGamePage: not room game or missing data, navigating to join-room");
       setGameStarted(false);
-      navigate("/join-room");
+      navigate("/", { replace: true });
       return;
     }
 
-    // Host should be able to go back to the waiting room without deleting the room.
-    if (isHost) {
-      console.log("[GamePage] leaveFromGamePage: host returning to waiting room");
-      setGameStarted(false);
-      navigate(`/room/${encodeURIComponent(normalizedRoomID)}`);
-      return;
-    }
-
-    // Non-host: actually leave the room/game.
-    console.log("[GamePage] leaveFromGamePage: non-host leaving room");
+    // Both host and non-host: leave the room and go home.
+    // Backend assigns a new random host if the host is the one leaving.
     try {
-      console.log("[GamePage] leaveFromGamePage: calling leaveRoomMutation");
       await leaveRoomMutation(roomIdTyped, playerId);
-      console.log("[GamePage] leaveFromGamePage: leaveRoomMutation completed");
     } catch (err) {
       console.error("[GamePage] leaveFromGamePage: mutation failed", err);
     } finally {
-      console.log("[GamePage] leaveFromGamePage: cleaning up session and navigating");
       clearRoomSession();
       setGameStarted(false);
       localStorage.removeItem("playerId");
       localStorage.removeItem("playerRoomId");
-      navigate("/join-room");
+      navigate("/", { replace: true });
     }
   };
 
@@ -285,8 +279,8 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     // Mark as online when joining
     updatePlayerStatus(roomIdTyped, playerId, true);
 
-    // Heartbeat interval
-    const heartbeatInterval = setInterval(() => {
+    // Heartbeat interval (stored in ref so we can stop it before leaving)
+    heartbeatIntervalRef.current = setInterval(() => {
       updatePlayerStatus(roomIdTyped, playerId, true);
     }, 30 * 1000); // Every 30 seconds
 
@@ -298,22 +292,22 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    // On page unload, mark player as offline via Convex
+    // On page unload, mark player as offline
     const handleBeforeUnload = () => {
-      if (!isHost && roomIdTyped) {
-        // Best-effort: mark as offline. Convex cron cleanup handles stale players.
-        updatePlayerStatus(roomIdTyped, playerId, false);
-      }
+      updatePlayerStatus(roomIdTyped, playerId, false);
     };
     window.addEventListener("pagehide", handleBeforeUnload);
 
     // Cleanup
     return () => {
-      clearInterval(heartbeatInterval);
+      if (heartbeatIntervalRef.current) {
+        clearInterval(heartbeatIntervalRef.current);
+        heartbeatIntervalRef.current = null;
+      }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("pagehide", handleBeforeUnload);
     };
-  }, [roomIdTyped, playerId, updatePlayerStatus, isHost]);
+  }, [roomIdTyped, playerId, updatePlayerStatus]);
 
   // Redirect if room deleted or player removed
   useEffect(() => {
@@ -333,7 +327,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
       setGameStarted(false);
       localStorage.removeItem("playerId");
       localStorage.removeItem("playerRoomId");
-      navigate("/join-room", { replace: true });
+      navigate("/", { replace: true });
       return;
     }
   }, [isRoomGame, room, playerRecords, normalizedRoomID, playerId, clearRoomSession, setGameStarted, navigate]);
@@ -411,6 +405,19 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRoomGame, gameStarted, isHost, roomIdTyped]);
 
+  // Detect host transfer: when a non-host becomes host mid-game, prefill their FIFO queue
+  useEffect(() => {
+    if (!isRoomGame || !gameStarted || !roomIdTyped) {
+      prevIsHostRef.current = isHost;
+      return;
+    }
+    if (!prevIsHostRef.current && isHost) {
+      console.log("[GamePage] Host transfer detected — prefilling card queue");
+      prefillCardQueue(7);
+    }
+    prevIsHostRef.current = isHost;
+  }, [isHost, isRoomGame, gameStarted, roomIdTyped, prefillCardQueue]);
+
   return (
     <div className="game-screen">
       {showLateJoinPopup && lateJoinMessage && (
@@ -436,11 +443,11 @@ export default function GamePage({ language }: { language: LanguageCode }) {
           type="button"
           className="button"
           onClick={() => {
-            if (isHost) {
-              leaveFromGamePage();
-              return;
-            } else {
+            if (isRoomGame) {
               setShowLeaveRoomPopup(true);
+            } else {
+              setGameStarted(false);
+              navigate("/", { replace: true });
             }
           }}
           aria-label={i18n.ui.leaveGame}

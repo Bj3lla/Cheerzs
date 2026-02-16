@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -22,8 +23,8 @@ export function useConvexRoom(roomCode?: string, roomId?: Id<"rooms">) {
   const updatePlayerStatusMutation = useMutation(api.rooms.updatePlayerStatus);
   const startGameMutation = useMutation(api.rooms.startGame);
 
-  // Helper functions
-  const createRoom = async ({
+  // Helper functions (wrapped in useCallback to keep stable references)
+  const createRoom = useCallback(async ({
     code,
     hostId,
     hostName,
@@ -49,9 +50,9 @@ export function useConvexRoom(roomCode?: string, roomId?: Id<"rooms">) {
       console.error("Failed to create room:", error);
       return { success: false, error: String(error) };
     }
-  };
+  }, [createRoomMutation]);
 
-  const joinRoom = async ({
+  const joinRoom = useCallback(async ({
     code,
     playerId,
     playerName,
@@ -72,9 +73,9 @@ export function useConvexRoom(roomCode?: string, roomId?: Id<"rooms">) {
       console.error("Failed to join room:", error);
       return { success: false, error: String(error) };
     }
-  };
+  }, [joinRoomMutation]);
 
-  const leaveRoom = async (roomId: Id<"rooms">, playerId: string) => {
+  const leaveRoom = useCallback(async (roomId: Id<"rooms">, playerId: string) => {
     console.log("[useConvexRoom] leaveRoom called", { roomId, playerId });
     try {
       console.log("[useConvexRoom] calling leaveRoomMutation");
@@ -85,26 +86,23 @@ export function useConvexRoom(roomCode?: string, roomId?: Id<"rooms">) {
       console.error("[useConvexRoom] leaveRoom failed:", error);
       return { success: false, error: String(error) };
     }
-  };
+  }, [leaveRoomMutation]);
 
-  const updatePlayerStatus = async (
+  const updatePlayerStatus = useCallback(async (
     roomId: Id<"rooms">,
     playerId: string,
     isOnline: boolean
   ) => {
-    console.log("[useConvexRoom] updatePlayerStatus called", { roomId, playerId, isOnline });
     try {
-      console.log("[useConvexRoom] calling updatePlayerStatusMutation");
-      const result = await updatePlayerStatusMutation({ roomId, playerId, isOnline });
-      console.log("[useConvexRoom] updatePlayerStatusMutation completed", result);
+      await updatePlayerStatusMutation({ roomId, playerId, isOnline });
       return { success: true };
     } catch (error) {
       console.error("[useConvexRoom] updatePlayerStatus failed:", error);
       return { success: false, error: String(error) };
     }
-  };
+  }, [updatePlayerStatusMutation]);
 
-  const startGame = async (
+  const startGame = useCallback(async (
     roomId: Id<"rooms">,
     questionTypes: string[]
   ) => {
@@ -115,7 +113,7 @@ export function useConvexRoom(roomCode?: string, roomId?: Id<"rooms">) {
       console.error("Failed to start game:", error);
       return { success: false, error: String(error) };
     }
-  };
+  }, [startGameMutation]);
 
   return {
     room,
