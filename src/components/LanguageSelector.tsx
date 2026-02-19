@@ -17,7 +17,7 @@ export default function LanguageSelector({
   const location = useLocation();
   const navigate = useNavigate();
 
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   const pathname = location?.pathname || "";
   const isGamePage = pathname === "/game";

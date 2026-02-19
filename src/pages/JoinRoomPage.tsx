@@ -19,7 +19,7 @@ type RoomJoinedResult = {
 export default function JoinRoomPage({ language }: { language: LanguageCode }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   const { setRoomSession, setGameStarted } = useGame();
 

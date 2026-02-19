@@ -3,9 +3,9 @@ import type { LanguageCode } from "../hooks/useLanguage";
 
 type RuleItem = { title: string; text: string };
 
-export default function GameRules({ language = "en" }: { language?: LanguageCode }) {
-  const i18n = translations[language] || translations.en;
-  const fallback = translations.en;
+export default function GameRules({ language = "no" }: { language?: LanguageCode }) {
+  const i18n = translations[language] || translations.no;
+  const fallback = translations.no;
 
   const rules = (Array.isArray(i18n.ui.gameRulesList) ? i18n.ui.gameRulesList : fallback.ui.gameRulesList) as RuleItem[];
 

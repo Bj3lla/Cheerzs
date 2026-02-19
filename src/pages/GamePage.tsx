@@ -12,7 +12,7 @@ import { translations } from "../locales/translations";
 import type { LanguageCode } from "../hooks/useLanguage";
 import SpotifyCard from "../components/SpotifyCard";
 
-export default function GamePage({ language }: { language: LanguageCode }) {
+export default function GamePage({ language = "no" }: { language?: LanguageCode }) {
   const {
     gameStarted,
     category,
@@ -71,7 +71,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
 
   const drawCardInFlightRef = useRef(false);
 
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
   const isRepealCard = Boolean(repelActive || category === "repeal");
 
   const cardPrompt = isSyncing

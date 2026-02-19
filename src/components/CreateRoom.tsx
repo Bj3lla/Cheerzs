@@ -9,11 +9,11 @@ type CreateRoomProps = {
   username?: string;
 };
 
-export default function CreateRoom({ onRoomCreated, language = "en", username }: CreateRoomProps) {
+export default function CreateRoom({ onRoomCreated, language = "no", username }: CreateRoomProps) {
   const [roomID, setRoomID] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   const handleCreate = async () => {
     if (!username || typeof username !== "string" || !username.trim()) {

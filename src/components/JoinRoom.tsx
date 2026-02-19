@@ -14,13 +14,13 @@ type JoinRoomProps = {
   username?: string;
 };
 
-export default function JoinRoom({ onRoomJoined, language = "en", username }: JoinRoomProps) {
+export default function JoinRoom({ onRoomJoined, language = "no", username }: JoinRoomProps) {
   const [roomID, setRoomID] = useState<string>("");
   const [localUsername, setLocalUsername] = useState<string>(username || "");
   const [showUsernameInput, setShowUsernameInput] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   useEffect(() => {
     setLocalUsername(username || "");

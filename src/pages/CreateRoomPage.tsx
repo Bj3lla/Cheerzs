@@ -12,7 +12,7 @@ type CreateRoomNavState = {
 export default function CreateRoomPage({ language }: { language: LanguageCode }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   // Get username from navigation state or localStorage
   const playerName =

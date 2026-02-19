@@ -10,12 +10,12 @@ import { IoArrowBack } from "react-icons/io5";
 import LeaveRoomPopup from "../components/LeaveRoomPopup";
 import LanguageSelector from "src/components/LanguageSelector";
 
-export default function WaitingRoomPage({ language = "en" }: { language?: LanguageCode }) {
+export default function WaitingRoomPage({ language = "no" }: { language?: LanguageCode }) {
   const navigate = useNavigate();
   const { roomId } = useParams();
   const { setGameStarted, setRoomSession, clearRoomSession } = useGame();
 
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   const normalizedRoomID = useMemo(() => {
     return typeof roomId === "string" ? roomId.trim().toUpperCase() : "";

@@ -16,7 +16,7 @@ export default function MenuPage({
   const navigate = useNavigate();
   const { roomId, gameStarted } = useGame();
 
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   useEffect(() => {
     // Prevent manual navigation here from a cold start.
