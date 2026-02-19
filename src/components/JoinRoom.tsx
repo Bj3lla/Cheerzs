@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Button from "./Button";
 import { translations } from "../locales/translations";
 import type { LanguageCode } from "../hooks/useLanguage";
+import { useConvexRoom } from "../hooks/useConvexRoom";
 
 type JoinRoomProps = {
   onRoomJoined: (args: {
@@ -14,13 +15,15 @@ type JoinRoomProps = {
   username?: string;
 };
 
-export default function JoinRoom({ onRoomJoined, language = "en", username }: JoinRoomProps) {
+export default function JoinRoom({ onRoomJoined, language = "no", username }: JoinRoomProps) {
   const [roomID, setRoomID] = useState<string>("");
   const [localUsername, setLocalUsername] = useState<string>(username || "");
   const [showUsernameInput, setShowUsernameInput] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const i18n = translations[language] || translations.en;
+  const [roomError, setRoomError] = useState<string>("");
+  const [nameError, setNameError] = useState<string>("");
+  const i18n = translations[language] || translations.no;
+  const { joinRoom } = useConvexRoom();
 
   useEffect(() => {
     setLocalUsername(username || "");
@@ -36,130 +39,129 @@ export default function JoinRoom({ onRoomJoined, language = "en", username }: Jo
 
   const handleJoin = async () => {
     const name = (localUsername || "").trim();
+
+    // Validate both fields upfront so both errors can show at once
+    let hasError = false;
+    setRoomError("");
+    setNameError("");
+
     if (!name) {
-      setError(i18n.ui.pleaseEnterPlayerName || "Please enter a name first");
-      return;
+      setNameError(i18n.ui.pleaseEnterPlayerName || "Please enter a name first");
+      setShowUsernameInput(true);
+      hasError = true;
     }
 
     if (!roomID.trim()) {
-      setError(i18n.ui.pleaseEnterRoomID || "Please enter a room ID");
-      return;
+      setRoomError(i18n.ui.pleaseEnterRoomID || "Please enter a room ID");
+      hasError = true;
     }
 
-    setLoading(true);
-    setError("");
+    if (hasError) return;
 
-    console.groupCollapsed("[JoinRoom] POST /api/join-room");
+    setLoading(true);
+
     try {
       const normalizedRoomID = roomID.trim().toUpperCase();
-      const payload: Record<string, string> = { roomID: normalizedRoomID, username: name };
 
-      // Only send playerId when re-joining the same room with the same username.
+      // Determine which player ID to use
+      let playerId = "";
       if (
         storedPlayerId &&
         storedPlayerRoomId &&
         storedPlayerRoomId === normalizedRoomID &&
         (localStorage.getItem("playerName") || "").trim() === name
       ) {
-        (payload as Record<string, string | undefined>).playerId = storedPlayerId;
+        // Re-joining the same room with the same name
+        playerId = storedPlayerId;
+      } else {
+        // New player or different room
+        playerId = `player_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
       }
-      console.log("payload", payload);
 
-      const res = await fetch("/api/join-room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      const result = await joinRoom({
+        code: normalizedRoomID,
+        playerId,
+        playerName: name,
       });
 
-      const contentType = res.headers.get("content-type") || "";
-      const vercelError = res.headers.get("x-vercel-error") || "";
-      const vercelId = res.headers.get("x-vercel-id") || "";
-
-      const rawText = await res.text();
-      let data: Record<string, unknown> | null = null;
-      if (rawText) {
-        try {
-          data = JSON.parse(rawText) as Record<string, unknown>;
-        } catch {
-          data = null;
-        }
-      }
-
-      console.log("status", res.status);
-      console.log("content-type", contentType);
-      if (vercelError) console.log("x-vercel-error", vercelError);
-      if (vercelId) console.log("x-vercel-id", vercelId);
-      console.log("parsed response", data);
-      if (!data && rawText) console.log("raw response", rawText);
-
-      if (res.ok) {
-        const playerId = (data as Record<string, unknown>)?.playerId;
-        if (playerId) {
-          localStorage.setItem("playerId", String(playerId));
-          localStorage.setItem("playerRoomId", normalizedRoomID);
-        }
+      if (result.success && result.roomId) {
+        // Store player session
+        localStorage.setItem("playerId", playerId);
+        localStorage.setItem("playerRoomId", normalizedRoomID);
         localStorage.setItem("playerName", name);
+
         onRoomJoined({
           roomID: normalizedRoomID,
           username: name,
-          gameStarted: Boolean((data as Record<string, unknown>)?.gameStarted),
-          startedAt: (typeof (data as Record<string, unknown>)?.startedAt === "string" ? (data as Record<string, unknown>).startedAt : null) as string | null,
+          gameStarted: result.gameStarted || false,
+          startedAt: null,
         });
       } else {
-        const code = (data as Record<string, unknown>)?.code;
-        if (res.status === 409 && code === "USERNAME_TAKEN") {
-          setShowUsernameInput(true);
-          setError(i18n.ui.usernameTaken || "The username is already taken");
-        } else {
-          const errorMsg = typeof (data as Record<string, unknown>)?.error === "string" ? (data as Record<string, unknown>).error as string : i18n.ui.networkError || "Network error";
-          setError(errorMsg);
-        }
+        classifyError(result.error || "");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("[JoinRoom] request failed", err);
-      setError(i18n.ui.networkError || "Network error");
+      const errorMessage = err?.message || String(err);
+      classifyError(errorMessage);
     } finally {
-      console.groupEnd();
       setLoading(false);
+    }
+  };
+
+  /** Map a backend error string to the right field-level error. */
+  const classifyError = (msg: string) => {
+    if (msg.includes("already in use")) {
+      setShowUsernameInput(true);
+      setNameError(i18n.ui.usernameTaken || "The username is already taken");
+    } else if (msg.includes("Room not found")) {
+      setRoomError(i18n.ui.roomNotFound || "Room not found");
+    } else if (msg.includes("Game has already finished")) {
+      setRoomError(i18n.ui.roomNotFound || "Room not found");
+    } else {
+      setRoomError(i18n.ui.networkError || "Network error");
     }
   };
 
   return (
     <div className="join-room">
-      {/* <h2>{i18n.ui.joinRoom}</h2> */}
+      <div className="friend-input">
+        <input
+          type="text"
+          placeholder={i18n.ui.placeholderEnterRoomID || "enter room ID..."}
+          value={roomID}
+          onChange={(e) => {
+            setRoomID(e.target.value.toUpperCase());
+            setRoomError("");
+          }}
+          onKeyDown={(e) => e.key === "Enter" && !loading && void handleJoin()}
+          disabled={loading}
+          autoCapitalize="characters"
+          autoCorrect="off"
+          spellCheck={false}
+          className={`${roomError ? "error " : ""}room-code-input`}
+        />
+      </div>
+      {roomError && <p className="error-message">{roomError}</p>}
       {showUsernameInput && (
-        <div className="friend-input" style={{ marginBottom: "1rem" }}>
+        <div className="friend-input" style={{ marginTop: "0.75rem" }}>
           <input
             type="text"
             placeholder={i18n.ui.placeholderPlayerName || "playername..."}
             value={localUsername}
             onChange={(e) => {
               setLocalUsername(e.target.value);
-              setError("");
+              setNameError("");
             }}
             onKeyDown={(e) => e.key === "Enter" && !loading && void handleJoin()}
             disabled={loading}
             autoCapitalize="words"
             autoCorrect="off"
             spellCheck={false}
+            className={`${nameError ? "error " : ""}room-code-input`}
           />
         </div>
       )}
-      <div className="friend-input">
-        <input
-          type="text"
-          placeholder={i18n.ui.placeholderEnterRoomID || "enter room ID..."}
-          value={roomID}
-          onChange={(e) => setRoomID(e.target.value.toUpperCase())}
-          onKeyDown={(e) => e.key === "Enter" && !loading && void handleJoin()}
-          disabled={loading}
-          autoCapitalize="characters"
-          autoCorrect="off"
-          spellCheck={false}
-          className={`${error ? "error " : ""}room-code-input`}
-        />
-      </div>
-      {error && <p className="error-message">{error}</p>}
+      {nameError && <p className="error-message">{nameError}</p>}
       <div className="join-room-button">
         <Button
           label={loading ? i18n.ui.joiningRoom : i18n.ui.joinRoom}

@@ -1,2172 +1,3242 @@
 export const spotifyUrls = [
   {
-    id: 1, //Cant hold us - Macklemore and Ray Dalton
+    id: 1,
+    title: "Cant hold us",
+    artists: ["Macklemore", "Ray Dalton"],
     url: "https://open.spotify.com/track/22skzmqfdWrjJylampe0kt?si=PJA-JZc5RqGqtoVeCfzlZA",
   },
   {
-    id: 2, //Astronomia - Tony Igy and Vicetone
+    id: 2,
+    title: "Astronomia",
+    artists: ["Tony Igy", "Vicetone"],
     url: "https://open.spotify.com/track/665AK0ovB11McZRwfa852G?si=sk8N598oRMCZ7ms2fvS4Rw",
   },
   {
-    id: 3, //Beauty and a Beat - Justin Bieber and Nicki Minaj
+    id: 3,
+    title: "Beauty and a Beat",
+    artists: ["Justin Bieber", "Nicki Minaj"],
     url: "https://open.spotify.com/track/6QFCMUUq1T2Vf5sFUXcuQ7?si=QFu0AzJbTy-J0I-bzcPpYw",
   },
   {
-    id: 4, //Break Your Heart - Taio Cruz and Ludacris
+    id: 4,
+    title: "Break Your Heart",
+    artists: ["Taio Cruz", "Ludacris"],
     url: "https://open.spotify.com/track/7mDCg8XTEyDNPzC5Jdt7mu?si=wN8DdqBJR1ylCp6bQM8fQA",
   },
   {
-    id: 5, //Bullet Proof - La Roux
+    id: 5,
+    title: "Bullet Proof",
+    artists: ["La Roux"],
     url: "https://open.spotify.com/track/3kMrazSvILsgcwtidZd1Qd?si=tgJy4b3fRe-DyCid8Eex_w",
   },
   {
-    id: 6, //Club Can't Handle Me - Flo Rida and David Guetta
+    id: 6,
+    title: "Club Can't Handle Me",
+    artists: ["Flo Rida", "David Guetta"],
     url: "https://open.spotify.com/track/6ebkx7Q5tTxrCxKq4GYj0Y?si=j2RpsHe0SD-6AqxSfJWexw",
   },
   {
-    id: 7, //Dancing Queen - ABBA
+    id: 7,
+    title: "Dancing Queen",
+    artists: ["ABBA"],
     url: "https://open.spotify.com/track/0GjEhVFGZW8afUYGChu3Rr?si=KXvCvHvRSJeIkm9jJNLfYA",
   },
   {
-    id: 8, //Danza Kuduro - Don Omar and Lucenzo
+    id: 8,
+    title: "Danza Kuduro",
+    artists: ["Don Omar", "Lucenzo"],
     url: "https://open.spotify.com/track/6DXLO8LndZMVOHM0wNbpzg?si=iTYFlkMBTAisOe9brQWBbw",
   },
   {
-    id: 9, //Delilah (pull me out of this) - Fred Again and Delilah Montagu
+    id: 9,
+    title: "Delilah (pull me out of this)",
+    artists: ["Fred Again", "Delilah Montagu"],
     url: "https://open.spotify.com/track/5w9upngVRHNjdZcRC7Xxr2?si=HHtlkdBeRyuFVE7MgV_fOg",
   },
   {
-    id: 10, //Die Young - Ke$ha
+    id: 10,
+    title: "Die Young",
+    artists: ["Ke$ha"],
     url: "https://open.spotify.com/track/7EQGXaVSyEDsCWKmUcfpLk?si=JZTr_qYCR56MneAFSv8pJg",
   },
   {
-    id: 11, //Disturbia - Rihanna
+    id: 11,
+    title: "Disturbia",
+    artists: ["Rihanna"],
     url: "https://open.spotify.com/track/2VOomzT6VavJOGBeySqaMc?si=b7QQ04LZRI-1Lz4HsSJIUw",
   },
   {
-    id: 12, //DJ Got Us Fallin' In Love - Usher and Pitbull
+    id: 12,
+    title: "DJ Got Us Fallin' In Love",
+    artists: ["Usher", "Pitbull"],
     url: "https://open.spotify.com/track/4356Typ82hUiFAynbLYbPn?si=OnhfqbTqSH2icD60lfta_Q",
   },
   {
-    id: 13, //Don't Stop Believin' - Journey
+    id: 13,
+    title: "Don't Stop Believin'",
+    artists: ["Journey"],
     url: "https://open.spotify.com/track/5RKQ5NdjSh2QzD4MaunT91?si=y20KMtGaRkiYVIXxJSTnpQ",
   },
   {
-    id: 14, //Dont Stop Me Now - Queen
+    id: 14,
+    title: "Dont Stop Me Now",
+    artists: ["Queen"],
     url: "https://open.spotify.com/track/5T8EDUDqKcs6OSOwEsfqG7?si=5grVa44lQce_clZvmqSWMg",
   },
   {
-    id: 15, //Don't Stop the Party - Pitbull and TJR
+    id: 15,
+    title: "Don't Stop the Party",
+    artists: ["Pitbull", "TJR"],
     url: "https://open.spotify.com/track/3Tu7uWBecS6GsLsL8UONKn?si=N2WsuDI6Taq86VKtFmdCMA",
   },
   {
-    id: 16, //Don't You Worry Child - Swedish House Mafia and John Martin
+    id: 16,
+    title: "Don't You Worry Child",
+    artists: ["Swedish House Mafia", "John Martin"],
     url: "https://open.spotify.com/track/2V65y3PX4DkRhy1djlxd9p?si=52TUGMLKR4-APdwLV4dDDw",
   },
   {
-    id: 17, //Dragosta din tei - O-Zone
+    id: 17,
+    title: "Dragosta din tei",
+    artists: ["O-Zone"],
     url: "https://open.spotify.com/track/52Zr0sinhWTCRrQhRRY4EP?si=q4g2kPk6T26zna-d0OXmzQ",
   },
   {
-    id: 18, // Eenie Meenie - Sean Kingston and Justin Bieber
+    id: 18,
+    title: "Eenie Meenie",
+    artists: ["Sean Kingston", "Justin Bieber"],
     url: "https://open.spotify.com/track/4vVTI94F9uJ8lHNDWKv0i2?si=dpH8rQlmSFOGUEwfKBqIVA",
   },
   {
-    id: 19, // Evacuate the Dancefloor - Cascada
+    id: 19,
+    title: "Evacuate the Dancefloor",
+    artists: ["Cascada"],
     url: "https://open.spotify.com/track/0fw7GNhguLX3KI0eoLioDS?si=uO6pjUeNQpCWTjnhsHufNg",
   },
   {
-    id: 20, // Everytime We Touch - Cascada and Maurice West (remix)
+    id: 20,
+    title: "Everytime We Touch",
+    artists: ["Cascada", "Maurice West (remix)"],
     url: "https://open.spotify.com/track/18rHGxr6QDiPieSTo7cUGL?si=gNEIsz92TJWIGTFe8JH5Bw",
   },
   {
-    id: 21, // Feel This Moment - Pitbull and Christina Aguilera
+    id: 21,
+    title: "Feel This Moment",
+    artists: ["Pitbull", "Christina Aguilera"],
     url: "https://open.spotify.com/track/0Hf4aIJpsN4Os2f0y0VqWl?si=Nsq3pCJ2T-WbOIqPzogm2A",
   },
   {
-    id: 22, // Fireball - Pitbull and John Ryan
+    id: 22,
+    title: "Fireball",
+    artists: ["Pitbull", "John Ryan"],
     url: "https://open.spotify.com/track/4Y7XAxTANhu3lmnLAzhWJW?si=8SqUHFNuS8OCBmJevlbeUg",
   },
   {
-    id: 23, // Fire Burning - Sean Kingston
+    id: 23,
+    title: "Fire Burning",
+    artists: ["Sean Kingston"],
     url: "https://open.spotify.com/track/2oENJa1T33GJ0w8dC167G4?si=MPIfixLiQvWM_mvi4NkI_Q",
   },
   {
-    id: 24, // Five More Hours - Deorro and Chris Brown
+    id: 24,
+    title: "Five More Hours",
+    artists: ["Deorro", "Chris Brown"],
     url: "https://open.spotify.com/track/3MOECVkNshqHYTPt5DZcdN?si=8CWrVHF2Tq6OjKbXC9Op7g",
   },
   {
-    id: 25, // Forever Alone - Kakkmaddafakka
+    id: 25,
+    title: "Forever Alone",
+    artists: ["Kakkmaddafakka"],
     url: "https://open.spotify.com/track/5d0MNrb8EWHfYJvM0jf4cS?si=wXQpRl0oSx2Yn6gpIFJJzQ",
   },
   {
-    id: 26, // Gasolina - Daddy Yankee
+    id: 26,
+    title: "Gasolina",
+    artists: ["Daddy Yankee"],
     url: "https://open.spotify.com/track/228BxWXUYQPJrJYHDLOHkj?si=VWjKRkVhT5S8LqlJyU4xmg",
   },
   {
-    id: 27, // Gimme! Gimme! Gimme! - ABBA
+    id: 27,
+    title: "Gimme! Gimme! Gimme!",
+    artists: ["ABBA"],
     url: "https://open.spotify.com/track/3vkQ5DAB1qQMYO4Mr9zJN6?si=2VBkEZqDSj6lkJ-gR-kUFQ",
   },
   {
-    id: 28, // Give Me Everything - Pitbull, Ne-Yo, Afrojack and Nayer
+    id: 28,
+    title: "Give Me Everything",
+    artists: ["Pitbull", "Ne-Yo", "Afrojack", "Nayer"],
     url: "https://open.spotify.com/track/4QNpBfC0zvjKqPJcyqBy9W?si=0jWBIUXbQnim5Dd2wFboWg",
   },
   {
-    id: 29, // Good Feeling - Flo Rida
+    id: 29,
+    title: "Good Feeling",
+    artists: ["Flo Rida"],
     url: "https://open.spotify.com/track/2LEF1A8DOZ9wRYikWgVlZ8?si=ykEVUJutR2OP9fyIwZ4DEQ",
   },
   {
-    id: 30, // Händerna mot himlen - Petra Marklund
+    id: 30,
+    title: "Händerna mot himlen",
+    artists: ["Petra Marklund"],
     url: "https://open.spotify.com/track/14AJI1RloVWTh8bJe9gBPM?si=Qy9xw9fDTS6WaI8dAmc76g",
   },
   {
-    id: 31, // Hangover - Taio Cruz and Flo Rida
+    id: 31,
+    title: "Hangover",
+    artists: ["Taio Cruz", "Flo Rida"],
     url: "https://open.spotify.com/track/5pmL3RzOy3IvGFaSDi4hZL?si=j9Zsh8lQTeiIcIs3kAd12A",
   },
   {
-    id: 32, // Heaven Is a Place On Earth - Belinda Carlisle
+    id: 32,
+    title: "Heaven Is a Place On Earth",
+    artists: ["Belinda Carlisle"],
     url: "https://open.spotify.com/track/1ryT9eOWD1JuxPD5ew53SJ?si=kdfNDLvmQBSCdhm40ARs6w",
   },
   {
-    id: 33, // Heaven Takes You Home - Sweedish House Mafia
+    id: 33,
+    title: "Heaven Takes You Home",
+    artists: ["Sweedish House Mafia"],
     url: "https://open.spotify.com/track/3nEHrvNNtgLv9rneTAYVr4?si=8qJVEfs1S1yoD5voQTHDHw",
   },
   {
-    id: 34, // Hey Baby (Drop It To The Floor) - Pitbull and T-Pain
+    id: 34,
+    title: "Hey Baby (Drop It To The Floor)",
+    artists: ["Pitbull", "T-Pain"],
     url: "https://open.spotify.com/track/3rfhI32Il2hVRKDkuGeeen?si=oeQNDuePSY-wE5jRu4zvUg",
   },
   {
-    id: 35, // Hey Brother - Avicii
+    id: 35,
+    title: "Hey Brother",
+    artists: ["Avicii"],
     url: "https://open.spotify.com/track/4RXpgGM7A4Hg7cFBoH5KyF?si=wIsXjV1QTDWmU5JGSo7SCw",
   },
   {
-    id: 36, // Highway to Hell - AC/DC
+    id: 36,
+    title: "Highway to Hell",
+    artists: ["AC/DC"],
     url: "https://open.spotify.com/track/2zYzyRzz6pRmhPzyfMEC8s?si=aHF1rZABRHq6CH-r11YIVQ",
   },
   {
-    id: 37, // Hips Don't Lie - Shakira and Wyclef Jean
+    id: 37,
+    title: "Hips Don't Lie",
+    artists: ["Shakira", "Wyclef Jean"],
     url: "https://open.spotify.com/track/3ZFTkvIE7kyPt6Nu3PEa7V?si=6p2tymDUStmlyAlJtvHxLg",
   },
   {
-    id: 38, // Hotel Room Service - Pitbull
+    id: 38,
+    title: "Hotel Room Service",
+    artists: ["Pitbull"],
     url: "https://open.spotify.com/track/6Rb0ptOEjBjPPQUlQtQGbL?si=MU6rrAQmQU-zal0ff2KiHQ",
   },
   {
-    id: 39, // I Kissed A Girl - Katy Perry
+    id: 39,
+    title: "I Kissed A Girl",
+    artists: ["Katy Perry"],
     url: "https://open.spotify.com/track/14iN3o8ptQ8cFVZTEmyQRV?si=gG21VWjJSmG4si4ubeYtBg",
   },
   {
-    id: 40, // I Know You Want Me (Calle Ocho) - Pitbull
+    id: 40,
+    title: "I Know You Want Me (Calle Ocho)",
+    artists: ["Pitbull"],
     url: "https://open.spotify.com/track/13plQdOoWSSXPRUSZc5FuM?si=3BHdbXiaR3CXLsp5_D_CyQ",
   },
   {
-    id: 41, // I Like It - Enrique Iglesias and Pitbull
+    id: 41,
+    title: "I Like It",
+    artists: ["Enrique Iglesias", "Pitbull"],
     url: "https://open.spotify.com/track/5kipsdp2OANOQfYOCxPNft?si=Xwwbu0FhSgqb9aKiCzljNg",
   },
   {
-    id: 42, // I Love It (feat. Charli XCX) - Icona Pop
+    id: 42,
+    title: "I Love It (feat. Charli XCX)",
+    artists: ["Icona Pop"],
     url: "https://open.spotify.com/track/2U8NXPTXZWG2O0ye2sYRiH?si=uVPw2q_kRXqvNLiT7ccQ4Q",
   },
   {
-    id: 43, // I'm an Albatraoz - AronChupa and Little Sis Nora
+    id: 43,
+    title: "I'm an Albatraoz",
+    artists: ["AronChupa", "Little Sis Nora"],
     url: "https://open.spotify.com/track/5MhsZlmKJG6X5kTHkdwC4B?si=f13-RPEQTi2O0KNVgbZxXA",
   },
   {
-    id: 44, // Infinity 2008 - Guru Josh Project
+    id: 44,
+    title: "Infinity 2008",
+    artists: ["Guru Josh Project"],
     url: "https://open.spotify.com/track/7vseIfb8ooQmXzisuinchZ?si=5JhuAZKiRN2y447e8seLVg",
   },
   {
-    id: 45, // International Love - Pitbull and Chris Brown
+    id: 45,
+    title: "International Love",
+    artists: ["Pitbull", "Chris Brown"],
     url: "https://open.spotify.com/track/62zFEHfAYl5kdHYOivj4BC?si=-J8RhJJBRzqbFfJauHB38A",
   },
   {
-    id: 46, // Intoxicated - Martin Solveig and Good Times Ahead
+    id: 46,
+    title: "Intoxicated",
+    artists: ["Martin Solveig", "Good Times Ahead"],
     url: "https://open.spotify.com/track/2RhKxrhti1jd1Krzh968Cb?si=vBzs1OvERl6U-p0bcNc6Mg",
   },
   {
-    id: 47, // I Wana Go - Britney Spears
+    id: 47,
+    title: "I Wana Go",
+    artists: ["Britney Spears"],
     url: "https://open.spotify.com/track/5cCAZS9VhLGEDV4NCfieeg?si=Re8ENP1CQXS1ToekG4Dcnw",
   },
   {
-    id: 48, // Jag kommer - Veronica Maggio
+    id: 48,
+    title: "Jag kommer",
+    artists: ["Veronica Maggio"],
     url: "https://open.spotify.com/track/5M2y8QdDepGYMsWyxhoxQU?si=0O-eDhHfTEmf9Y9yHdrO6g",
   },
   {
-    id: 49, // Jump - 2015 Van Halen 
+    id: 49,
+    title: "Jump",
+    artists: ["2015 Van Halen"],
     url: "https://open.spotify.com/track/5FqYA8KfiwsQvyBI4IamnY?si=GbqCV8NDR-6dL_w8EiUonQ",
   },
   {
-    id: 50, // L'AMOUR DE MA VIE [OVER NOW EXTENDED EDIT] - Billie Eilish
+    id: 50,
+    title: "L'AMOUR DE MA VIE [OVER NOW EXTENDED EDIT]",
+    artists: ["Billie Eilish"],
     url: "https://open.spotify.com/track/2Y6U158gVXfvqNWOLdis0R?si=QhKdJCoZS6qKbqmHEwvwZQ",
   },
   {
-    id: 51, // Last Friday Night (T.G.I.F.) - Katy Perry
+    id: 51,
+    title: "Last Friday Night (T.G.I.F.)",
+    artists: ["Katy Perry"],
     url: "https://open.spotify.com/track/1htQDV8JxSuXG2QsNj5ttr?si=9Q7VKeynT8Crq1Iq_mO2Hw",
   },
   {
-    id: 52, // leavemealone - Fred Again and Baby Keem
+    id: 52,
+    title: "leavemealone",
+    artists: ["Fred Again", "Baby Keem"],
     url: "https://open.spotify.com/track/1MVqeIAwhD4T44AKVkIfic?si=Oush68zTQO-aQXInF1V0FA",
   },
   {
-    id: 53, // Let It Rock - Kevin Rudolf and Lil Wayne
+    id: 53,
+    title: "Let It Rock",
+    artists: ["Kevin Rudolf", "Lil Wayne"],
     url: "https://open.spotify.com/track/6i24LdtpurY1OPvRVjNsSH?si=jG5-UoveTRO3xrJRHxLWrA",
   },
   {
-    id: 54, // Levels Radio Edit - Avicii
+    id: 54,
+    title: "Levels Radio Edit",
+    artists: ["Avicii"],
     url: "https://open.spotify.com/track/5UqCQaDshqbIk3pkhy4Pjg?si=D7pAvjgSQRyzbqYyPBIJQQ",
   },
   {
-    id: 55, // Live A G6 - Far East Movement and The Cataracs
+    id: 55,
+    title: "Live A G6",
+    artists: ["Far East Movement", "The Cataracs"],
     url: "https://open.spotify.com/track/5AyL2kgLtTWEu3qO3B9SqK?si=zOmPzNTRRKC60URVz3UBWg",
   },
   {
-    id: 56, // Losing It - FISHER
+    id: 56,
+    title: "Losing It",
+    artists: ["FISHER"],
     url: "https://open.spotify.com/track/6ho0GyrWZN3mhi9zVRW7xi?si=dE7fqjcnSpa0Tl0u2y8sjA",
   },
   {
-    id: 57, // Low(feat. T-Pain) - Flo Rida
+    id: 57,
+    title: "Low(feat. T-Pain)",
+    artists: ["Flo Rida"],
     url: "https://open.spotify.com/track/0CAfXk7DXMnon4gLudAp7J?si=SnwhiCNtTpuFF8H2FXxWwg",
   },
   {
-    id: 58, // Mambo No. 5 (a Little Bit of...) - Lou Bega
+    id: 58,
+    title: "Mambo No. 5 (a Little Bit of...)",
+    artists: ["Lou Bega"],
     url: "https://open.spotify.com/track/6x4tKaOzfNJpEJHySoiJcs?si=dT0KgRXXSJGTfpIPqBkubg",
   },
   {
-    id: 59, // Maneater - Nelly Furtado
+    id: 59,
+    title: "Maneater",
+    artists: ["Nelly Furtado"],
     url: "https://open.spotify.com/track/4wH4dJgrsxONID6KS2tDQM?si=aPxYZ-JjTKSSCYdipKP6PQ",
   },
   {
-    id: 60, // Marea (We’ve Lost Dancing) - Fred Again and The Blessed Madonna
+    id: 60,
+    title: "Marea (We’ve Lost Dancing)",
+    artists: ["Fred Again", "The Blessed Madonna"],
     url: "https://open.spotify.com/track/5Z8Dj3LtbyCMiwE86rhg2f?si=o_gLxcI5Rc6FSqGtQ5b7eg",
   },
   {
-    id: 61, // MONEY ON THE DASH SPED UP - Elley Duhé and Whenthan
+    id: 61,
+    title: "MONEY ON THE DASH SPED UP",
+    artists: ["Elley Duhé", "Whenthan"],
     url: "https://open.spotify.com/track/086THPnabbu1zfDjRsxpoN?si=RtGmCH9lQKissaxKlpy3sQ",
   },
   {
-    id: 62, // More (RedOne Jimmy Joker Remix) - USHER
+    id: 62,
+    title: "More (RedOne Jimmy Joker Remix)",
+    artists: ["USHER"],
     url: "https://open.spotify.com/track/0aBKFfdyOD1Ttvgv0cfjjJ?si=3pCoaxx_Skad5z7j7aPY9Q",
   },
   {
-    id: 63, // More Than You Know - Axwell /\ Ingrosso
+    id: 63,
+    title: "More Than You Know",
+    artists: ["Axwell /\ Ingrosso"],
     url: "https://open.spotify.com/track/6h5PAsRni4IRlxWr6uDPTP?si=tJ5ixEwqQi6ilSWK7Wsbjg",
   },
   {
-    id: 64, // Moth To A Flame (with The Weeknd) - Swedish House Mafia
+    id: 64,
+    title: "Moth To A Flame (with The Weeknd)",
+    artists: ["Swedish House Mafia"],
     url: "https://open.spotify.com/track/7kfOEMJBJwdCYqyJeEnNhr?si=pHt-4_1WR1mNvzlmxiKIaA",
   },
   {
-    id: 65, // Mr. Brightside - The Killers
+    id: 65,
+    title: "Mr. Brightside",
+    artists: ["The Killers"],
     url: "https://open.spotify.com/track/3n3Ppam7vgaVa1iaRUc9Lp?si=ya_c9o18Qc6jfn7eLGsdjg",
   },
   {
-    id: 66, // The Nights - Avicii
+    id: 66,
+    title: "The Nights",
+    artists: ["Avicii"],
     url: "https://open.spotify.com/track/0ct6r3EGTcMLPtrXHDvVjc?si=0GB5Gpn9Rm-Q6RVT_R_MsQ",
   },
   {
-    id: 68, // Not Like Us - Kendrick Lamar
+    id: 68,
+    title: "Not Like Us",
+    artists: ["Kendrick Lamar"],
     url: "https://open.spotify.com/track/6AI3ezQ4o3HUoP6Dhudph3?si=laVtIhpiTN2-zmFCMmGBpA",
   },
   {
-    id: 69, // Only Girl (In The World) - Rihanna
+    id: 69,
+    title: "Only Girl (In The World)",
+    artists: ["Rihanna"],
     url: "https://open.spotify.com/track/2ENexcMEMsYk0rVJigVD3i?si=GvUj4BJbSs2ulGIX2-rZIg",
   },
   {
-    id: 70, // On The Floor - Jennifer Lopez and Pitbull
+    id: 70,
+    title: "On The Floor",
+    artists: ["Jennifer Lopez", "Pitbull"],
     url: "https://open.spotify.com/track/20zQZVyUNPbq8kZACdgYrh?si=3bAKwiJdTei_nykg0k0l7g",
   },
   {
-    id: 71, // Party Rock Anthem - LMFAO and Lauren Bennett and GoonRock
+    id: 71,
+    title: "Party Rock Anthem",
+    artists: ["LMFAO", "Lauren Bennett", "GoonRock"],
     url: "https://open.spotify.com/track/4650WGL6InVqP7YN5POqIz?si=euW5ulUASHek4ajRRmRFxg",
   },
   {
-    id: 72, // Play Hard (feat. Ne-Yo and Akon) - David Guetta
+    id: 72,
+    title: "Play Hard (feat. Ne-Yo and Akon)",
+    artists: ["David Guetta"],
     url: "https://open.spotify.com/track/16Cs9KsHzgunxaEfGrXysG?si=s6H3rr6PQUGEvNY1mMZVfg",
   },
   {
-    id: 73, // Prada - RAYE and cassö
+    id: 73,
+    title: "Prada",
+    artists: ["RAYE", "cassö"],
     url: "https://open.spotify.com/track/59NraMJsLaMCVtwXTSia8i?si=t64XvuRYT-mD6Gp4sgGgQg",
   },
   {
-    id: 74, // Primadonna - MARINA
+    id: 74,
+    title: "Primadonna",
+    artists: ["MARINA"],
     url: "https://open.spotify.com/track/4sOX1nhpKwFWPvoMMExi3q?si=aGgTMwdLSwWMRe536PVNfA",
   },
   {
-    id: 75, // Promiscuous - Nelly Furtado and Timbaland
+    id: 75,
+    title: "Promiscuous",
+    artists: ["Nelly Furtado", "Timbaland"],
     url: "https://open.spotify.com/track/2gam98EZKrF9XuOkU13ApN?si=-zcFS_fcT-iNYJ8dhd0Fag",
   },
   {
-    id: 76, // Rasputin - Boney M. and Majestic
+    id: 76,
+    title: "Rasputin",
+    artists: ["Boney M.", "Majestic"],
     url: "https://open.spotify.com/track/0b18g3G5spr4ZCkz7Y6Q0Q?si=ZXlMeTILQKWSLE4KeEua6g",
   },
   {
-    id: 77, // Red Lights - Tiësto
+    id: 77,
+    title: "Red Lights",
+    artists: ["Tiësto"],
     url: "https://open.spotify.com/track/5L2l7mI8J1USMzhsmdjat9?si=NZvLT96gSoq78i0bnh-ZEA",
   },
-  { 
-    id: 78, // Right Round - Flo Rida and Kesha
+  {
+    id: 78,
+    title: "Right Round",
+    artists: ["Flo Rida", "Kesha"],
     url: "https://open.spotify.com/track/3GpbwCm3YxiWDvy29Uo3vP?si=l0bEknlsTtOl_ueGA-POyg",
   },
   {
-    id: 79, // Ring meg - Gabrielle
+    id: 79,
+    title: "Ring meg",
+    artists: ["Gabrielle"],
     url: "https://open.spotify.com/track/0Gf6mZ2kMJCDVHm2afcpfl?si=mwqw9QjeSd6g43KJna6uLQ",
   },
   {
-    id: 80, // Rude Boy - Rihanna
+    id: 80,
+    title: "Rude Boy",
+    artists: ["Rihanna"],
     url: "https://open.spotify.com/track/60jzFy6Nn4M0iD1d94oteF?si=KFRwsKwQSQ-YOVF3O6WRQA",
   },
   {
-    id: 81, // Save The World - Swedish House Mafia
+    id: 81,
+    title: "Save The World",
+    artists: ["Swedish House Mafia"],
     url: "https://open.spotify.com/track/65hRZOQkVjmBdusz1N7aOv?si=3qUM9BTfRX2lMoDvVGknsQ",
   },
   {
-    id: 82, // Seven Nation Army (The Glitch Mob Remix) - The White Stripes and The Glitch Mob
+    id: 82,
+    title: "Seven Nation Army (The Glitch Mob Remix)",
+    artists: ["The White Stripes", "The Glitch Mob"],
     url: "https://open.spotify.com/track/4IiuExPFijOGZnVxGsKWcc?si=b2pznFPKTKKEtQAvzRl-mg",
   },
   {
-    id: 83, // Sexy And I Know It - LMFAO
+    id: 83,
+    title: "Sexy And I Know It",
+    artists: ["LMFAO"],
     url: "https://open.spotify.com/track/2OBKvpCTPo0q4qQELJ1n7h?si=Am6BO5ixQqqFj4GcCFUaIg",
   },
   {
-    id: 84, // Sexy Bitch (feat. Akon) - David Guetta and Akon
+    id: 84,
+    title: "Sexy Bitch (feat. Akon)",
+    artists: ["David Guetta", "Akon"],
     url: "https://open.spotify.com/track/0pBMFlAy7mQeUMQKaN4y8x?si=2NGoeLoYT_C60sFsytMV1A",
   },
   {
-    id: 85, // Shots - LMFAO and Lil Jon
+    id: 85,
+    title: "Shots",
+    artists: ["LMFAO", "Lil Jon"],
     url: "https://open.spotify.com/track/1V4jC0vJ5525lEF1bFgPX2?si=EHI_uTtBS7K3LwOBKIXC6Q",
   },
   {
-    id: 86, // Shut Up and Dance - WALK THE MOON
+    id: 86,
+    title: "Shut Up and Dance",
+    artists: ["WALK THE MOON"],
     url: "https://open.spotify.com/track/4kbj5MwxO1bq9wjT5g9HaA?si=H8vPAZv6SladARhG1LGhwg",
   },
   {
-    id: 87, // S&M - Rihanna
+    id: 87,
+    title: "S&M",
+    artists: ["Rihanna"],
     url: "https://open.spotify.com/track/7ySUcLPVX7KudhnmNcgY2D?si=ML8CEcAhQr2oEY9DkfyfKg",
   },
   {
-    id: 88, // Somebody To Love - Justin Bieber
+    id: 88,
+    title: "Somebody To Love",
+    artists: ["Justin Bieber"],
     url: "https://open.spotify.com/track/3rLIv187BhjyweFe89SgLn?si=MGDIJCaYR8Wj78YpvLku2Q",
   },
   {
-    id: 89, // Spectre - Alan Walker 
+    id: 89,
+    title: "Spectre",
+    artists: ["Alan Walker"],
     url: "https://open.spotify.com/track/2kY1bCxkRIPz3qDgKAbQM6?si=jnrfRCZ2RLSN0V0bIsM0LA",
   },
   {
-    id: 90, // Stamp On The Ground - ItaloBrothers
+    id: 90,
+    title: "Stamp On The Ground",
+    artists: ["ItaloBrothers"],
     url: "https://open.spotify.com/track/2KgCPRTAECwNbJG1uYdfjl?si=B40U-AmnRieJPiOWTaSoPA",
   },
   {
-    id: 91, // Starships - Nicki Minaj
+    id: 91,
+    title: "Starships",
+    artists: ["Nicki Minaj"],
     url: "https://open.spotify.com/track/1oHNvJVbFkexQc0BpQp7Y4?si=1_f6wlolTnSL86QuBPcHnQ",
   },
   {
-    id: 92, // Stay The Night - Zedd and Hayley Williams
+    id: 92,
+    title: "Stay The Night",
+    artists: ["Zedd", "Hayley Williams"],
     url: "https://open.spotify.com/track/4bT2zLVv2T4GiK9q9KtI0v?si=LGD2l_U8QBOmu9UnITnwKQ",
   },
   {
-    id: 93, // Stereo Love - Edward Maya and Vika Jigulina
+    id: 93,
+    title: "Stereo Love",
+    artists: ["Edward Maya", "Vika Jigulina"],
     url: "https://open.spotify.com/track/2Xf4RoFpi7n06ppsGKbxiq?si=fO587CQcQTivF1dhuFyPfA",
   },
   {
-    id: 94, // Sun Is Shining - Axwell /\ Ingrosso and Sebastian Ingrosso
+    id: 94,
+    title: "Sun Is Shining",
+    artists: ["Axwell /\ Ingrosso", "Sebastian Ingrosso"],
     url: "https://open.spotify.com/track/4b2tcjrG1qUkSdsqEFP2dB?si=Vt6Hu1nsQb-mzk9OcXxmBw",
   },
   {
-    id: 95, // Super Bass - Nicki Minaj
+    id: 95,
+    title: "Super Bass",
+    artists: ["Nicki Minaj"],
     url: "https://open.spotify.com/track/3hlksXnvbKogFdPbpO9vel?si=VGSr6up0RBq_J4MXyXKwUg",
   },
   {
-    id: 96, // The Thrill - Wiz Khalifa and Empire of the Sun
+    id: 96,
+    title: "The Thrill",
+    artists: ["Wiz Khalifa", "Empire of the Sun"],
     url: "https://open.spotify.com/track/56oGoEjA9eTZYgsttEFKY3?si=kA0aQXyqR0G3rWJCdqxfuA",
   },
   {
-    id: 97, // Thunderstruck - AC/DC
+    id: 97,
+    title: "Thunderstruck",
+    artists: ["AC/DC"],
     url: "https://open.spotify.com/track/57bgtoPSgt236HzfBOd8kj?si=JKN1leStTrqV4qgbNNd1hg",
   },
   {
-    id: 98, // Tik Tok - Ke$ha
+    id: 98,
+    title: "Tik Tok",
+    artists: ["Ke$ha"],
     url: "https://open.spotify.com/track/5OMwQFBcte0aWFJFqrr5oj?si=rN08sn-CS2O-1aGmjawv9g",
   },
   {
-    id: 99, // Time of Our Lives - Pitbull and Ne-Yo
+    id: 99,
+    title: "Time of Our Lives",
+    artists: ["Pitbull", "Ne-Yo"],
     url: "https://open.spotify.com/track/2bJvI42r8EF3wxjOuDav4r?si=6RU4DpHQR-6f5U5LOurCeA",
   },
   {
-    id: 100, // Tounge Tied - Grouplove
+    id: 100,
+    title: "Tounge Tied",
+    artists: ["Grouplove"],
     url: "https://open.spotify.com/track/0GO8y8jQk1PkHzS31d699N?si=aVKxb3FVQ3W8x23KZE2lYw",
   },
   {
-    id: 101, // Von dutch - Charli xcx
+    id: 101,
+    title: "Von dutch",
+    artists: ["Charli xcx"],
     url: "https://open.spotify.com/track/3Y1EvIgEVw51XtgNEgpz5c?si=YlvAa7MSQY2cmp-wqGvD3g",
   },
   {
-    id: 102, // Wannabe - Spice Girls
+    id: 102,
+    title: "Wannabe",
+    artists: ["Spice Girls"],
     url: "https://open.spotify.com/track/1Je1IMUlBXcx1Fz0WE7oPT?si=cIS8ZlE0QOm2lMhiipHxWA",
   },
   {
-    id: 103, // Waterloo - ABBA
+    id: 103,
+    title: "Waterloo",
+    artists: ["ABBA"],
     url: "https://open.spotify.com/track/3Dy4REq8O09IlgiwuHQ3sk?si=yLq2cUaiT_uovWijcZhQQQ",
   },
   {
-    id: 104, // The Way I Are - Timbaland and Keri Hilson and D.O.E.
+    id: 104,
+    title: "The Way I Are",
+    artists: ["Timbaland", "Keri Hilson", "D.O.E."],
     url: "https://open.spotify.com/track/2bLqfJjuC5syrsgDsZfGmn?si=gBGO30WCSAWcnyxaYgwnFA",
   },
   {
-    id: 105, // What Is Love 7" Mix - Haddaway
+    id: 105,
+    title: "What Is Love 7\" Mix",
+    artists: ["Haddaway"],
     url: "https://open.spotify.com/track/0OTO8ZF2YqFQVw9hnZylTd?si=O02iNnTtQFOAw6Dt-jvU1A",
   },
   {
-    id: 106, // Where Them Girls At - David Guetta and Nicki Minaj and Flo Rida
+    id: 106,
+    title: "Where Them Girls At",
+    artists: ["David Guetta", "Nicki Minaj", "Flo Rida"],
     url: "https://open.spotify.com/track/7ks6AZmFcm3Y6PGGxGSmlB?si=Wtz2lcAdTYCoDK9fK_S-bw",
   },
   {
-    id: 107, // Without You(feat. Sandro Cavazza) - Avicii
+    id: 107,
+    title: "Without You(feat. Sandro Cavazza)",
+    artists: ["Avicii"],
     url: "https://open.spotify.com/track/6Pgkp4qUoTmJIPn7ReaGxL?si=i2vPjuXlQMWYywNh2j-lLg",
   },
   {
-    id: 108, // Yeah!(feat. Lil Jon & Ludacris) - Usher and Lil Jon and Ludacris
+    id: 108,
+    title: "Yeah!(feat. Lil Jon & Ludacris)",
+    artists: ["Usher", "Lil Jon", "Ludacris"],
     url: "https://open.spotify.com/track/5rb9QrpfcKFHM1EUbSIurX?si=RzQ-OJaPS1Sicbe1JIwHqA",
   },
   {
-    id: 109, // YMCA - Village People
+    id: 109,
+    title: "YMCA",
+    artists: ["Village People"],
     url: "https://open.spotify.com/track/3ypMsqUwfNFMiooMLVHfkp?si=gr4-NDIFSm-kUpD-TFnygg",
   },
   {
-    id: 110, // Yeah 3x - Chris Brown
+    id: 110,
+    title: "Yeah 3x",
+    artists: ["Chris Brown"],
     url: "https://open.spotify.com/track/2QtxlzvSBONjs1bDC34ixs?si=PtGJ6anPSCiMdItwCljMYg",
   },
   {
-    id: 111, // Barbie Girl - Aqua
+    id: 111,
+    title: "Barbie Girl",
+    artists: ["Aqua"],
     url: "https://open.spotify.com/track/5ZrDlcxIDZyjOzHdYW1ydr?si=-9A-MTN9RBOlHC0RiqsEjw",
   },
   {
-    id: 112, // Shots Broiler Remix - Imagine Dragons and Broiler
+    id: 112,
+    title: "Shots Broiler Remix",
+    artists: ["Imagine Dragons", "Broiler"],
     url: "https://open.spotify.com/track/0fsEFwLSJTSHSawhe864Cp?si=5dsakcgAQNyjGWPwmQ2ZiA",
   },
   {
-    id: 113, // Temperature - Sean Paul
+    id: 113,
+    title: "Temperature",
+    artists: ["Sean Paul"],
     url: "https://open.spotify.com/track/0k2GOhqsrxDTAbFFSdNJjT?si=Cx9M0ar8ROOlesxqwnS7IA",
   },
   {
-    id: 114, // She Doesn't Mind - Sean Paul
+    id: 114,
+    title: "She Doesn't Mind",
+    artists: ["Sean Paul"],
     url: "https://open.spotify.com/track/4odiyU3myG29Ld0wurMfE8?si=-JH0ez7FQNGQnYxpNv9cXw",
   },
   {
-    id: 115, // Dreams - Fleetwood Mac 
+    id: 115,
+    title: "Dreams",
+    artists: ["Fleetwood Mac"],
     url: "https://open.spotify.com/track/0ofHAoxe9vBkTCp2UQIavz?si=Kf-YqaFOR86StyulBzraVQ&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 116, // Crazy Train - Ozzy Osbourne
+    id: 116,
+    title: "Crazy Train",
+    artists: ["Ozzy Osbourne"],
     url: "https://open.spotify.com/track/1Lm6B6aXsBhcsxrimyhkJb?si=5g8vwwIoQC6hwhfuwfdajw&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 117, // Stairway to Heaven - Led Zeppelin
+    id: 117,
+    title: "Stairway to Heaven",
+    artists: ["Led Zeppelin"],
     url: "https://open.spotify.com/track/0RO9W1xJoUEpq5MEelddFb?si=WzF1SFmwTvOJrTsViHzQMA&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 118, // Purple Rain - Prince
+    id: 118,
+    title: "Purple Rain",
+    artists: ["Prince"],
     url: "https://open.spotify.com/track/1uvyZBs4IZYRebHIB1747m?si=49XoBmFMQiirMYsr2xHX5A&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 119, // Paranoid - Black Sabbath
+    id: 119,
+    title: "Paranoid",
+    artists: ["Black Sabbath"],
     url: "https://open.spotify.com/track/3Jnxngdff0lVu2rza1GVx6?si=zcQOm5XcQK-t71O1bdvPOg&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 120, // Creep - Radiohead
+    id: 120,
+    title: "Creep",
+    artists: ["Radiohead"],
     url: "https://open.spotify.com/track/70LcF31zb1H0PyJoS1Sx1r?si=xsd47l4hQC6dhqeav_SW5w&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 121, // Seven Nation Army - The White Stripes
+    id: 121,
+    title: "Seven Nation Army",
+    artists: ["The White Stripes"],
     url: "https://open.spotify.com/track/3dPQuX8Gs42Y7b454ybpMR?si=8aImHxIsSLm_SZnSWfM05A&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 122, // Hotel California - Eagles
+    id: 122,
+    title: "Hotel California",
+    artists: ["Eagles"],
     url: "https://open.spotify.com/track/40riOy7x9W7GXjyGp4pjAv?si=aDXq0BDuQpGQk89KxxvwKg&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 123, // House of the Rising Sun - The Animals
+    id: 123,
+    title: "House of the Rising Sun",
+    artists: ["The Animals"],
     url: "https://open.spotify.com/track/4mn2kNTqiGLwaUR8JdhJ1l?si=gafHElAzQNiCShla0F0cVQ",
   },
   {
-    id: 124, // Zombie - The Cranberries
+    id: 124,
+    title: "Zombie",
+    artists: ["The Cranberries"],
     url: "https://open.spotify.com/track/3gjHnylel3PTRpjS44ocqr?si=Gnu_gq1eQReQfCDTNrA9vQ&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 125, // Dream On - Aerosmith
+    id: 125,
+    title: "Dream On",
+    artists: ["Aerosmith"],
     url: "https://open.spotify.com/track/1xsYj84j7hUDDnTTerGWlH?si=20soMR5uSguxOPKSzrx6QQ&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 126, // Californication - Red Hot Chili Peppers
+    id: 126,
+    title: "Californication",
+    artists: ["Red Hot Chili Peppers"],
     url: "https://open.spotify.com/track/48UPSzbZjgc449aqz8bxox?si=OAzkohS9QV6S-9yAZKarGA&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 127, // Enter Sandman - Metallica
+    id: 127,
+    title: "Enter Sandman",
+    artists: ["Metallica"],
     url: "https://open.spotify.com/track/3DwQ7AH3xGD9h65ezslm6q?si=LN2zyj_pRl6uFS5yX82zfg&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 128, // Sweet Child O' Mine - Guns N' Roses
+    id: 128,
+    title: "Sweet Child O' Mine",
+    artists: ["Guns N' Roses"],
     url: "https://open.spotify.com/track/7snQQk1zcKl8gZ92AnueZW?si=YZ7N1AqjRg-PMEA-YrULug&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 129, // I Love Rock 'n' Roll - Joan Jett and the Blackhearts
+    id: 129,
+    title: "I Love Rock 'n' Roll",
+    artists: ["Joan Jett & the Blackhearts"],
     url: "https://open.spotify.com/track/2Cdvbe2G4hZsnhNMKyGrie?si=JrFdlKPvTD2V5-UOrO9obg&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 130, // Fortunate Son - Creedence Clearwater Revival
+    id: 130,
+    title: "Fortunate Son",
+    artists: ["Creedence Clearwater Revival"],
     url: "https://open.spotify.com/track/4BP3uh0hFLFRb5cjsgLqDh?si=t7VMeuM5Tb2nySliloJpfA&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 131, // Smoke On The Water - Deep Purple
+    id: 131,
+    title: "Smoke On The Water",
+    artists: ["Deep Purple"],
     url: "https://open.spotify.com/track/5MMnwYs0hIxkENRsbkWJ2G?si=Tv_YVke1ToqTApzNOLZhlg&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 132, // Wonderwall - Oasis
+    id: 132,
+    title: "Wonderwall",
+    artists: ["Oasis"],
     url: "https://open.spotify.com/track/7ygpwy2qP3NbrxVkHvUhXY?si=mo289ihYT6iOQHCC9vpnyA&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 133, // Another Brick In The Wall, Pt. 2 - Pink Floyd
+    id: 133,
+    title: "Another Brick In The Wall, Pt. 2",
+    artists: ["Pink Floyd"],
     url: "https://open.spotify.com/track/4gMgiXfqyzZLMhsksGmbQV?si=tmukVx4DQjC0vaGVYqi3og&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 134, // Runaway - Bon Jovi
+    id: 134,
+    title: "Runaway",
+    artists: ["Bon Jovi"],
     url: "https://open.spotify.com/track/0X1sqQ652p1sceKM2nJlIJ?si=wIbgKb5nSJWMtbpeapIEEg&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 135, // Dust in the Wind - Kansas
+    id: 135,
+    title: "Dust in the Wind",
+    artists: ["Kansas"],
     url: "https://open.spotify.com/track/6zeE5tKyr8Nu882DQhhSQI?si=8giypD4gRVW5opsbxBHKcw&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 136, // Every Breath You Take - The Police
+    id: 136,
+    title: "Every Breath You Take",
+    artists: ["The Police"],
     url: "https://open.spotify.com/track/1JSTJqkT5qHq8MDJnJbRE1?si=7pMcc9EuRreFd6jAY-2XTQ&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 137, // Basket Case - Green Day
+    id: 137,
+    title: "Basket Case",
+    artists: ["Green Day"],
     url: "https://open.spotify.com/track/6L89mwZXSOwYl76YXfX13s?si=J1ETFfWuTsqQAiCpmzimOw&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 138, // One Way Or Another - Blondie
+    id: 138,
+    title: "One Way Or Another",
+    artists: ["Blondie"],
     url: "https://open.spotify.com/track/5Th6EdNVhxp0TPX41ZLZk6?si=6W8mCKHUSuys-eiE0jKT5A&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 139, // Mama, I'm Coming Home - Ozzy Osbourne
+    id: 139,
+    title: "Mama, I'm Coming Home",
+    artists: ["Ozzy Osbourne"],
     url: "https://open.spotify.com/track/0S3gpZzlT9Hb7CCSV2owX7?si=AwxgMNssTaeDMGTFItgeig&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 140, // Welcome To The Jungle - Guns N' Roses
+    id: 140,
+    title: "Welcome To The Jungle",
+    artists: ["Guns N' Roses"],
     url: "https://open.spotify.com/track/0G21yYKMZoHa30cYVi1iA8?si=2-5OXAAiTqOnlP9BFdPbsA&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 141, // Rock You Like A Hurricane - Scorpions
+    id: 141,
+    title: "Rock You Like A Hurricane",
+    artists: ["Scorpions"],
     url: "https://open.spotify.com/track/58dBJivB6lbAY5irCuAxJX?si=GpQwgL2eSwO9ucIEJyHngQ&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 142, // (I Can't Get No) Satisfaction - The Rolling Stones
+    id: 142,
+    title: "(I Can't Get No) Satisfaction",
+    artists: ["The Rolling Stones"],
     url: "https://open.spotify.com/track/2PzU4IB8Dr6mxV3lHuaG34?si=Jyp6JPiIQp6ylzMjrohzAg&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 143, // Livin' On A Prayer - Bon Jovi
+    id: 143,
+    title: "Livin' On A Prayer",
+    artists: ["Bon Jovi"],
     url: "https://open.spotify.com/track/0ee1DiZF94NSqqpG0XHUzH?si=O9xwRTgFTzOuLEy7rmeq9w",
   },
   {
-    id: 144, // Smells Like Teen Spirit - Nirvana
+    id: 144,
+    title: "Smells Like Teen Spirit",
+    artists: ["Nirvana"],
     url: "https://open.spotify.com/track/4CeeEOM32jQcH3eN9Q2dGj?si=QNaz9qCZS7axmWvM6enK0g&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 145, // Bitter Sweet Symphony - The Verve
+    id: 145,
+    title: "Bitter Sweet Symphony",
+    artists: ["The Verve"],
     url: "https://open.spotify.com/track/57iDDD9N9tTWe75x6qhStw?si=ZlzQYOpwSfyBOAFO-z3jdA&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 146, // Sharp Dressed Man - ZZ Top
+    id: 146,
+    title: "Sharp Dressed Man",
+    artists: ["ZZ Top"],
     url: "https://open.spotify.com/track/0bRNszTbTFLNlunAeh7eom?si=eziwVYdISCamUtn7FLMzwQ&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 147, // Sweet Home Alabama - Lynyrd Skynyrd
+    id: 147,
+    title: "Sweet Home Alabama",
+    artists: ["Lynyrd Skynyrd"],
     url: "https://open.spotify.com/track/7e89621JPkKaeDSTQ3avtg?si=3Uv5nVe-Sd2x7PEZ8ljSgQ&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 148, // Where Is My Mind? - Pixies
+    id: 148,
+    title: "Where Is My Mind?",
+    artists: ["Pixies"],
     url: "https://open.spotify.com/track/7wCmS9TTVUcIhRalDYFgPy?si=mqAroamYSp22DWzla11MLw&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 149, // Immigrant Song - Led Zeppelin
+    id: 149,
+    title: "Immigrant Song",
+    artists: ["Led Zeppelin"],
     url: "https://open.spotify.com/track/78lgmZwycJ3nzsdgmPPGNx?si=kvwnbKcPTOqQv3OtEXM_rQ&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 150, // Under Pressure - Queen and David Bowie
+    id: 150,
+    title: "Under Pressure",
+    artists: ["Queen", "David Bowie"],
     url: "https://open.spotify.com/track/2fuCquhmrzHpu5xcA1ci9x?si=RkkMjZiFT227fdHm4BIq7w&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 151, // Should I Stay Or Should I Go - The Clash
+    id: 151,
+    title: "Should I Stay Or Should I Go",
+    artists: ["The Clash"],
     url: "https://open.spotify.com/track/39shmbIHICJ2Wxnk1fPSdz?si=kXl_F8U9SK6565IBnOWM-Q&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 152, // Born in the U.S.A. - Bruce Springsteen
+    id: 152,
+    title: "Born in the U.S.A.",
+    artists: ["Bruce Springsteen"],
     url: "https://open.spotify.com/track/0dOg1ySSI7NkpAe89Zo0b9?si=W3Tyv6IpRZuKKx5DfiZ8BA&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 153, // Back In Black - AC/DC
+    id: 153,
+    title: "Back In Black",
+    artists: ["AC/DC"],
     url: "https://open.spotify.com/track/08mG3Y1vljYA6bvDt4Wqkj?si=52g3Bt_RQWS2Eqto_p4R2A&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 154, // Everywhere - Fleetwood Mac 
+    id: 154,
+    title: "Everywhere",
+    artists: ["Fleetwood Mac"],
     url: "https://open.spotify.com/track/254bXAqt3zP6P50BdQvEsq?si=U8QD__k5SjyhBQIOl_kMdg&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 155, // Barracuda - Heart
+    id: 155,
+    title: "Barracuda",
+    artists: ["Heart"],
     url: "https://open.spotify.com/track/4KfSdst7rW39C0sfhArdrz?si=RpCeiB0GRJuXr4C_6gkO2g&context=spotify%3Aplaylist%3A37i9dQZF1DWXRqgorJj26U",
   },
   {
-    id: 156, // 505 - Arctic Monkeys
+    id: 156,
+    title: "505",
+    artists: ["Arctic Monkeys"],
     url: "https://open.spotify.com/track/0BxE4FqsDD1Ot4YuBXwAPp?si=epRUv8q1RCOIhR_HMD_p1g",
   },
   {
-    id: 157, // Bonski - Broiler
+    id: 157,
+    title: "Bonski",
+    artists: ["Broiler"],
     url: "https://open.spotify.com/track/3tsna9IXmTB9Mfy1oWNV8G?si=NsXFKzDuTOGjNqde8UaMQA",
   },
   {
-    id: 158, // Vannski - Broiler
+    id: 158,
+    title: "Vannski",
+    artists: ["Broiler"],
     url: "https://open.spotify.com/track/42nPcx9vKx6XSD7TsWVUyz?si=S9JCq7RZQxKd8uFwWdQ4Dg",
   },
   {
-    id: 159, // 5 fine frøkner - Gabrielle 
+    id: 159,
+    title: "5 fine frøkner",
+    artists: ["Gabrielle"],
     url: "https://open.spotify.com/track/49lGGqlyEnlRQfc69I8ajk?si=67cwcuWKTFW79lHxphyLdA",
   },
   {
-    id: 160, // Æ vil bare dans - Sirkus Eliassen and Broiler
+    id: 160,
+    title: "Æ vil bare dans",
+    artists: ["Sirkus Eliassen", "Broiler"],
     url: "https://open.spotify.com/track/36umbTnx3gZVnl4GUFJp3v?si=L4wcnfr6RQ-2caKwchqaIw",
   },
   {
-    id: 161, // Ambitions - Donkeyboy
+    id: 161,
+    title: "Ambitions",
+    artists: ["Donkeyboy"],
     url: "https://open.spotify.com/track/0TQMrN1R7JNixCnjrNJsLd?si=OuY0LfFORFmcmlqvn3SqdA",
   },
   {
-    id: 162, // Idyll - Postgirobygget
+    id: 162,
+    title: "Idyll",
+    artists: ["Postgirobygget"],
     url: "https://open.spotify.com/track/6ZB1dFgdUW6I9qzW7Oap6o?si=w-Iyg3LGRqySkMoQhil6LA",
   },
-  { 
-    id: 163, // Hjerteknuser - Kaizers Orchestra
+  {
+    id: 163,
+    title: "Hjerteknuser",
+    artists: ["Kaizers Orchestra"],
     url: "https://open.spotify.com/track/3NThq9BqYtKYBfsHIogjM6?si=8DCh-d5BSpufZrF_460mmA",
   },
   {
-    id: 164, // Riv i hjertet - Sondre Justad
+    id: 164,
+    title: "Riv i hjertet",
+    artists: ["Sondre Justad"],
     url: "https://open.spotify.com/track/7tGjJZsmeh7Lxvz6LrZkWy?si=ftL727mAR0iNjU_Ax9d3tQ",
   },
   {
-    id: 165, // En Solskinnsdag - Postgirobygget
+    id: 165,
+    title: "En Solskinnsdag",
+    artists: ["Postgirobygget"],
     url: "https://open.spotify.com/track/005cocyIL36CVjjtUEdVSq?si=0kR2rYblSh2JY10SIivjMw",
   },
   {
-    id: 166, // Jenter - Di Derre
+    id: 166,
+    title: "Jenter",
+    artists: ["Di Derre"],
     url: "https://open.spotify.com/track/6SOmLQXDnvZhOHoQQue50V?si=KnrQ51suTga9keheeeLW3w",
   },
   {
-    id: 167, // Den finast eg veit - Hellbillies
+    id: 167,
+    title: "Den finast eg veit",
+    artists: ["Hellbillies"],
     url: "https://open.spotify.com/track/3NQDZSM47zCMao3GFkcqaV?si=-E1yVCW9TP6L0VP9bKOnOg",
   },
   {
-    id: 168, // Den du veit - Marius Müller
+    id: 168,
+    title: "Den du veit",
+    artists: ["Marius Müller"],
     url: "https://open.spotify.com/track/0oGPYMA6yzDRZuIHtPQh8o?si=9g6sxErqT7WfQO9Y2sr5vg",
   },
   {
-    id: 169, // Optimist - Jahn Teigen
+    id: 169,
+    title: "Optimist",
+    artists: ["Jahn Teigen"],
     url: "https://open.spotify.com/track/7eetS2lIMnmFCVl08IxwB7?si=gv0cUDtvSUWoqLt5Vli2Ew",
   },
   {
-    id: 170, // Hun Er Forelska I Lærer'n - The Kids
+    id: 170,
+    title: "Hun Er Forelska I Lærer'n",
+    artists: ["The Kids"],
     url: "https://open.spotify.com/track/2S3PNhj2ic2LhUXtUq25Lw?si=DbxpJT1tQ3K2tEa-92WGyQ",
   },
   {
-    id: 171, // Tore Tang - Mods
+    id: 171,
+    title: "Tore Tang",
+    artists: ["Mods"],
     url: "https://open.spotify.com/track/25sn39PY451B0DA39WDQuh?si=y_n-RjzcScKdtDnoibHuAQ",
   },
   {
-    id: 172, // Neste Sommer - deLillos
+    id: 172,
+    title: "Neste Sommer",
+    artists: ["deLillos"],
     url: "https://open.spotify.com/track/57ZtwfFbKNS3mj8E8ijujU?si=oTveBOIzRVSzV17iA435Ww",
   },
   {
-    id: 173, // Det vakreste som fins - Jahn Teigen
+    id: 173,
+    title: "Det vakreste som fins",
+    artists: ["Jahn Teigen"],
     url: "https://open.spotify.com/track/540RHDIFG7xAtbYS0ay42d?si=YtUu8FdXRpyrYdflN96VHQ",
   },
   {
-    id: 174, // Vil Du Vaerra Me'Mae Hjem I Natt - The Kids
+    id: 174,
+    title: "Vil Du Vaerra Me'Mae Hjem I Natt",
+    artists: ["The Kids"],
     url: "https://open.spotify.com/track/22t9z3DeydwnHSZddtbMKt?si=ExIIV3iWR8OA2pCUaBqanA",
   },
   {
-    id: 175, // Levva livet - Åge Aleksandersen
+    id: 175,
+    title: "Levva livet",
+    artists: ["Åge Aleksandersen"],
     url: "https://open.spotify.com/track/56C8jz11WNH1PM677aq6ez?si=X4ADfw8sSmW3j6TcatiYvA",
   },
   {
-    id: 176, // Splitter Pine - Dumdum Boys
+    id: 176,
+    title: "Splitter Pine",
+    artists: ["Dumdum Boys"],
     url: "https://open.spotify.com/track/1JLdVHnYAGqr2tUD3LVN2c?si=c-seq_73S4yZej5_Yfy8lA",
   },
   {
-    id: 177, // Kursiv - Trang Fødsel
+    id: 177,
+    title: "Kursiv",
+    artists: ["Trang Fødsel"],
     url: "https://open.spotify.com/track/5NzCtDOf8QsEZrGZhzPH50?si=-98aB2SbSumyIRfdHPweuQ",
   },
   {
-    id: 178, // Englefjes - Dumdum Boys
+    id: 178,
+    title: "Englefjes",
+    artists: ["Dumdum Boys"],
     url: "https://open.spotify.com/track/4CYWusIxbm64oQGymWPRXx?si=5sc6CixYQkOyrQ3cD2pXwQ",
   },
   {
-    id: 179, // Det Går Likar No - D.D.E.
+    id: 179,
+    title: "Det Går Likar No",
+    artists: ["D.D.E."],
     url: "https://open.spotify.com/track/1o3399N0PkpCAvvDNhxCAl?si=oKzNxkCzTw-xti6ZrEWqqQ",
   },
   {
-    id: 180, // Den finast eg veit - Hellbillies
+    id: 180,
+    title: "Den finast eg veit",
+    artists: ["Hellbillies"],
     url: "https://open.spotify.com/track/6cCmwUtiKm9VstLhgKGQpI?si=YN5T39wtS6yDz1b07C3DQw",
   },
   {
-    id: 181, // Vill, Vakker & Våt - CC Cowboys
+    id: 181,
+    title: "Vill, Vakker & Våt",
+    artists: ["CC Cowboys"],
     url: "https://open.spotify.com/track/0f78flK99LqerP7kQgDT1L?si=vdxAkYZXTo63ewf7x08i8g",
   },
   {
-    id: 182, // Cheerio - The Monroes 
+    id: 182,
+    title: "Cheerio",
+    artists: ["The Monroes"],
     url: "https://open.spotify.com/track/1Jr9IcDZqYYVMmE853Yc5u?si=G6kVigdOQCaMkNQn6SqUpQ",
   },
   {
-    id: 183, // Bare så du vett det - Stavangerkameratene
+    id: 183,
+    title: "Bare så du vett det",
+    artists: ["Stavangerkameratene"],
     url: "https://open.spotify.com/track/7yRrAsBprcsSDtiENWVQds?si=k8TWnVZtTeaazqSdxPp5YQ",
   },
   {
-    id: 184, // Alt For Norge - Drillos 
+    id: 184,
+    title: "Alt For Norge",
+    artists: ["Drillos"],
     url: "https://open.spotify.com/track/3E5IeN5MqUs16rjvMRlaT1?si=ajhY6EhUSziW6a2G2nYHBA",
   },
   {
-    id: 185, // Min første kjærlighet - Jahn Teigen
+    id: 185,
+    title: "Min første kjærlighet",
+    artists: ["Jahn Teigen"],
     url: "https://open.spotify.com/track/4LMDDrhnM4vm5Ql4K3vw9t?si=FriX6j2jTzyGuTmyMgv20Q",
   },
   {
-    id: 186, // Kjærlighet er mer enn forelskelse - Gaute Ormåsen
+    id: 186,
+    title: "Kjærlighet er mer enn forelskelse",
+    artists: ["Gaute Ormåsen"],
     url: "https://open.spotify.com/track/2imlqNmoy1zcIritIyMSYu?si=WK2EPUZnR46zm4pcwBJvKg",
   },
   {
-    id: 187, // Om - Niklas Strömstedt
+    id: 187,
+    title: "Om",
+    artists: ["Niklas Strömstedt"],
     url: "https://open.spotify.com/track/3tgDP0BTRP10i4HkLlAER3?si=Qyu8fXUlRx6HEy7lnAHkPA",
   },
   {
-    id: 188, // Frida Kahlo - Marstein
+    id: 188,
+    title: "Frida Kahlo",
+    artists: ["Marstein"],
     url: "https://open.spotify.com/track/4v8yhLDEcRQ6BynXcCrGMo?si=rHn-uA5HQRmHSY0O0X7iTw",
   },
   {
-    id: 189, // Italia - UNDERGRUNN
+    id: 189,
+    title: "Italia",
+    artists: ["UNDERGRUNN"],
     url: "https://open.spotify.com/track/3h2IRgTZrU4hSNCePszT23?si=g6tngEpRR4uy0stQpvK3_g",
   },
   {
-    id: 190, // Michelin Stjerner - UNDERGRUNN
+    id: 190,
+    title: "Michelin Stjerner",
+    artists: ["UNDERGRUNN"],
     url: "https://open.spotify.com/track/4KjHgPOIsA8LlMwyAJRlfv?si=XmYX-LMrTKmkrRYtlH1iNg",
   },
   {
-    id: 191, // Pinne for landet - Freddy Kalas
+    id: 191,
+    title: "Pinne for landet",
+    artists: ["Freddy Kalas"],
     url: "https://open.spotify.com/track/0jefzmTNGgqmxVgMbNWdOa?si=RUYUTW8ZSZOHkxRrcpUkPw",
   },
   {
-    id: 192, // Jovial - Freddy Kalas
+    id: 192,
+    title: "Jovial",
+    artists: ["Freddy Kalas"],
     url: "https://open.spotify.com/track/5paNYIC0vrVj1EWGVzfJzb?si=6v7hOWW8RyGIcVgy2Lhlbw",
   },
   {
-    id: 193, // SALMALAKS - Karpe 
+    id: 193,
+    title: "SALMALAKS",
+    artists: ["Karpe"],
     url: "https://open.spotify.com/track/77CbBhyQwjWgF5EWT76cPY?si=-_QlNi3FRMWV7S7pyRuNwQ",
   },
   {
-    id: 194, // PAF.no - Karpe
+    id: 194,
+    title: "PAF.no",
+    artists: ["Karpe"],
     url: "https://open.spotify.com/track/2coLAzVouJE4BC8lrKbDLk?si=YUXeUkS0Q-SvKsSggVzG-Q",
   },
   {
-    id: 195, // 00:00 SAS PUSSY - Karpe 
+    id: 195,
+    title: "00:00 SAS PUSSY",
+    artists: ["Karpe"],
     url: "https://open.spotify.com/track/5cqm4MSDY9Rx0zAymiWtrh?si=mu3RuRNTSjimp8ssJUEf1w",
   },
   {
-    id: 196, //Alene - Arif Murakami
+    id: 196,
+    title: "Alene",
+    artists: ["Arif Murakami"],
     url: "https://open.spotify.com/track/59JKf8eOjY39KzqkWrtn34?si=e25y3QeUTPmILZ3ZYmEkdQ",
   },
   {
-    id: 197, // Håper du har plass - Cezinando
+    id: 197,
+    title: "Håper du har plass",
+    artists: ["Cezinando"],
     url: "https://open.spotify.com/track/3TetzmUS3NlK6GJrKAgvzc?si=B6kLKj_SQxOJDgvXC43Iog",
   },
   {
-    id: 198, // jeg bruker ikke kondom - MARS, Karpe, Arif Murakami, Unge Ferrari
+    id: 198,
+    title: "jeg bruker ikke kondom",
+    artists: ["MARS", "Karpe", "Arif Murakami", "Unge Ferrari"],
     url: "https://open.spotify.com/track/6k4eveAE2YX2xjz95BWcHl?si=nmk5O3cATNeEyu5I9xL8Cg",
   },
   {
-    id: 199, // jeg er lei meg - MARS, Karpe, Arif Murakami, Unge Ferrari
+    id: 199,
+    title: "jeg er lei meg",
+    artists: ["MARS", "Karpe", "Arif Murakami", "Unge Ferrari"],
     url: "https://open.spotify.com/track/1WEAlmjvj9T6LaJE44P6kY?si=kA_nIdQsQxiZ79jcX_fkvg",
   },
   {
-    id: 200, // Spis din syvende sans - Karpe
+    id: 200,
+    title: "Spis din syvende sans",
+    artists: ["Karpe"],
     url: "https://open.spotify.com/track/2wklUkI6nr4uurf5w0AyPz?si=0q0eloPSRqWnKHl0xHz6cA",
   },
   {
-    id: 201, // Her - Karpe
+    id: 201,
+    title: "Her",
+    artists: ["Karpe"],
     url: "https://open.spotify.com/track/5hXlNBMHinSsyPP9RVnqgo?si=x5CBcnDTQuWheJnRWbFfjQ",
   },
   {
-    id: 202, // Stjerner - Karpe
+    id: 202,
+    title: "Stjerner",
+    artists: ["Karpe"],
     url: "https://open.spotify.com/track/17mdSsuyzqe4R200aEUHXB?si=N-l3LkCyQ8S47zZUt4Piuw",
   },
   {
-    id: 203, // Hvem Er Hun - Arif Murakami
+    id: 203,
+    title: "Hvem Er Hun",
+    artists: ["Arif Murakami"],
     url: "https://open.spotify.com/track/1thU1NIPh8ACsoMy9Wz5eV?si=q7jDmsrOTSKMpTjt24Zbrw",
   },
   {
-    id: 204, // Salsa Tequila - Anders Nilsen
+    id: 204,
+    title: "Salsa Tequila",
+    artists: ["Anders Nilsen"],
     url: "https://open.spotify.com/track/4WRjqQ6sx5qIcddaIxNTfF?si=q7uNIjb6TWSXtQ9fQrr0Qw",
   },
   {
-    id: 205, // Dra Tilbake - Erik Og Kriss
+    id: 205,
+    title: "Dra Tilbake",
+    artists: ["Erik Og Kriss"],
     url: "https://open.spotify.com/track/6WlPv7BE0kTS8oaG1Ti7XG?si=RWw9QzkWQ_6lLMZhm42bxg",
   },
   {
-    id: 206, // Ølbriller(feat. Bysz) - Erik Og Kriss, Byz
+    id: 206,
+    title: "Ølbriller(feat. Bysz)",
+    artists: ["Erik Og Kriss", "Byz"],
     url: "https://open.spotify.com/track/1RHgbZQytMxKYDUtNlhkWy?si=Tm1oTOfDTbiRa0zRKDsRuA",
   },
   {
-    id: 207, // Den Låta - Erik Og Kriss 
+    id: 207,
+    title: "Den Låta",
+    artists: ["Erik Og Kriss"],
     url: "https://open.spotify.com/track/4jnUCNO955rK13fOaWjFoa?si=t4X61ESIRIiuF6EdETSRlA",
   },
   {
-    id: 208, // Snakke litt - Admiral P 
+    id: 208,
+    title: "Snakke litt",
+    artists: ["Admiral P"],
     url: "https://open.spotify.com/track/7I3hP0CXKbaONW53HJ8dH4?si=vjUpvBweRP2xVv8lQdC-Ig",
   },
   {
-    id: 209, // Supernova (feat. Julie Bergan) - Cir.Cuz, Julie Bergan
+    id: 209,
+    title: "Supernova (feat. Julie Bergan)",
+    artists: ["Cir.Cuz", "Julie Bergan"],
     url: "https://open.spotify.com/track/26FnnoLvASzjCADVVL83Ow?si=sKCN5mbAQ7ament7mCLb0Q",
   },
   {
-    id: 210, // Kaptein Morgan - Staysmann & Lazz
+    id: 210,
+    title: "Kaptein Morgan",
+    artists: ["Staysmann & Lazz"],
     url: "https://open.spotify.com/track/0C4nnWUBHiIv9ouCMzWgyC?si=5I2lwgeSTluqRuzRPWT3Pw",
   },
   {
-    id: 211, // Kongen av Mallorca - Stein Østvik
+    id: 211,
+    title: "Kongen av Mallorca",
+    artists: ["Stein Østvik"],
     url: "https://open.spotify.com/track/4HcUQTJ5m4UByRvNKBESf5?si=-sLf2wADT4CikTX2Ms3I6Q",
   },
   {
-    id: 212, // Fakk Min X - Ballinciaga, Kamelen
+    id: 212,
+    title: "Fakk Min X",
+    artists: ["Ballinciaga", "Kamelen"],
     url: "https://open.spotify.com/track/0lJCvh6IJQ7vedN2zgW9ws?si=KEa0GXbZTj6ckHBW1T3Djw",
   },
   {
-    id: 213, // Grevling i Taket - Knutsen & Ludvigsen
+    id: 213,
+    title: "Grevling i Taket",
+    artists: ["Knutsen & Ludvigsen"],
     url: "https://open.spotify.com/track/7HFq2KvZPEUIxFMrHbYL6O?si=Ei9A8dgeTyGfdh7BIEszdg",
   },
   {
-    id: 214, // E-ore - Ravio & DJ Løv
+    id: 214,
+    title: "E-ore",
+    artists: ["Ravio & DJ Løv"],
     url: "https://open.spotify.com/track/1YNxB811QutTqnodFq7ML7?si=mQQztga0Sx2iJsIeH54KAQ",
   },
   {
-    id: 215, // Bare min - Morgan Sulele
+    id: 215,
+    title: "Bare min",
+    artists: ["Morgan Sulele"],
     url: "https://open.spotify.com/track/4sz7zZkJp13YfuCfLNcDTo?si=gvdIUbAhSvKw9bR3T3zvjg",
   },
   {
-    id: 216, // Best når jeg er full - Robin og Bugge
+    id: 216,
+    title: "Best når jeg er full",
+    artists: ["Robin og Bugge"],
     url: "https://open.spotify.com/track/5jrCwGy7p6qoHM2SplKOVv?si=iNdv9YPoQsCVWRi8ugxPGQ",
   },
   {
-    id: 217, // Elektrisk - Marcus & Martinus, Katastrofe
+    id: 217,
+    title: "Elektrisk",
+    artists: ["Marcus & Martinus", "Katastrofe"],
     url: "https://open.spotify.com/track/1jU7I17rDKUbnIAJJkNVAy?si=5FOAf589Rg27j8gr4qkIUQ",
   },
   {
-    id: 218, // Lett å være rebell i kjellerleiligheten din - Karpe
+    id: 218,
+    title: "Lett å være rebell i kjellerleiligheten din",
+    artists: ["Karpe"],
     url: "https://open.spotify.com/track/7p31Q6SFArvZ0LWCnGPUTp?si=XFFSeGz9SwOntKymmmVMig",
   },
   {
-    id: 219, // Typisk Norsk - Katastrofe, Alexander Rybak
+    id: 219,
+    title: "Typisk Norsk",
+    artists: ["Katastrofe", "Alexander Rybak"],
     url: "https://open.spotify.com/track/3ocWYSEuNMF9D1f3wObqL4?si=aoEX9gTGQvicu2EFw2r21w",
   },
   {
-    id: 220, // Ponyville 2016 - TIX, The Pøssy Project
+    id: 220,
+    title: "Ponyville 2016",
+    artists: ["TIX", "The Pøssy Project"],
     url: "https://open.spotify.com/track/09ucDx2RxyxpraUjSDUrq4?si=BarIb0nGQdOMrmbdyj2vdg",
   },
   {
-    id: 221, // Før jeg dør (feat. Medina) - Cir.Cuz, Medina
+    id: 221,
+    title: "Før jeg dør (feat. Medina)",
+    artists: ["Cir.Cuz", "Medina"],
     url: "https://open.spotify.com/track/6ySkSLcWlzqUUXFmGfpDd5?si=PlXG4mouTzWDKseC847D2w",
   },
   {
-    id: 222, // Tenker feil - Sushi x Kobe
+    id: 222,
+    title: "Tenker feil",
+    artists: ["Sushi x Kobe"],
     url: "https://open.spotify.com/track/1XbbeujUaEaEM2kzUFw7tf?si=Jd3DRm5NSb2uQCrPtL1CmQ",
   },
   {
-    id: 223, // Sorry - AF1
+    id: 223,
+    title: "Sorry",
+    artists: ["AF1"],
     url: "https://open.spotify.com/track/2rMpfSoUSQZoeKpxJwe2U5?si=wPWdaoVuQSaJgAcmCbsdTA",
   },
   {
-    id: 224, // Etter Regnet - Erik Og Kriss
+    id: 224,
+    title: "Etter Regnet",
+    artists: ["Erik Og Kriss"],
     url: "https://open.spotify.com/track/0lKR7b3xe4nw0bjrgixDlE?si=vNwrjaK5T8Ksc2O0NAmMZQ",
   },
   {
-    id: 225, // Hu Kyssa Meg - Olsenbanden Jr. På Sirkus
+    id: 225,
+    title: "Hu Kyssa Meg",
+    artists: ["Olsenbanden Jr. På Sirkus"],
     url: "https://open.spotify.com/track/3XiYMLfGuZuSGNNEvX6Rr0?si=qLOp6Wo6T1eLak14dB-V6w",
   },
   {
-    id: 226, // Sjeiken 2015 - TIX, The Pøssy Project
+    id: 226,
+    title: "Sjeiken 2015",
+    artists: ["TIX", "The Pøssy Project"],
     url: "https://open.spotify.com/track/6RqfD0pbD769SEd3NVBZlo?si=CE1aD-i6SjGQVhYpUoys5w",
   },
   {
-    id: 227, // Det e over - Sondre Justad
+    id: 227,
+    title: "Det e over",
+    artists: ["Sondre Justad"],
     url: "https://open.spotify.com/track/6i727ACer8XMtKMT4ZGmc1?si=rz_brpFbTMinatpSk2kKGg",
   },
   {
-    id: 229, // Disco Demolition 2018 - J-Dawg, Lille Saus
+    id: 229,
+    title: "Disco Demolition 2018",
+    artists: ["J-Dawg", "Lille Saus"],
     url: "https://open.spotify.com/track/04rjxIPsEtpM8Yj9UPy6Tt?si=rlGzwxWqSdKORmXsNI_nGg",
   },
   {
-    id: 230, // Radio - Cir.Cuz
+    id: 230,
+    title: "Radio",
+    artists: ["Cir.Cuz"],
     url: "https://open.spotify.com/track/0sJpoZ3nvdyHfDlY27Wzgk?si=F3lgxpNmS5O7JzkrP9ZuUw",
   },
   {
-    id: 231, // Shotgun - TIX
+    id: 231,
+    title: "Shotgun",
+    artists: ["TIX"],
     url: "https://open.spotify.com/track/3XLuehOxBsDJoN3RBO2wfX?si=TdOYOWewRKOcKHvDYP9Z4A",
   },
   {
-    id: 232, // Ikke som de andre - Sondre Justad
+    id: 232,
+    title: "Ikke som de andre",
+    artists: ["Sondre Justad"],
     url: "https://open.spotify.com/track/3lYlbSVfxrSDE7FwO5fzzI?si=j0wG-vHwTxKkqnqYOkqCXg",
   },
   {
-    id: 233, // Balkong - Unge Ferrari, Stig Brenner
+    id: 233,
+    title: "Balkong",
+    artists: ["Unge Ferrari", "Stig Brenner"],
     url: "https://open.spotify.com/track/6sWtJNUxC5SYEKQ0zFGeNT?si=3I85SijgT0mw96HvRmwATQ",
   },
   {
-    id: 234, // La det swinge - Bobbysocks
+    id: 234,
+    title: "La det swinge",
+    artists: ["Bobbysocks"],
     url: "https://open.spotify.com/track/0LmEzNrxk0lecRm8X58jiC?si=peNS4-6HSpWEht0s7_Q4wA",
   },
   {
-    id: 235, // Haugenstua - Herman Flesvig
+    id: 235,
+    title: "Haugenstua",
+    artists: ["Herman Flesvig"],
     url: "https://open.spotify.com/track/0GFOW30WB6SsPoeOlZdDPl?si=HUpGYRzIR1uxs-C9lGF98w",
   },
   {
-    id: 236, // Afterski - Soppgirobygget
+    id: 236,
+    title: "Afterski",
+    artists: ["Soppgirobygget"],
     url: "https://open.spotify.com/track/72gCZzPrTYIwfpztcL64rP?si=1AZ7Ud75SDSGWhBXJOzFjw",
   },
   {
-    id: 237, // Viva La Vida - Soppgirobygget
+    id: 237,
+    title: "Viva La Vida",
+    artists: ["Soppgirobygget"],
     url: "https://open.spotify.com/track/3PzfAzqI03wcX8OikTdrH2?si=EMDCKOdmSYS5M7EOQK5KAw",
   },
   {
-    id: 238, // Domen 2019 - Soppgirobygget
+    id: 238,
+    title: "Domen 2019",
+    artists: ["Soppgirobygget"],
     url: "https://open.spotify.com/track/7cdzfYrqbbMC6auCV0yAQr?si=IsDmGyG4SVqoeNAyAP6l5g",
   },
   {
-    id: 239, // Dans På Bordet - Ballinciaga, David Mokel
+    id: 239,
+    title: "Dans På Bordet",
+    artists: ["Ballinciaga", "David Mokel"],
     url: "https://open.spotify.com/track/56kyGGwLIVAR30ZFiASn8Q?si=dX_1BAGnTLqM_g8xeuThNw",
   },
   {
-    id: 240, // Beklager(Guttaklubben) - Ballinciaga, Kris Winther
+    id: 240,
+    title: "Beklager(Guttaklubben)",
+    artists: ["Ballinciaga", "Kris Winther"],
     url: "https://open.spotify.com/track/2kPukYbkTVuvaNn4HhIPBW?si=TYKB_Z1UTDWTqmS0i01p9Q",
   },
   {
-    id: 241, // STAY KEEG, Beathoven, Henrik von Grogg 
+    id: 241,
+    title: "STAY KEEG, Beathoven, Henrik von Grogg",
+    artists: [],
     url: "https://open.spotify.com/track/25DxQM0bG7kbj2js8NCO9v?si=rc3oskdsQkOX2CtMOMYZsA",
   },
   {
-    id: 242, // Moren Din - Vidar Villa 
+    id: 242,
+    title: "Moren Din",
+    artists: ["Vidar Villa"],
     url: "https://open.spotify.com/track/3sBjXLkl6EtBUhi6ChAWKX?si=AUbblPelS-WdFB6AIDXDHQ",
   },
   {
-    id: 243, // Creme De La Creme - Kamelen 
+    id: 243,
+    title: "Creme De La Creme",
+    artists: ["Kamelen"],
     url: "https://open.spotify.com/track/1beuDJXaekLPtvX1jQe0yx?si=fwBzccvfTXekEtlRqasTMw",
   },
   {
-    id: 244, // Klubbkamel - Kamelen
+    id: 244,
+    title: "Klubbkamel",
+    artists: ["Kamelen"],
     url: "https://open.spotify.com/track/7a2ZtmBmKoxb8JLyQf6KBM?si=TXDDQ7bgTXGsKImy4cZ9oA",
   },
   {
-    id: 245, // Sprint - 06Boys
+    id: 245,
+    title: "Sprint",
+    artists: ["06Boys"],
     url: "https://open.spotify.com/track/1wbm612Jt38EXw6CNuiIPE?si=_YfRusSXQWSo8GucwWnLMw",
   },
   {
-    id: 246, // danser med tjommi - Ka2
+    id: 246,
+    title: "danser med tjommi",
+    artists: ["Ka2"],
     url: "https://open.spotify.com/track/6TCOxtXW1wRbJmzKa6UxhD?si=21R7hHrbTFiGimDF_ImXHw",
   },
   {
-    id: 247, // Badebussen(feat. Kjartan Lauritzen) - DJ MøMø, Kjartan Lauritzen
+    id: 247,
+    title: "Badebussen(feat. Kjartan Lauritzen)",
+    artists: ["DJ MøMø", "Kjartan Lauritzen"],
     url: "https://open.spotify.com/track/5F8c71PbayLIedqmjskrhM?si=9hlrhDMcTLqwPh-1HWPx_Q",
   },
   {
-    id: 248, // Fredag - Kjartan Lauritzen
+    id: 248,
+    title: "Fredag",
+    artists: ["Kjartan Lauritzen"],
     url: "https://open.spotify.com/track/35qibzZGUorddcJbI7TQi1?si=T4lNgKKhQXa1VmeukTntrA",
   },
   {
-    id: 249, // Superstars - GOLF (Golfklubb)
+    id: 249,
+    title: "Superstars",
+    artists: ["GOLF (Golfklubb)"],
     url: "https://open.spotify.com/track/7r8FHPasw67Nl4Hqyd4685?si=_2-RuXjyRm2yVaKt7TuM-A",
   },
   {
-    id: 250, // Suksé 2022 (Hjemmesmæck) - Sportsalleen, gangCBang
+    id: 250,
+    title: "Suksé 2022 (Hjemmesmæck)",
+    artists: ["Sportsalleen", "gangCBang"],
     url: "https://open.spotify.com/track/0gG0dF1yexUsE8OO7mq8Kn?si=gjUL1lrQRBesKi16ItBHzg",
   },
   {
-    id: 251, // Danseproblem - Bausa, Coucheron
+    id: 251,
+    title: "Danseproblem",
+    artists: ["Bausa", "Coucheron"],
     url: "https://open.spotify.com/track/4MyPCOodOr2arMPmDxHqBX?si=hjtGNsyAQJm0FD8VeP-D5Q",
   },
   {
-    id: 252, // End of Beginning - Djo
+    id: 252,
+    title: "End of Beginning",
+    artists: ["Djo"],
     url: "https://open.spotify.com/track/3qhlB30KknSejmIvZZLjOD?si=fk5zkaruRlGvJUMKLm8lIw",
   },
   {
-    id: 253, // The Fate of Ophelia - Taylor Swift
+    id: 253,
+    title: "The Fate of Ophelia",
+    artists: ["Taylor Swift"],
     url: "https://open.spotify.com/track/53iuhJlwXhSER5J2IYYv1W?si=dJA0E2XbR2yFv4DPO-ThHg",
   },
   {
-    id: 254, // Aperture - Harry Styles
+    id: 254,
+    title: "Aperture",
+    artists: ["Harry Styles"],
     url: "https://open.spotify.com/track/45Z3m6yazmAi4jZuW0tzW0?si=A4WDLfU7T0W4Vf71Uv86mA",
   },
   {
-    id: 255, // back to friends - sombr
+    id: 255,
+    title: "back to friends",
+    artists: ["sombr"],
     url: "https://open.spotify.com/track/7qjZnBKE73H4Oxkopwulqe?si=2K8R0SyHTf2ZnkcjUebXDw",
   },
   {
-    id: 256, // WHERE IS MY HUSBAND! - RAYE
+    id: 256,
+    title: "WHERE IS MY HUSBAND!",
+    artists: ["RAYE"],
     url: "https://open.spotify.com/track/55lijDD6OAjLFFUHU9tcDm?si=6SsI70fGTj6Et0oot0y9zg",
   },
   {
-    id: 257, // Man I Need - Olivia Dean
+    id: 257,
+    title: "Man I Need",
+    artists: ["Olivia Dean"],
     url: "https://open.spotify.com/track/1qbmS6ep2hbBRaEZFpn7BX?si=B9FJKAMmR0O29SQzk5oDyg",
   },
   {
-    id: 258, // Golden - HUNTR/X
+    id: 258,
+    title: "Golden",
+    artists: ["HUNTR/X"],
     url: "https://open.spotify.com/track/1CPZ5BxNNd0n0nF4Orb9JS?si=31RTo13cTaevONaHWHQlDQ",
   },
   {
-    id: 259, // I Just Might - Bruno Mars
+    id: 259,
+    title: "I Just Might",
+    artists: ["Bruno Mars"],
     url: "https://open.spotify.com/track/12bYYQaLqHliSXvRIYlq8G?si=Knraw-RrST-KF-1BBBzdzg",
   },
   {
-    id: 260, // Lush Life - Zara Larsson
+    id: 260,
+    title: "Lush Life",
+    artists: ["Zara Larsson"],
     url: "https://open.spotify.com/track/1rIKgCH4H52lrvDcz50hS8?si=0gUUgcrIRAmp0L-apKN_Ug",
   },
   {
-    id: 261, // Die On This Hill - SIENNA SPIRO
+    id: 261,
+    title: "Die On This Hill",
+    artists: ["SIENNA SPIRO"],
     url: "https://open.spotify.com/track/2gYTC8DsplN3RNdpdBcCOQ?si=bfraTwFJTKO0ku8EiiLw5w",
   },
   {
-    id: 262, // So Easy (To Fall In Love) - Olivia Dean
+    id: 262,
+    title: "So Easy (To Fall In Love)",
+    artists: ["Olivia Dean"],
     url: "https://open.spotify.com/track/6sGIMrtIzQjdzNndVxe397?si=lN7ufc4YTuOszhQpWq0a2A",
   },
   {
-    id: 263, // Raindance (feat. Tems) - Dave, Tems
+    id: 263,
+    title: "Raindance (feat. Tems)",
+    artists: ["Dave", "Tems"],
     url: "https://open.spotify.com/track/3oTuTpF1F3A7rEC6RKsMRz?si=hyYNvlj0RPmSdcsCdGoXTA",
   },
   {
-    id: 264, // Ordinary - Alex Warren
+    id: 264,
+    title: "Ordinary",
+    artists: ["Alex Warren"],
     url: "https://open.spotify.com/track/2RkZ5LkEzeHGRsmDqKwmaJ?si=X1OHbcUkRL649yZLOp1MiQ",
   },
   {
-    id: 265, // I Thought I Saw Your Face - She & Him
+    id: 265,
+    title: "I Thought I Saw Your Face",
+    artists: ["She & Him"],
     url: "https://open.spotify.com/track/0myRViRgmQ3J8izICXEAVO?si=8KzOHcXnQdiNKImefzfSAw",
   },
   {
-    id: 266, // Die With A Smile - Lady Gaga, Bruno Mars
+    id: 266,
+    title: "Die With A Smile",
+    artists: ["Lady Gaga", "Bruno Mars"],
     url: "https://open.spotify.com/track/7so0lgd0zP2Sbgs2d7a1SZ?si=kAuZRw8eRH-Xi_t_o39UmQ",
   },
   {
-    id: 267, // Every Breath You Take - The Police
+    id: 267,
+    title: "Every Breath You Take",
+    artists: ["The Police"],
     url: "https://open.spotify.com/track/1JSTJqkT5qHq8MDJnJbRE1?si=1pRz6LwQRVWeBQkVzMmbNA",
   },
   {
-    id: 268, // Iris - The Goo Goo Dolls
+    id: 268,
+    title: "Iris",
+    artists: ["The Goo Goo Dolls"],
     url: "https://open.spotify.com/track/6Qyc6fS4DsZjB2mRW9DsQs?si=W7rpihoQTw-yp9VR2Vwn_A",
   },
   {
-    id: 269, // Sailor Song - Gigi Perez
+    id: 269,
+    title: "Sailor Song",
+    artists: ["Gigi Perez"],
     url: "https://open.spotify.com/track/21IYMdzTrzSe191Cy5eMap?si=pbf328XHQiKT2LrXzBInNQ",
   },
   {
-    id: 270, // BIRDS OF A FEATHER - Billie Eilish
+    id: 270,
+    title: "BIRDS OF A FEATHER",
+    artists: ["Billie Eilish"],
     url: "https://open.spotify.com/track/6dOtVTDdiauQNBQEDOtlAB?si=SFhBgh1GQkaIYNgbS9kzJQ",
   },
   {
-    id: 271, // Sweater Weather - The Neighbourhood
+    id: 271,
+    title: "Sweater Weather",
+    artists: ["The Neighbourhood"],
     url: "https://open.spotify.com/track/2QjOHCTQ1Jl3zawyYOpxh6?si=OckfXO1qTGi3lE_7OYAPfw",
   },
   {
-    id: 272, // Love Me Not - Ravyn Lenae 
+    id: 272,
+    title: "Love Me Not",
+    artists: ["Ravyn Lenae"],
     url: "https://open.spotify.com/track/4WFgvKVfEhb3IUAFGrutTR?si=qa85D9ZKRKeC7nA2Jttsew",
   },
   {
-    id: 273, // Stateside + Zara Larsson - Zara Larsson, PinkPantheress
+    id: 273,
+    title: "Stateside + Zara Larsson",
+    artists: ["Zara Larsson", "PinkPantheress"],
     url: "https://open.spotify.com/track/1DwscornXpj8fmOmYVlqZt?si=X6rpIBIeRIyIvXtIxWXHnw",
   },
   {
-    id: 276, // No Broke Boys - Disco Lines, Tinashe 
+    id: 276,
+    title: "No Broke Boys",
+    artists: ["Disco Lines", "Tinashe"],
     url: "https://open.spotify.com/track/3cZajhyr8LmtPfHZ9296tj?si=LaCU0QQ-Ra-rBppG9w9ybw",
   },
   {
-    id: 277, // Gabriela - KATSEYE
+    id: 277,
+    title: "Gabriela",
+    artists: ["KATSEYE"],
     url: "https://open.spotify.com/track/1xOqGUkyxGQRdCvGpvWKmL?si=xcMZtmTzS_-8Z1ntvGVEYA",
   },
   {
-    id: 278, // 12 to 12 - sombr
+    id: 278,
+    title: "12 to 12",
+    artists: ["sombr"],
     url: "https://open.spotify.com/track/05od2qm2MTSKCHxy1GBp5W?si=YoSYW0QaTRezVWB7-Uvt_g",
   },
   {
-    id: 280, // DtMF - Bad Bunny
+    id: 280,
+    title: "DtMF",
+    artists: ["Bad Bunny"],
     url: "https://open.spotify.com/track/3sK8wGT43QFpWrvNQsrQya?si=6fkF4OEVR3KKkdx2KlbUvw",
   },
   {
-    id: 281, // Locked out of Heaven - Bruno Mars
+    id: 281,
+    title: "Locked out of Heaven",
+    artists: ["Bruno Mars"],
     url: "https://open.spotify.com/track/3w3y8KPTfNeOKPiqUTakBh?si=bC7ue186QUyohqkt7QOr8w",
   },
   {
-    id: 283, // One Dance - Drake, Kyla, Wizkid
+    id: 283,
+    title: "One Dance",
+    artists: ["Drake", "Kyla", "Wizkid"],
     url: "https://open.spotify.com/track/1zi7xx7UVEFkmKfv06H8x0?si=6q17K3i_S6-_Kki-RyNjCA",
   },
   {
-    id: 284, // Let Me Love You - DJ Snake, Justin Bieber
+    id: 284,
+    title: "Let Me Love You",
+    artists: ["DJ Snake", "Justin Bieber"],
     url: "https://open.spotify.com/track/0lYBSQXN6rCTvUZvg9S0lU?si=psw11KS3RWS4ksuxjaDKEg",
   },
   {
-    id: 287, // CHANEL - Tyla
+    id: 287,
+    title: "CHANEL",
+    artists: ["Tyla"],
     url: "https://open.spotify.com/track/4VxTzYm00mg82MuoT35Ja7?si=PSafZgqvTlOVJWhANRKAhg",
   },
   {
-    id: 288, // Sparks - Coldplay
+    id: 288,
+    title: "Sparks",
+    artists: ["Coldplay"],
     url: "https://open.spotify.com/track/7D0RhFcb3CrfPuTJ0obrod?si=bH-o9rYWSfau3RBs08nT2A",
   },
   {
-    id: 290, // That's What I Like - Bruno Mars
+    id: 290,
+    title: "That's What I Like",
+    artists: ["Bruno Mars"],
     url: "https://open.spotify.com/track/0KKkJNfGyhkQ5aFogxQAPU?si=GHQY3B44QuOOE_IcDS8-fw",
   },
   {
-    id: 292, // WILDFLOWER - Billie Eilis 
+    id: 292,
+    title: "WILDFLOWER",
+    artists: ["Billie Eilis"],
     url: "https://open.spotify.com/track/3QaPy1KgI7nu9FJEQUgn6h?si=NQfA38EBS1aJIcAsuGzI8g",
   },
   {
-    id: 293, // Yellow - Coldplay
+    id: 293,
+    title: "Yellow",
+    artists: ["Coldplay"],
     url: "https://open.spotify.com/track/3AJwUDP919kvQ9QcozQPxg?si=bX2Ot51PRDeu3Kf1BXaaIQ",
   },
   {
-    id: 294, // I Wanna Be Yours - Arctic Monkeys
+    id: 294,
+    title: "I Wanna Be Yours",
+    artists: ["Arctic Monkeys"],
     url: "https://open.spotify.com/track/5XeFesFbtLpXzIVDNQP22n?si=TfQ9Z4DoQQWdnln2FXXuPQ",
   },
   {
-    id: 295, // Beautiful Things - Benson Boone
+    id: 295,
+    title: "Beautiful Things",
+    artists: ["Benson Boone"],
     url: "https://open.spotify.com/track/3xkHsmpQCBMytMJNiDf3Ii?si=FmUJtTbkTAeV6WoouRKibw",
   },
   {
-    id: 296, // Starboy - The Weeknd, Daft Punk
+    id: 296,
+    title: "Starboy",
+    artists: ["The Weeknd", "Daft Punk"],
     url: "https://open.spotify.com/track/7MXVkk9YMctZqd1Srtv4MB?si=dhY98nRERuGRndLNsXab2w",
   },
   {
-    id: 298, // Abracadabra - Lady Gaga 
+    id: 298,
+    title: "Abracadabra",
+    artists: ["Lady Gaga"],
     url: "https://open.spotify.com/track/2LHNTC9QZxsL3nWpt8iaSR?si=-telV12nS069p5_byo_53Q",
   },
   {
-    id: 299, //No One Noticed - The Marías 
+    id: 299,
+    title: "No One Noticed",
+    artists: ["The Marías"],
     url: "https://open.spotify.com/track/3siwsiaEoU4Kuuc9WKMUy5?si=4wXi-QqOQV6mP_H5z_fDFw",
   },
   {
-    id: 300, // Lose Control - Teddy Swims
+    id: 300,
+    title: "Lose Control",
+    artists: ["Teddy Swims"],
     url: "https://open.spotify.com/track/17phhZDn6oGtzMe56NuWvj?si=SU1XraB9Ql-oZ3d8RJzGfw",
   },
   {
-    id: 301, // Espresso - Sabrina Carpenter
+    id: 301,
+    title: "Espresso",
+    artists: ["Sabrina Carpenter"],
     url: "https://open.spotify.com/track/2HRqTpkrJO5ggZyyK6NPWz?si=zzubiZguTAq76j0T9_sxMg",
   },
   {
-    id: 302, // APT. - ROSÉ, Bruno Mars
+    id: 302,
+    title: "APT.",
+    artists: ["ROSÉ", "Bruno Mars"],
     url: "https://open.spotify.com/track/4wJ5Qq0jBN4ajy7ouZIV1c?si=exnrVe-cSiGboejZWrXPEw",
   },
   {
-    id: 303, // It Will Rain - Bruno Mars
+    id: 303,
+    title: "It Will Rain",
+    artists: ["Bruno Mars"],
     url: "https://open.spotify.com/track/0M3HkE321xpCbCYqVKzr1q?si=RbB8lORiQuiqh0ht-MHbcQ",
   },
   {
-    id: 304, // Riptide - Vance Joy
+    id: 304,
+    title: "Riptide",
+    artists: ["Vance Joy"],
     url: "https://open.spotify.com/track/2uXlHCUbq9OMUwx3hrk06o?si=n5mr6A0XQI-B9Jzr5f734A",
   },
   {
-    id: 305, // Timeless)feat Playboi Carti - The Weekend, Playboi Carti
+    id: 305,
+    title: "Timeless)feat Playboi Carti",
+    artists: ["The Weekend", "Playboi Carti"],
     url: "https://open.spotify.com/track/0FIDCNYYjNvPVimz5icugS?si=MEus_ydyQlePN5o07oE-dg",
   },
   {
-    id: 306, // Closer - The Chainsmokers, Halsey
+    id: 306,
+    title: "Closer",
+    artists: ["The Chainsmokers", "Halsey"],
     url: "https://open.spotify.com/track/7BKLCZ1jbUBVqRi2FVlTVw?si=DxJlgFrqSMqcfSxDZDwJyg",
   },
   {
-    id: 307, // That's So True - Gracie Abrams
+    id: 307,
+    title: "That's So True",
+    artists: ["Gracie Abrams"],
     url: "https://open.spotify.com/track/7ne4VBA60CxGM75vw0EYad?si=pHuy7-0aT7KifzdTcGJkDA",
   },
   {
-    id: 308, // In the End - Linkin Park
+    id: 308,
+    title: "In the End",
+    artists: ["Linkin Park"],
     url: "https://open.spotify.com/track/60a0Rd6pjrkxjPbaKzXjfq?si=iHIcBDrHRE-5tk7--tEjyQ",
   },
   {
-    id: 310, // Manchild - Sabrina Carpenter
+    id: 310,
+    title: "Manchild",
+    artists: ["Sabrina Carpenter"],
     url: "https://open.spotify.com/track/2BwO5K8Q7EPAJSGze3AAh9?si=ky2y_7aPSOSAZv3cWMBdGA",
   },
   {
-    id: 311, //All The Stars(with SZA) - Kendrick Lamar, SZA
+    id: 311,
+    title: "All The Stars(with SZA)",
+    artists: ["Kendrick Lamar", "SZA"],
     url: "https://open.spotify.com/track/3GCdLUSnKSMJhs4Tj6CV3s?si=xPhY1k2bSB6-TsdYwtW5sg",
   },
   {
-    id: 312, // Just The Way You Are - Bruno Mars
+    id: 312,
+    title: "Just The Way You Are",
+    artists: ["Bruno Mars"],
     url: "https://open.spotify.com/track/7BqBn9nzAq8spo5e7cZ0dJ?si=eSepi_QzT9qwc8DvQOlvBQ",
   },
   {
-    id: 313, // When I Was Your Man - Bruno Mars
+    id: 313,
+    title: "When I Was Your Man",
+    artists: ["Bruno Mars"],
     url: "https://open.spotify.com/track/0nJW01T7XtvILxQgC5J7Wh?si=UWgDRH6tRVm1O9aR75kOtQ",
   },
   {
-    id: 315, // As It Was - Harry Styles
+    id: 315,
+    title: "As It Was",
+    artists: ["Harry Styles"],
     url: "https://open.spotify.com/track/4Dvkj6JhhA12EX05fT7y2e?si=utoX7MkNR2eh4NPECHAJxw",
   },
   {
-    id: 316, // Cinnamon Girl - Lana Del Rey
+    id: 316,
+    title: "Cinnamon Girl",
+    artists: ["Lana Del Rey"],
     url: "https://open.spotify.com/track/2mdEsXPu8ZmkHRRtAdC09e?si=78Y-JUAHQG-X2y0JOJEmsA",
   },
   {
-    id: 317, // Folded - Kehlani
+    id: 317,
+    title: "Folded",
+    artists: ["Kehlani"],
     url: "https://open.spotify.com/track/0bxPRWprUVpQK0UFcddkrA?si=ADyHXd9cT4uAO0fUskJFDQ",
   },
   {
-    id: 318, // Sorry - Justin Bieber
+    id: 318,
+    title: "Sorry",
+    artists: ["Justin Bieber"],
     url: "https://open.spotify.com/track/09CtPGIpYB4BrO8qb1RGsF?si=C4DiTcLhTH-IBhXDF_OGGw",
   },
   {
-    id: 319, // Apocalypse - Cigarettes After Sex
+    id: 319,
+    title: "Apocalypse",
+    artists: ["Cigarettes After Sex"],
     url: "https://open.spotify.com/track/3AVrVz5rK8Hrqo9YGiVGN5?si=w66wq4J0Rxq1Lsd5-cyWjw",
   },
   {
-    id: 320, // Always Remember Us This Way - Lady Gaga
+    id: 320,
+    title: "Always Remember Us This Way",
+    artists: ["Lady Gaga"],
     url: "https://open.spotify.com/track/2rbDhOo9Fh61Bbu23T2qCk?si=RCvbj4-RRxSaR4gSnJnM4w",
   },
   {
-    id: 321, // Feel Good Inc. - Gorillaz, De La Soul
+    id: 321,
+    title: "Feel Good Inc.",
+    artists: ["Gorillaz", "De La Soul"],
     url: "https://open.spotify.com/track/0d28khcov6AiegSCpG5TuT?si=cY3cP-huR-G3x9E9n5T1tQ",
   },
   {
-    id: 322, // The Man Who Can't Be Moved - The Script
+    id: 322,
+    title: "The Man Who Can't Be Moved",
+    artists: ["The Script"],
     url: "https://open.spotify.com/track/3nqqDo8CcCLke3ZoTgiOKf?si=I3aRe9HZT0aW8IH92uVWSA",
   },
   {
-    id: 323, // Fame is a Gun - Addison Rae
+    id: 323,
+    title: "Fame is a Gun",
+    artists: ["Addison Rae"],
     url: "https://open.spotify.com/track/7B3BwNecBhKvNwSMOOl7Gk?si=AT4uWEL9TfStMCahcLS_Kg",
   },
   {
-    id: 324, // undressed - sombr
+    id: 324,
+    title: "undressed",
+    artists: ["sombr"],
     url: "https://open.spotify.com/track/0TFTAtCYhp2tQ9KcJIZb55?si=MHMdiTjHQg2IQ9lkFozP8w",
   },
   {
-    id: 325, // Running Up That Hill (A Deal With God) - Kate Bush
+    id: 325,
+    title: "Running Up That Hill (A Deal With God)",
+    artists: ["Kate Bush"],
     url: "https://open.spotify.com/track/1PtQJZVZIdWIYdARpZRDFO?si=V7H0UU3LTnObTHxefs1j0g",
   },
   {
-    id: 326, // Young And Beautiful - Lana Del Rey
+    id: 326,
+    title: "Young And Beautiful",
+    artists: ["Lana Del Rey"],
     url: "https://open.spotify.com/track/2nMeu6UenVvwUktBCpLMK9?si=YLGQlgADT-2IKPEkJc9H_w",
   },
   {
-    id: 327, // Bring Me To Life - Evanescence
+    id: 327,
+    title: "Bring Me To Life",
+    artists: ["Evanescence"],
     url: "https://open.spotify.com/track/0COqiPhxzoWICwFCS4eZcp?si=sfNFzcU8RG-QWofWcRWXYg",
   },
   {
-    id: 328, // Seven(feat.Latto) - Jungkook, Latto
+    id: 328,
+    title: "Seven(feat.Latto)",
+    artists: ["Jungkook", "Latto"],
     url: "https://open.spotify.com/track/2HRgqmZQC0MC7GeNuDIXHN?si=nbANNcr4QF6rsobgbbhASg",
   },
   {
-    id: 329, // Somewhere Only We Know - Keane
+    id: 329,
+    title: "Somewhere Only We Know",
+    artists: ["Keane"],
     url: "https://open.spotify.com/track/1SKPmfSYaPsETbRHaiA18G?si=wunPrYd4Qg-mv0CPhiU8BQ",
   },
   {
-    id: 330, // Everybody Wants To Rule The World - Tears For Fears
+    id: 330,
+    title: "Everybody Wants To Rule The World",
+    artists: ["Tears For Fears"],
     url: "https://open.spotify.com/track/4RvWPyQ5RL0ao9LPZeSouE?si=t5GA0H8-RGue6usTk6tZdQ",
   },
   {
-    id: 331, // Viva La Vida - Coldplay
+    id: 331,
+    title: "Viva La Vida",
+    artists: ["Coldplay"],
     url: "https://open.spotify.com/track/1mea3bSkSGXuIRvnydlB5b?si=CZcVmmzuSmy9N_UHvEm_wA",
   },
   {
-    id: 332, // The Night We Met - Lord Huron
+    id: 332,
+    title: "The Night We Met",
+    artists: ["Lord Huron"],
     url: "https://open.spotify.com/track/3hRV0jL3vUpRrcy398teAU?si=Ua_pEj1JTF2IIwN4j2KvQA",
   },
   {
-    id: 333, // Trap Queen - Fetty Wap
+    id: 333,
+    title: "Trap Queen",
+    artists: ["Fetty Wap"],
     url: "https://open.spotify.com/track/2d8JP84HNLKhmd6IYOoupQ?si=tC9zMOcgRAaGJDhL6j9WYg",
   },
   {
-    id: 334, // We Are The People - Empire Of The Sun
+    id: 334,
+    title: "We Are The People",
+    artists: ["Empire Of The Sun"],
     url: "https://open.spotify.com/track/3zEN0ii6s4DHHBpnTp3RP7?si=dqZTFLPfQt-AeCojKo_SCA",
   },
   {
-    id: 335, // Nothin'on You - B.o.B, Bruno Mars
+    id: 335,
+    title: "Nothin'on You",
+    artists: ["B.o.B", "Bruno Mars"],
     url: "https://open.spotify.com/track/59dLtGBS26x7kc0rHbaPrq?si=2ePzfUFSREuAHo1ya3g9ow",
   },
   {
-    id: 336, // Paparazzi - Lady Gaga
+    id: 336,
+    title: "Paparazzi",
+    artists: ["Lady Gaga"],
     url: "https://open.spotify.com/track/02XnQdf7sipaKBBHixz3Zp?si=U3DlnWk6TmmRbgCYLdlmxA",
   },
   {
-    id: 337, // Numb - Linkin Park
+    id: 337,
+    title: "Numb",
+    artists: ["Linkin Park"],
     url: "https://open.spotify.com/track/2nLtzopw4rPReszdYBJU6h?si=BERozq8ZRceNEKU-crUKsg",
   },
   {
-    id: 338, // Photograph - Ed Sheeran
+    id: 338,
+    title: "Photograph",
+    artists: ["Ed Sheeran"],
     url: "https://open.spotify.com/track/1HNkqx9Ahdgi1Ixy2xkKkL?si=9bf9keRCREyFRXyhYlcjFQ",
   },
   {
-    id: 339, // Blinding Lights - The Weeknd
+    id: 339,
+    title: "Blinding Lights",
+    artists: ["The Weeknd"],
     url: "https://open.spotify.com/track/0VjIjW4GlUZAMYd2vXMi3b?si=67KCKTXpQKaxwODk1tGXSQ",
   },
   {
-    id: 340, // Nice To Each Other - Olivia Dean
+    id: 340,
+    title: "Nice To Each Other",
+    artists: ["Olivia Dean"],
     url: "https://open.spotify.com/track/7gKxCvTDWwV9wBhdeBbr3l?si=BZcXY5yMTDG9RceU5o0SAg",
   },
   {
-    id: 341, // Good Luck, Babe! - Chappell Roan
+    id: 341,
+    title: "Good Luck, Babe!",
+    artists: ["Chappell Roan"],
     url: "https://open.spotify.com/track/0WbMK4wrZ1wFSty9F7FCgu?si=thlNZSLfTEK7SCmxk_M8pw",
   },
   {
-    id: 342, // DAISIES - Justin Bieber
+    id: 342,
+    title: "DAISIES",
+    artists: ["Justin Bieber"],
     url: "https://open.spotify.com/track/5BZsQlgw21vDOAjoqkNgKb?si=p7Wfl_NnT4OkAFr3P4sOUw",
   },
   {
-    id: 343, // The Less I Know The Better - Tame Impala
+    id: 343,
+    title: "The Less I Know The Better",
+    artists: ["Tame Impala"],
     url: "https://open.spotify.com/track/6K4t31amVTZDgR3sKmwUJJ?si=Y5V8fWUARgSxhPoX7dzHqA",
   },
   {
-    id: 344, // Another Love - Tom Odell
+    id: 344,
+    title: "Another Love",
+    artists: ["Tom Odell"],
     url: "https://open.spotify.com/track/3JvKfv6T31zO0ini8iNItO?si=YZbwjZ6WRriavekvVxq8ug",
   },
   {
-    id: 345, // Bad Romance - Lady Gaga
+    id: 345,
+    title: "Bad Romance",
+    artists: ["Lady Gaga"],
     url: "https://open.spotify.com/track/0SiywuOBRcynK0uKGWdCnn?si=pdxVnfFBTRO9VuNt_lUiEA",
   },
   {
-    id: 346, // No Pole - Don Toliver
+    id: 346,
+    title: "No Pole",
+    artists: ["Don Toliver"],
     url: "https://open.spotify.com/track/0eaVIYo2zeOaGJeqZ5TwYz?si=G-zp0Ca6TW2RvdKY3N38Ow",
   },
   {
-    id: 347, // Just Keep Watching (From F1 The Movie) - Tate McRae, F1 The Album
+    id: 347,
+    title: "Just Keep Watching (From F1 The Movie)",
+    artists: ["Tate McRae", "F1 The Album"],
     url: "https://open.spotify.com/track/2yWlGEgEfPot0lv3OAjuG3?si=YgdS9jipTfWMETATsnvSCw",
   },
   {
-    id: 348, // Unforgettable - French Montana, Swae Lee
+    id: 348,
+    title: "Unforgettable",
+    artists: ["French Montana", "Swae Lee"],
     url: "https://open.spotify.com/track/3B54sVLJ402zGa6Xm4YGNe?si=JYlO5BrARI2QMY7jWGpBEw",
   },
   {
-    id: 349, // Counting Stars - OneRepublic
+    id: 349,
+    title: "Counting Stars",
+    artists: ["OneRepublic"],
     url: "https://open.spotify.com/track/2tpWsVSb9UEmDRxAl1zhX1?si=30fuPhM-Qa-lZvaM_iAlPw",
   },
   {
-    id: 350, // Sports car - Tate McRae
+    id: 350,
+    title: "Sports car",
+    artists: ["Tate McRae"],
     url: "https://open.spotify.com/track/5UJbgR4XF4y1DvbkxEqe8S?si=KM8vJPYUQtOJpHf8VjH8zg",
   },
   {
-    id: 351, // we can't be friends (wait for your love) - Ariana Grande
+    id: 351,
+    title: "we can't be friends (wait for your love)",
+    artists: ["Ariana Grande"],
     url: "https://open.spotify.com/track/51ZQ1vr10ffzbwIjDCwqm4?si=MU0btaO5Sdei1CyIIPnsOg",
   },
   {
-    id: 352, // Africa - TOTO
+    id: 352,
+    title: "Africa",
+    artists: ["TOTO"],
     url: "https://open.spotify.com/track/2374M0fQpWi3dLnB54qaLX?si=XIJCLGsyRuOBwdR5s_0MQA",
   },
   {
-    id: 353, // Sienna - The Marías
+    id: 353,
+    title: "Sienna",
+    artists: ["The Marías"],
     url: "https://open.spotify.com/track/0InIeZW4P6VO7dUGRM4AKH?si=NbGyWXm7SMuuPp3QJUuRYA",
   },
   {
-    id: 354, // luther (with sza) - Kendrick Lamar, SZA
+    id: 354,
+    title: "luther (with sza)",
+    artists: ["Kendrick Lamar", "SZA"],
     url: "https://open.spotify.com/track/45J4avUb9Ni0bnETYaYFVJ?si=9_9a2NNrQ1GgdEwsPVJnRQ",
   },
   {
-    id: 355, // Take Me To Church - Hozier
+    id: 355,
+    title: "Take Me To Church",
+    artists: ["Hozier"],
     url: "https://open.spotify.com/track/3dYD57lRAUcMHufyqn9GcI?si=UjCDFODVQ2ag85rWbLZAoQ",
   },
   {
-    id: 356, // Danza Kuduro - Don Omar, Lucenzo
+    id: 356,
+    title: "Danza Kuduro",
+    artists: ["Don Omar", "Lucenzo"],
     url: "https://open.spotify.com/track/2a1o6ZejUi8U3wzzOtCOYw?si=nty0RtNFR46dCJz5bixn7A",
   },
   {
-    id: 357, // Confident - Justin Bieber, Chance The Rapper
+    id: 357,
+    title: "Confident",
+    artists: ["Justin Bieber", "Chance The Rapper"],
     url: "https://open.spotify.com/track/3JsydWaf2Ev4ehaLUjj3SY?si=vTdOODGGQBGBqJ444TgulA",
   },
   {
-    id: 358, // Outside(feat. Ellie Goulding) - Calvin Harris, Ellie Goulding
+    id: 358,
+    title: "Outside(feat. Ellie Goulding)",
+    artists: ["Calvin Harris", "Ellie Goulding"],
     url: "https://open.spotify.com/track/7MmG8p0F9N3C4AXdK6o6Eb?si=lP1W5__jTsGVU2q9m6HByA",
   },
   {
-    id: 359, // Something Just Like This - The Chainsmokers, Coldplay
+    id: 359,
+    title: "Something Just Like This",
+    artists: ["The Chainsmokers", "Coldplay"],
     url: "https://open.spotify.com/track/6RUKPb4LETWmmr3iAEQktW?si=PDuC78G0Qr678k5S12JQUw",
   },
   {
-    id: 360, // Style - Taylor Swift
+    id: 360,
+    title: "Style",
+    artists: ["Taylor Swift"],
     url: "https://open.spotify.com/track/0ug5NqcwcFR2xrfTkc7k8e?si=M4WSgpKKTCSJ4C1pxC5ecw",
   },
   {
-    id: 361, // Midnight City - Zara Larsson
+    id: 361,
+    title: "Midnight City",
+    artists: ["Zara Larsson"],
     url: "https://open.spotify.com/track/1qRV1dKLOfH1s00b9J2LUQ?si=3LnuBh0RQvG2RiAA-3VhVg",
   },
   {
-    id: 362, // Stressed Out - Twenty One Pilots
+    id: 362,
+    title: "Stressed Out",
+    artists: ["Twenty One Pilots"],
     url: "https://open.spotify.com/track/3CRDbSIZ4r5MsZ0YwxuEkn?si=LVwl80z8QlO71DSpWglDng",
   },
   {
-    id: 363, // Sunflower - Post Malone, Swae Lee
+    id: 363,
+    title: "Sunflower",
+    artists: ["Post Malone", "Swae Lee"],
     url: "https://open.spotify.com/track/0RiRZpuVRbi7oqRdSMwhQY?si=pOrD9kw5Tl2ws5loySWs7Q",
   },
   {
-    id: 364, // We Found Love - Rihanna, Calvin Harris
+    id: 364,
+    title: "We Found Love",
+    artists: ["Rihanna", "Calvin Harris"],
     url: "https://open.spotify.com/track/6qn9YLKt13AGvpq9jfO8py?si=IESBLq5IS72VevIyX8VFKg",
   },
   {
-    id: 365, // Gangsta's Paradise - Coolio, L.V.
+    id: 365,
+    title: "Gangsta's Paradise",
+    artists: ["Coolio", "L.V."],
     url: "https://open.spotify.com/track/1DIXPcTDzTj8ZMHt3PDt8p?si=5OqulRkiS36CSABtm6IASw",
   },
   {
-    id: 366, // Payphone - Maroon 5, Wiz Khalifa
+    id: 366,
+    title: "Payphone",
+    artists: ["Maroon 5", "Wiz Khalifa"],
     url: "https://open.spotify.com/track/1XGmzt0PVuFgQYYnV2It7A?si=zlUQZiP0QGeFUiGwgQZq4A",
   },
   {
-    id: 367, // Young, Wild & Free - Snoop Dogg, Wiz Khalifa, Bruno Mars
+    id: 367,
+    title: "Young, Wild & Free",
+    artists: ["Snoop Dogg", "Wiz Khalifa", "Bruno Mars"],
     url: "https://open.spotify.com/track/3FNy4yzOhHhFBeA5p4ofoq?si=Y94KpevCQYm5rhI-VyTwrw",
   },
   {
-    id: 368, // Drop It  Like It's Hot - Snoop Dogg, Pharrell Williams
+    id: 368,
+    title: "Drop It  Like It's Hot",
+    artists: ["Snoop Dogg", "Pharrell Williams"],
     url: "https://open.spotify.com/track/2NBQmPrOEEjA8VbeWOQGxO?si=ymTM-ji6TRGHYYpdK55UhA",
   },
   {
-    id: 369, // Sweat - Snoop Dogg vs David Guetta Remix - Snoop Dogg, David Guetta
+    id: 369,
+    title: "Sweat",
+    artists: ["Snoop Dogg vs David Guetta Remix - Snoop Dogg", "David Guetta"],
     url: "https://open.spotify.com/track/0R7YVi7w41Dr9jU5vblAok?si=VWwI3ldpRgS3wSgHDNs9pQ",
   },
   {
-    id: 370, // It Wasn't Me - Shaggy, RikRok
+    id: 370,
+    title: "It Wasn't Me",
+    artists: ["Shaggy", "RikRok"],
     url: "https://open.spotify.com/track/0OaunKfsxkgBvPv68jBbmm?si=9htCvs97RF68FioywKesLg",
   },
   {
-    id: 371, // Hey Ya! - OutKast
+    id: 371,
+    title: "Hey Ya!",
+    artists: ["OutKast"],
     url: "https://open.spotify.com/track/5WQ1hIc5d2EVbRQ8qsj8Uh?si=daIC8MRxQlyw4libDuHL8A",
   },
   {
-    id: 372, // Music Sound Better With You - Stardust, Benjamin Diamond, Thomas Bangalter, Alan Braxe
+    id: 372,
+    title: "Music Sound Better With You",
+    artists: ["Stardust", "Benjamin Diamond", "Thomas Bangalter", "Alan Braxe"],
     url: "https://open.spotify.com/track/303ccTay2FiDTZ9fZ2AdBt?si=bzcAYiaUTCe3vztGsxUyYw",
   },
   {
-    id: 373, // Unwritten - Natasha Bedingfield
+    id: 373,
+    title: "Unwritten",
+    artists: ["Natasha Bedingfield"],
     url: "https://open.spotify.com/track/3U5JVgI2x4rDyHGObzJfNf?si=PygigqBLSkmaxuwQC0Gkdw",
   },
   {
-    id: 374, // Down - Jay Sean, Lil Wayne 
+    id: 374,
+    title: "Down",
+    artists: ["Jay Sean", "Lil Wayne"],
     url: "https://open.spotify.com/track/6cmm1LMvZdB5zsCwX5BjqE?si=1q0q-6FES4uvcE4q3Pi7yA",
   },
   {
-    id: 375, // White Walls (feat. ScHoolboy Q & Hollis) - Macklemore & Ryan Lewis, ScHoolboy Q, Hollis
+    id: 375,
+    title: "White Walls (feat. ScHoolboy Q & Hollis)",
+    artists: ["Macklemore & Ryan Lewis", "ScHoolboy Q", "Hollis"],
     url: "https://open.spotify.com/track/1o1Pny4JcE3LdUBeBedbm6?si=SH3kvBK0SjenDg6QxlQZ4Q",
   },
   {
-    id: 376, // I Gotta Feeling - The Black Eyed Peas
+    id: 376,
+    title: "I Gotta Feeling",
+    artists: ["The Black Eyed Peas"],
     url: "https://open.spotify.com/track/4kLLWz7srcuLKA7Et40PQR?si=RctW20WQRYKngaVvIoBnFA",
   },
   {
-    id: 377, // Baby By Me - 50 Cent, Ne-Yo
+    id: 377,
+    title: "Baby By Me",
+    artists: ["50 Cent", "Ne-Yo"],
     url: "https://open.spotify.com/track/1x075F39Q0zOhjPzPKgG8E?si=1159-zdpSq28k0WeYYYZug",
   },
   {
-    id: 378, // Escapism. - RAYE, 070 Shake
+    id: 378,
+    title: "Escapism.",
+    artists: ["RAYE", "070 Shake"],
     url: "https://open.spotify.com/track/2VOZniNxFIDl8ydLltrMNb?si=SF7XYMTxTDGAIrm2zwfXKQ",
   },
   {
-    id: 379, // Latch - Disclosure, Sam Smith
+    id: 379,
+    title: "Latch",
+    artists: ["Disclosure", "Sam Smith"],
     url: "https://open.spotify.com/track/51ODNNDZm21HU7wI7cccRr?si=ITT972vbSYu5pi7CO14Ajg",
   },
   {
-    id: 380, // Wake Me Up - Avicii
+    id: 380,
+    title: "Wake Me Up",
+    artists: ["Avicii"],
     url: "https://open.spotify.com/track/0nrRP2bk19rLc0orkWPQk2?si=fUFBoEWFSm6F_xZ3WTIAag",
   },
   {
-    id: 381, // Waiting For Love - Avicii
+    id: 381,
+    title: "Waiting For Love",
+    artists: ["Avicii"],
     url: "https://open.spotify.com/track/2P4OICZRVAQcYAV2JReRfj?si=9JQ9ZiaGQ0-hGVeSwoAuYg",
   },
   {
-    id: 382, // Without You (feat. Sandro Cavazza) - Avicii, Sandro Cavazza
+    id: 382,
+    title: "Without You (feat. Sandro Cavazza)",
+    artists: ["Avicii", "Sandro Cavazza"],
     url: "https://open.spotify.com/track/6Pgkp4qUoTmJIPn7ReaGxL?si=kcIV0iRAS8WEoScbPMQsfw",
   },
   {
-    id: 383, // Call on Me - Eric Prydz
+    id: 383,
+    title: "Call on Me",
+    artists: ["Eric Prydz"],
     url: "https://open.spotify.com/track/1xNcBAoUw8Hz6LqK2jt4Ff?si=ic4_AsIARgygztIS413Ppw",
   },
   {
-    id: 384, // MILLION DOLLAR BABY - Rommy Richman
+    id: 384,
+    title: "MILLION DOLLAR BABY",
+    artists: ["Rommy Richman"],
     url: "https://open.spotify.com/track/5AJ9hqTS2wcFQCELCFRO7A?si=Ebc2SRAGSlqzCkeSjl4uyQ",
   },
   {
-    id: 385, // Voulez-Vous - ABBA
+    id: 385,
+    title: "Voulez-Vous",
+    artists: ["ABBA"],
     url: "https://open.spotify.com/track/17OqI90oTFZ3J8PVu6j07V?si=I5DhSlESQlOluubIS9l1KQ",
   },
   {
-    id: 386, // Fell So Close - Calvin Harris
+    id: 386,
+    title: "Fell So Close",
+    artists: ["Calvin Harris"],
     url: "https://open.spotify.com/track/1gihuPhrLraKYrJMAEONyc?si=Sy4nmUulSfKJcHxCBzfWXg",
   },
   {
-    id: 387, // yes, and? - Ariana Grande
+    id: 387,
+    title: "yes, and?",
+    artists: ["Ariana Grande"],
     url: "https://open.spotify.com/track/5D34wRmbFS29AjtTOP2QJe?si=g1Dz0YjYSXiw7hdx1cr3-Q",
   },
   {
-    id: 388, // Summer - Calvin Harris
+    id: 388,
+    title: "Summer",
+    artists: ["Calvin Harris"],
     url: "https://open.spotify.com/track/6YUTL4dYpB9xZO5qExPf05?si=tEn6mV50Rs-fH4IVUSSSKg",
   },
   {
-    id: 389, // I Took A Pill In Ibiza - Mike Posner
+    id: 389,
+    title: "I Took A Pill In Ibiza",
+    artists: ["Mike Posner"],
     url: "https://open.spotify.com/track/0vbtURX4qv1l7besfwmnD8?si=rpr3et6ZTpe3rWN5GHhHMA",
   },
   {
-    id: 390, // Sugar(feat. Francesco Yates) - Robin Schulz, Francesco Yates
+    id: 390,
+    title: "Sugar(feat. Francesco Yates)",
+    artists: ["Robin Schulz", "Francesco Yates"],
     url: "https://open.spotify.com/track/5tf1VVWniHgryyumXyJM7w?si=dgsrP59cSZabu2N6keXl9A",
   },
   {
-    id: 391, // How Deep Is Your Love - Calvin Harris, Disciples
+    id: 391,
+    title: "How Deep Is Your Love",
+    artists: ["Calvin Harris", "Disciples"],
     url: "https://open.spotify.com/track/22mek4IiqubGD9ctzxc69s?si=8hyZAa5kSHC7mYw2UIKM3A",
   },
   {
-    id: 392, // Fast Cat - Jonas Blue, Dekota
+    id: 392,
+    title: "Fast Cat",
+    artists: ["Jonas Blue", "Dekota"],
     url: "https://open.spotify.com/track/1SN1vSPsr4V4tIUTR3s8YW?si=eNDIuJWpRcydNnbRmErU3g",
   },
-  { 
-    id: 393, // Don't Worry(feat. Ray Dalton) - Madcon, Ray Dalton
+  {
+    id: 393,
+    title: "Don't Worry(feat. Ray Dalton)",
+    artists: ["Madcon", "Ray Dalton"],
     url: "https://open.spotify.com/track/2Wf0uMfCpwLO1B2Up3NbXH?si=MRLieiL2QOWp4VjSlqhuGg",
   },
   {
-    id: 394, // This Girl (Kungs vs Cookin' on 3 Burners) - Kungs, Cookin' on 3 Burners
+    id: 394,
+    title: "This Girl (Kungs vs Cookin' on 3 Burners)",
+    artists: ["Kungs", "Cookin' on 3 Burners"],
     url: "https://open.spotify.com/track/1A8j067qyiNwQnZT0bzUpZ?si=No6INgm-R9aCwKzAGlKw5g",
   },
   {
-    id: 395, // Moves Like Jagger - Maroon 5, Christina Aguilera
+    id: 395,
+    title: "Moves Like Jagger",
+    artists: ["Maroon 5", "Christina Aguilera"],
     url: "https://open.spotify.com/track/7pYfyrMNPn3wtoCyqcTVoI?si=GGMN2xHWR5GnBJ-bTvRjUw",
   },
   {
-    id: 396, // Bad(feat. Vassy) - David Guetta, Showtek, VASSY
+    id: 396,
+    title: "Bad(feat. Vassy)",
+    artists: ["David Guetta", "Showtek", "VASSY"],
     url: "https://open.spotify.com/track/6eIacmhkE82vZlMDnGS7aP?si=4RtxGMQXQluddYP78TsCQg",
   },
   {
-    id: 397, // No Lie - Sean Paul, Dua Lipa
+    id: 397,
+    title: "No Lie",
+    artists: ["Sean Paul", "Dua Lipa"],
     url: "https://open.spotify.com/track/48QmG1dfvMuYLxMPt7KSRA?si=WnwdZljeQ3GTQMAgzu-F5A",
   },
   {
-    id: 398, // One Kiss (with Dua Lipa) - Calvin Harris, Dua Lipa
+    id: 398,
+    title: "One Kiss (with Dua Lipa)",
+    artists: ["Calvin Harris", "Dua Lipa"],
     url: "https://open.spotify.com/track/7ef4DlsgrMEH11cDZd32M6?si=OPeHc45OTqiXU6Mk3FP-jQ",
   },
   {
-    id: 399, // Replay - Iyaz
+    id: 399,
+    title: "Replay",
+    artists: ["Iyaz"],
     url: "https://open.spotify.com/track/4E5P1XyAFtrjpiIxkydly4?si=ofycx2UNTkumr1jWtbPpgQ",
   },
   {
-    id: 400, // Safe And Sound - Capital Cities
+    id: 400,
+    title: "Safe And Sound",
+    artists: ["Capital Cities"],
     url: "https://open.spotify.com/track/6Z8R6UsFuGXGtiIxiD8ISb?si=sguLDC6RRWSQgy9Tuml8GQ",
   },
   {
-    id: 401, // Back On 74 - Jungle
+    id: 401,
+    title: "Back On 74",
+    artists: ["Jungle"],
     url: "https://open.spotify.com/track/19kHhX6f6EfLU7rcO3RqjO?si=BLfyittDRL6a4S3BrBzcVA",
   },
   {
-    id: 402, // The Spins - Mac Miller, Empire Of The Sun
+    id: 402,
+    title: "The Spins",
+    artists: ["Mac Miller", "Empire Of The Sun"],
     url: "https://open.spotify.com/track/7FAFkQQZFeNwOFzTrSDFIh?si=z--N2H1ASSSjKZKuiKeT0A",
   },
   {
-    id: 403, // Airplanes(feat. Hayley Williams of Paramore) - B.o.B, Hayley Williams
+    id: 403,
+    title: "Airplanes(feat. Hayley Williams of Paramore)",
+    artists: ["B.o.B", "Hayley Williams"],
     url: "https://open.spotify.com/track/6lV2MSQmRIkycDScNtrBXO?si=F80t5uTLRgOTpT3VhpmPBQ",
   },
   {
-    id: 404, // SexyBack(feat.Timbaland) - Justin Timberlake, Timbaland
+    id: 404,
+    title: "SexyBack(feat.Timbaland)",
+    artists: ["Justin Timberlake", "Timbaland"],
     url: "https://open.spotify.com/track/0O45fw2L5vsWpdsOdXwNAR?si=soR9jNBmRm6UIhq9lFTNSg",
   },
   {
-    id: 405, // Water - Tyla 
+    id: 405,
+    title: "Water",
+    artists: ["Tyla"],
     url: "https://open.spotify.com/track/0wYwXrgGrrU1idueX5A1wJ?si=9M4ZaVFvTNmAhSDUYrHh1Q",
   },
   {
-    id: 406, // Cold Heart -  Elton John, Dua Lipa, PNAU
+    id: 406,
+    title: "Cold Heart",
+    artists: ["Elton John", "Dua Lipa", "PNAU"],
     url: "https://open.spotify.com/track/6zSpb8dQRaw0M1dK8PBwQz?si=69iTJFP_RYG7NtkrLyAYsw",
   },
   {
-    id: 407, // Do It To It - ACRAZE, Cherish
+    id: 407,
+    title: "Do It To It",
+    artists: ["ACRAZE", "Cherish"],
     url: "https://open.spotify.com/track/20on25jryn53hWghthWWW3?si=ukfSsEnTQ0WOt9rgGDwSVg",
   },
   {
-    id: 408, // Never Going Home - Kungs 
+    id: 408,
+    title: "Never Going Home",
+    artists: ["Kungs"],
     url: "https://open.spotify.com/track/0xfMlIW8lS40qvpsUw1l0X?si=rFaIhSeATsGsgOLuMQDtag",
   },
   {
-    id: 410, // Opus - Eric Prydz
+    id: 410,
+    title: "Opus",
+    artists: ["Eric Prydz"],
     url: "https://open.spotify.com/track/3v2oAQomhOcYCPPHafS3KV?si=xOquub-3QISF6sAloZovLA",
   },
   {
-    id: 411, // Pisk Mig Hårdt!!! - Dario Von Slutty, Barcode Brothers 
+    id: 411,
+    title: "Pisk Mig Hårdt!!!",
+    artists: ["Dario Von Slutty", "Barcode Brothers"],
     url: "https://open.spotify.com/track/1q3Iuk3nVEwRPj7mR34QYQ?si=5_vAyowKSbCndsYFFRZzYg",
   },
   {
-    id: 412, // Rattlin' Bog - Carlyle Fraser
+    id: 412,
+    title: "Rattlin' Bog",
+    artists: ["Carlyle Fraser"],
     url: "https://open.spotify.com/track/2VjrFvthQjw7BS8aS4VdZi?si=3vLg-NjNSiSUYN_ys8nkeA",
   },
   {
-    id: 413, // Closer - Ne-Yo
+    id: 413,
+    title: "Closer",
+    artists: ["Ne-Yo"],
     url: "https://open.spotify.com/track/0GX5oOKtU0nnx5OkhenW2i?si=agDW7t11TR6Tm-xrJlxwtg",
   },
   {
-    id: 414, // Kiss Me Thru The Phone - Soulja Boy, Sammie 
+    id: 414,
+    title: "Kiss Me Thru The Phone",
+    artists: ["Soulja Boy", "Sammie"],
     url: "https://open.spotify.com/track/2q4rjDy9WhaN3o9MvDbO21?si=PkGtWWH8R_al-3QTfgXTOA",
   },
   {
-    id: 415, // Pony - GinuWine 
+    id: 415,
+    title: "Pony",
+    artists: ["GinuWine"],
     url: "https://open.spotify.com/track/6mz1fBdKATx6qP4oP1I65G?si=e8rzxDDKQZaw_cc2eTtHmw",
   },
   {
-    id: 416, // I Want It That Way - Backstreet Boys 
+    id: 416,
+    title: "I Want It That Way",
+    artists: ["Backstreet Boys"],
     url: "https://open.spotify.com/track/47BBI51FKFwOMlIiX6m8ya?si=JZKYxtyMTOeowYLR56TiJA",
   },
   {
-    id: 417, // Everybody (Backstreet's Back) - Backstreet Boys
+    id: 417,
+    title: "Everybody (Backstreet's Back)",
+    artists: ["Backstreet Boys"],
     url: "https://open.spotify.com/track/1di1BEgJYzPvXUuinsYJGP?si=aDk55LLhQuqqKpmPXVOPVw",
   },
   {
-    id: 418, // Bumpy Ride - Mohombi
+    id: 418,
+    title: "Bumpy Ride",
+    artists: ["Mohombi"],
     url: "https://open.spotify.com/track/71R6zJsrF3ffc3TBFHfivX?si=hIfRfC1tSiitEvoAVTarVw",
   },
   {
-    id: 419, // Don't Tell 'Em - Jeremih, YG
+    id: 419,
+    title: "Don't Tell 'Em",
+    artists: ["Jeremih", "YG"],
     url: "https://open.spotify.com/track/0Dc7J9VPV4eOInoxUiZrsL?si=ukj1_KwjS5OOohNoU6a6JA",
   },
   {
-    id: 420, // Who's That Chick? (feat. Rihanna) - David Guetta, Rihanna
+    id: 420,
+    title: "Who's That Chick? (feat. Rihanna)",
+    artists: ["David Guetta", "Rihanna"],
     url: "https://open.spotify.com/track/7e1h7rqNB0BBC2fUuWEEFe?si=9URlyKDCTliqjdzdkxRuPA",
   },
   {
-    id: 421, // Lady (Hear Me Tonight) - Modjo
+    id: 421,
+    title: "Lady (Hear Me Tonight)",
+    artists: ["Modjo"],
     url: "https://open.spotify.com/track/49X0LAl6faAusYq02PRAY6?si=-yFajPD2RM-0GW7XY1lpyA",
   },
   {
-    id: 422, // Get Busy - Sean Paul
+    id: 422,
+    title: "Get Busy",
+    artists: ["Sean Paul"],
     url: "https://open.spotify.com/track/6bK9BH9Ts8Gj5JFvnQkzak?si=saE-N7xaRCGjhQgzBPvIng",
   },
   {
-    id: 423, // Got 2 Luv U (feat. Alexis Jordan) - Sean Paul, Alexis Jordan
+    id: 423,
+    title: "Got 2 Luv U (feat. Alexis Jordan)",
+    artists: ["Sean Paul", "Alexis Jordan"],
     url: "https://open.spotify.com/track/62pSYErgGri97X9aIyBzHm?si=eGMzsHDaQbaq02nV0jsXMQ",
   },
   {
-    id: 424, // Va Va Voom - Nicki Minaj 
+    id: 424,
+    title: "Va Va Voom",
+    artists: ["Nicki Minaj"],
     url: "https://open.spotify.com/track/2jATUzETZL49e6SywauZKE?si=Dwbuf4QzQz27Pv9QO-rwhQ",
   },
   {
-    id: 425, // Ai Se Eu Te Pego (Ao Vivo) - Michel Teló
+    id: 425,
+    title: "Ai Se Eu Te Pego (Ao Vivo)",
+    artists: ["Michel Teló"],
     url: "https://open.spotify.com/track/2yd5ZA1q3w6jdE03eVrGHU?si=B2kOP4BvSAefHrO2XwNMVw",
   },
   {
-    id: 426, // Billie Jean - Michael Jackson
+    id: 426,
+    title: "Billie Jean",
+    artists: ["Michael Jackson"],
     url: "https://open.spotify.com/track/7J1uxwnxfQLu4APicE5Rnj?si=LTaGfH6eQTWPh9whQ1Mo3Q",
   },
   {
-    id: 427, // Take on Me - A-ha
+    id: 427,
+    title: "Take on Me",
+    artists: ["A-ha"],
     url: "https://open.spotify.com/track/2WfaOiMkCvy7F5fcp2zZ8L?si=H1zSe-eYTZ6NTcu68jzigg",
   },
   {
-    id: 429, // What You Won't Do for Love - Bobby Caldwell
+    id: 429,
+    title: "What You Won't Do for Love",
+    artists: ["Bobby Caldwell"],
     url: "https://open.spotify.com/track/6Dk5fHTvH897XrVzCO64Mx?si=WWMh_-6yQ4KBli6n1shfHg",
   },
   {
-    id: 430, // Take Me Home, Country Roads - John Denver
+    id: 430,
+    title: "Take Me Home, Country Roads",
+    artists: ["John Denver"],
     url: "https://open.spotify.com/track/1QbOvACeYanja5pbnJbAmk?si=AbGE12OCSDiiOXK26L1ceQ",
   },
   {
-    id: 431, // Wicked Game - Chris Isaak
+    id: 431,
+    title: "Wicked Game",
+    artists: ["Chris Isaak"],
     url: "https://open.spotify.com/track/7w5AOd6HrDIHewHfpABEss?si=wZRV77DORRWJJfp67bYxbQ",
   },
   {
-    id: 432, // I Don't Want To Miss A Thing - Aerosmith
+    id: 432,
+    title: "I Don't Want To Miss A Thing",
+    artists: ["Aerosmith"],
     url: "https://open.spotify.com/track/225xvV8r1yKMHErSWivnow?si=qlWUbdJGRVi31ROyr7aHtA",
   },
   {
-    id: 433, // What Makes You Beautiful - One Direction
+    id: 433,
+    title: "What Makes You Beautiful",
+    artists: ["One Direction"],
     url: "https://open.spotify.com/track/4cluDES4hQEUhmXj6TXkSo?si=wq1AtTTETVSMxXJ2B-6n3w",
   },
   {
-    id: 434, // Steal My Girl - One Direction
+    id: 434,
+    title: "Steal My Girl",
+    artists: ["One Direction"],
     url: "https://open.spotify.com/track/2Bs4jQEGMycglOfWPBqrVG?si=YGIo1FOfQCaA04xCA0YRvg",
   },
   {
-    id: 435, // Drag Me Down - One Direction
+    id: 435,
+    title: "Drag Me Down",
+    artists: ["One Direction"],
     url: "https://open.spotify.com/track/2K87XMYnUMqLcX3zvtAF4G?si=0cnKNDNERg2QglH23ru9fg",
   },
   {
-    id: 436, // One Thing - One Direction
+    id: 436,
+    title: "One Thing",
+    artists: ["One Direction"],
     url: "https://open.spotify.com/track/5G2c6FsfTzgYUzageCmfXY?si=YcQSo7ToSUqflVaMrNC5_g",
   },
   {
-    id: 437, // Yeah 3x - Chris Brown
+    id: 437,
+    title: "Yeah 3x",
+    artists: ["Chris Brown"],
     url: "https://open.spotify.com/track/2QtxlzvSBONjs1bDC34ixs?si=tMfktHEhS_SeYbc1myUDGg",
   },
   {
-    id: 438, // Runaway - Aurora
-    url: "https://open.spotify.com/track/2WZ3zMVFxuC5i20jQrnPyE?si=x0WxeANwQ7eVgmEJ0wN92A"
-  },
-  {
-    id: 439, // Running with the Wolves - Aurora
+    id: 439,
+    title: "Running with the Wolves",
+    artists: ["Aurora"],
     url: "https://open.spotify.com/track/2xAyIArdyX0bV9mQP1vy1a?si=n7Jj4VGARdiHqViYo880bQ",
   },
   {
-    id: 440, // Grace Kelly - MIKA
-    url: "https://open.spotify.com/track/2SDx0PooHZI1SQKR0y44bs?si=iQZwsS1_QTWs6VABBLbGvw"
-  },
-  {
-    id: 441, // Relax, Take It Easy - Mika
+    id: 441,
+    title: "Relax, Take It Easy",
+    artists: ["Mika"],
     url: "https://open.spotify.com/track/0KM2y796j63t5RHhvRUxld?si=WkLNvEcXRXK7EhlcoECDVQ",
   },
   {
-    id: 442, // Lollipop - Mika
+    id: 442,
+    title: "Lollipop",
+    artists: ["Mika"],
     url: "https://open.spotify.com/track/2NjhV99ncY4A5lSkTHvTtU?si=9U_93tz3TWGU8heq_GmbAQ",
   },
   {
-    id: 443, // We No Speak Americano - Yolanda Be Cool and DCUP
+    id: 443,
+    title: "We No Speak Americano",
+    artists: ["Yolanda Be Cool", "DCUP"],
     url: "https://open.spotify.com/track/37dYAkMa4lzRCH6kDbMT1L?si=ZCLog4RuQSS4jKWMR01meg",
   },
   {
-    id: 444, // Genre Police - S3RL, Lexi
+    id: 444,
+    title: "Genre Police",
+    artists: ["S3RL", "Lexi"],
     url: "https://open.spotify.com/track/36flWlZzU7ETc40iXFGWzJ?si=-LupCN90Qnuu6TohXdFILg",
   },
   {
-    id: 445, // Im Blue - Eiffel 65, Gabry Ponte
+    id: 445,
+    title: "Im Blue",
+    artists: ["Eiffel 65", "Gabry Ponte"],
     url: "https://open.spotify.com/track/7lMIJ4EFWRVoAIPDpeGyM3?si=XELSuDfdTRGFwnYVrQ0fpA",
   },
   {
-    id: 446, // Bangarang (feat. Sirah) - Skrillex, Sirah
+    id: 446,
+    title: "Bangarang (feat. Sirah)",
+    artists: ["Skrillex", "Sirah"],
     url: "https://open.spotify.com/track/6VRhkROS2SZHGlp0pxndbJ?si=0g862svESmSha_p42vqPBQ",
   },
   {
-    id: 447, // Scary Monsters and Nice Sprites - Skrillex
+    id: 447,
+    title: "Scary Monsters and Nice Sprites",
+    artists: ["Skrillex"],
     url: "https://open.spotify.com/track/5q8oybjZelukF4h0CzSUN9?si=1UqOrfLuSLupXVqn21abVg",
   },
   {
-    id: 448, // Where Are Ü Now (with Justin Bieber) - Jack Ü, Skrillex, Diplo, Justin Bieber
+    id: 448,
+    title: "Where Are Ü Now (with Justin Bieber)",
+    artists: ["Jack Ü", "Skrillex", "Diplo", "Justin Bieber"],
     url: "https://open.spotify.com/track/66hayvUbTotekKU3H4ta1f?si=M2ByNn_MRwexGBJoDJvVIQ",
   },
   {
-    id: 449, // Hold the Line - Toto
+    id: 449,
+    title: "Hold the Line",
+    artists: ["Toto"],
     url: "https://open.spotify.com/track/4aVuWgvD0X63hcOCnZtNFA?si=NuNNnlasRJ-mr09M1oEO-g",
   },
   {
-    id: 450,// Gangnam Style - PSY
+    id: 450,
+    title: "Gangnam Style",
+    artists: ["PSY"],
     url: "https://open.spotify.com/track/03UrZgTINDqvnUMbbIMhql?si=AJpeJVavQBaWb1qKWoZuSg",
   },
   {
-    id: 451, // Baby - Justin Bieber, Ludacris
+    id: 451,
+    title: "Baby",
+    artists: ["Justin Bieber", "Ludacris"],
     url: "https://open.spotify.com/track/6epn3r7S14KUqlReYr77hA?si=UQRTzGUGTl2YFxcFPw5ZyA",
-  }, 
+  },
   {
-    id: 452, // M83 - Midnight City
+    id: 452,
+    title: "M83",
+    artists: ["Midnight City"],
     url: "https://open.spotify.com/track/6GyFP1nfCDB8lbD2bG0Hq9?si=ua3_bqTdRg-w6Z-i4RXc1Q",
   },
   {
-    id: 453, // God's Plan - Drake
+    id: 453,
+    title: "God's Plan",
+    artists: ["Drake"],
     url: "https://open.spotify.com/track/6DCZcSspjsKoFjzjrWoCdn?si=bFD_lGmtQtqx-CdfVGeE-w",
   },
   {
-    id: 454, // One Dance - Drake, Kyla, Wizkid
+    id: 454,
+    title: "One Dance",
+    artists: ["Drake", "Kyla", "Wizkid"],
     url: "https://open.spotify.com/track/1zi7xx7UVEFkmKfv06H8x0?si=GnkHeb1qTGuazCqny1m7Xg",
   },
   {
-    id: 455, // Passionfruit - Drake
+    id: 455,
+    title: "Passionfruit",
+    artists: ["Drake"],
     url: "https://open.spotify.com/track/5mCPDVBb16L4XQwDdbRUpz?si=GTAiIq-mQmC6eTPMTRXwrA",
   },
   {
-    id: 456, // Hotline Bling - Drake
+    id: 456,
+    title: "Hotline Bling",
+    artists: ["Drake"],
     url: "https://open.spotify.com/track/0wwPcA6wtMf6HUMpIRdeP7?si=Y9EPfaqRRUmAkK1JjC9zxA",
   },
   {
-    id: 457, // Despacito - Luis Fonsi, Daddy Yankee
+    id: 457,
+    title: "Despacito",
+    artists: ["Luis Fonsi", "Daddy Yankee"],
     url: "https://open.spotify.com/track/6habFhsOp2NvshLv26DqMb?si=CRzYhjm8RDOxFgH9Aj5gaA",
   },
   {
-    id: 458, // Shape of You - Ed Sheeran
+    id: 458,
+    title: "Shape of You",
+    artists: ["Ed Sheeran"],
     url: "https://open.spotify.com/track/7qiZfU4dY1lWllzX7mPBI3?si=Klx7BKXcR0eIZSmlyw28AQ",
   },
   {
-    id: 459, // Happy - Pharrell Williams
+    id: 459,
+    title: "Happy",
+    artists: ["Pharrell Williams"],
     url: "https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH?si=x90VnCGzRwyQMRSMCNW8ZQ",
   },
   {
-    id: 460, // Rolling in the Deep - Adele
+    id: 460,
+    title: "Rolling in the Deep",
+    artists: ["Adele"],
     url: "https://open.spotify.com/track/4OSBTYWVwsQhGLF9NHvIbR?si=MPylV6kgSkGOTM7NLpV2Fg",
   },
   {
-    id: 461, // Call Me Maybe - Carly Rae Jepsen
+    id: 461,
+    title: "Call Me Maybe",
+    artists: ["Carly Rae Jepsen"],
     url: "https://open.spotify.com/track/20I6sIOMTCkB6w7ryavxtO?si=AMyR1umOSa6-GAtPI6MKXQ",
   },
   {
-    id: 462, // Blurred Lines - Robin Thicke, T.I., Pharrell Williams
+    id: 462,
+    title: "Blurred Lines",
+    artists: ["Robin Thicke", "T.I.", "Pharrell Williams"],
     url: "https://open.spotify.com/track/0n4bITAu0Y0nigrz3MFJMb?si=rs1ih-JJQaGJKOCySrFekw",
   },
   {
-    id: 463, // Old Town Road - Lil Nas X
+    id: 463,
+    title: "Old Town Road",
+    artists: ["Lil Nas X"],
     url: "https://open.spotify.com/track/2YpeDb67231RjR0MgVLzsG?si=jMvJlnNfTi2p08qpWKdgIA",
   },
   {
-    id: 464, // See You Again - Wiz Khalifa, Charlie Puth
+    id: 464,
+    title: "See You Again",
+    artists: ["Wiz Khalifa", "Charlie Puth"],
     url: "https://open.spotify.com/track/66CFbqJScx6zRieGllITcs?si=WwiSP807T_SVvLkTQ_M41Q",
   },
   {
-    id: 465, // Lean On - Major Lazer, DJ Snake, MØ
+    id: 465,
+    title: "Lean On",
+    artists: ["Major Lazer", "DJ Snake", "MØ"],
     url: "https://open.spotify.com/track/4UKJUbcuStnnxLeJmVJsSc?si=V3nZrPQJTLSE57QfpAgcPQ",
   },
   {
-    id: 466, // Can't Stop the Feeling - Justin Timberlake
+    id: 466,
+    title: "Can't Stop the Feeling",
+    artists: ["Justin Timberlake"],
     url: "https://open.spotify.com/track/6JV2JOEocMgcZxYSZelKcc?si=EyYdAyQkR_C0HhrFnUzfZg",
   },
   {
-    id: 467, // Havana - Camila Cabello, Young Thug
+    id: 467,
+    title: "Havana",
+    artists: ["Camila Cabello", "Young Thug"],
     url: "https://open.spotify.com/track/1rfofaqEpACxVEHIZBJe6W?si=fFb75w7NQSe5G-bht5wsfA",
   },
   {
-    id: 468, // Forever - Chris Brown
+    id: 468,
+    title: "Forever",
+    artists: ["Chris Brown"],
     url: "https://open.spotify.com/track/3NZJlJemX3mzjf56MqC5ML?si=hGBpnGmcTEeyzE8B36dbUQ",
   },
   {
-    id: 469, // Next To You - Chris Brown, Justin Bieber
+    id: 469,
+    title: "Next To You",
+    artists: ["Chris Brown", "Justin Bieber"],
     url: "https://open.spotify.com/track/7gd01LMH2gBcoDngSt8sq9?si=uH4-3Pe3S3anF92TjviKEQ",
   },
   {
-    id: 470, // It Girl - Jason Derulo
+    id: 470,
+    title: "It Girl",
+    artists: ["Jason Derulo"],
     url: "https://open.spotify.com/track/4fINc8dnfcz7AdhFYVA4i7?si=Nv-kjyRWSpaf6r2df9vNqQ",
   },
   {
-    id: 471, // Ridin Solo - Jason Derulo
+    id: 471,
+    title: "Ridin Solo",
+    artists: ["Jason Derulo"],
     url: "https://open.spotify.com/track/6OEolOOk9Gh9bqkdpfIOl0?si=AILwujLdQ4GoXx8tmHn8vg",
   },
   {
-    id: 472, // Whatcha Say - Jason Derulo
+    id: 472,
+    title: "Whatcha Say",
+    artists: ["Jason Derulo"],
     url: "https://open.spotify.com/track/7xkQdy0cy5ymoWT7nedvLz?si=o7v2xJoCRw-k7JoLze3TSw",
   },
   {
-    id: 473, // Talk Dirty (feat. 2 Chainz) - Jason Derulo, 2 Chainz
+    id: 473,
+    title: "Talk Dirty (feat. 2 Chainz)",
+    artists: ["Jason Derulo", "2 Chainz"],
     url: "https://open.spotify.com/track/31JwK4iHCf75rnQWoMPU5t?si=2PFMpx_yS2GwmMVRSebGNw",
   },
   {
-    id: 474, // Want to Want Me - Jason Derulo
+    id: 474,
+    title: "Want to Want Me",
+    artists: ["Jason Derulo"],
     url: "https://open.spotify.com/track/6zKrj4SomgfbvsfuTAuElE?si=Zcq4PzwsS6Kt-tJDtSGvfg",
   },
   {
-    id: 475, // Swalla - Jason Derulo, Nicky Minaj, Ty Dolla $ign
+    id: 475,
+    title: "Swalla",
+    artists: ["Jason Derulo", "Nicky Minaj", "Ty Dolla $ign"],
     url: "https://open.spotify.com/track/5DswHXvXDUmgwP5zcRL5Hv?si=sXorGgmxTJyNAbETy1DzHQ",
   },
   {
-    id: 476, // Under The Influence - Chris Brown
+    id: 476,
+    title: "Under The Influence",
+    artists: ["Chris Brown"],
     url: "https://open.spotify.com/track/5IgjP7X4th6nMNDh4akUHb?si=4TbDNPEBTbuQQtdbPl_UiQ",
   },
   {
-    id: 477, // Mood (feat. Iann Dior) - 24kGoldn, Iann Dior
+    id: 477,
+    title: "Mood (feat. Iann Dior)",
+    artists: ["24kGoldn", "Iann Dior"],
     url: "https://open.spotify.com/track/4jPy3l0RUwlUI9T5XHBW2m?si=DLjGABnLSR-dFpWEQ9grCQ",
   },
   {
-    id: 478, // CITY OF ANGELS - 24kGoldn
+    id: 478,
+    title: "CITY OF ANGELS",
+    artists: ["24kGoldn"],
     url: "https://open.spotify.com/track/6ap9lSRJ0iLriGLqoJ44cq?si=HogDoDsJR6-FTPauPdidQg",
   },
   {
-    id: 479, // Hate Me - Ellie Goulding, Juice WRLD
+    id: 479,
+    title: "Hate Me",
+    artists: ["Ellie Goulding", "Juice WRLD"],
     url: "https://open.spotify.com/track/15og0pCEcTFWEXOFKdcJlU?si=PErnFGkgRkGyvtCpEgL9iQ",
   },
   {
-    id: 480, // Lucid Dreams - Juice WRLD
+    id: 480,
+    title: "Lucid Dreams",
+    artists: ["Juice WRLD"],
     url: "https://open.spotify.com/track/285pBltuF7vW8TeWk8hdRR?si=pQIg_FrISNGDJpfKWbmA7Q",
   },
   {
-    id: 481, // All Girls Are The Same - Juice WRLD
+    id: 481,
+    title: "All Girls Are The Same",
+    artists: ["Juice WRLD"],
     url: "https://open.spotify.com/track/4VXIryQMWpIdGgYR4TrjT1?si=s83BPvsYT-yFTSt1w12qwA",
   },
   {
-    id: 482, // Come & Go (with Marshmello)
+    id: 482,
+    title: "Come & Go (with Marshmello)",
+    artists: [],
     url: "https://open.spotify.com/track/2Y0wPrPQBrGhoLn14xRYCG?si=Of7doqJmRlG-7LhW8QA2hw",
   },
   {
-    id: 483, // Wishing Well - Juice WRLD
+    id: 483,
+    title: "Wishing Well",
+    artists: ["Juice WRLD"],
     url: "https://open.spotify.com/track/2U5WueTLIK5WJLD7mvDODv?si=GrZac7Z5SlmU6qoNnrzH-g",
   },
   {
-    id: 484, // Happier - Marshmello, Bastille
+    id: 484,
+    title: "Happier",
+    artists: ["Marshmello", "Bastille"],
     url: "https://open.spotify.com/track/7BqHUALzNBTanL6OvsqmC1?si=cZLYgMaXSiK3Mrx02Hlzrg",
   },
   {
-    id: 485, // Silence - Marshmello, Khalid
+    id: 485,
+    title: "Silence",
+    artists: ["Marshmello", "Khalid"],
     url: "https://open.spotify.com/track/7vGuf3Y35N4wmASOKLUVVU?si=SD_I_UodRxCWbig-TmQ-xA",
   },
   {
-    id: 486, // Pompei - Bastille
+    id: 486,
+    title: "Pompei",
+    artists: ["Bastille"],
     url: "https://open.spotify.com/track/4Ub8UsjWuewQrPhuepfVpd?si=Gpp1K-NxQzesxOZgtu99CA",
   },
   {
-    id: 487, // Cold Water - Major Lazar, Justin Bieber, MØ
+    id: 487,
+    title: "Cold Water",
+    artists: ["Major Lazar", "Justin Bieber", "MØ"],
     url: "https://open.spotify.com/track/6Bjtr3tPdto5nyuLYf61sN?si=lT0_jTP7Qc6biAzkoZzVOw",
   },
   {
-    id: 488, // In the Name of Love - Martin Garrix, Bebe Rexha
+    id: 488,
+    title: "In the Name of Love",
+    artists: ["Martin Garrix", "Bebe Rexha"],
     url: "https://open.spotify.com/track/23L5CiUhw2jV1OIMwthR3S?si=nuSxpT5jRlGwWzfdoA80yA",
   },
   {
-    id: 489, // Me, Myself & I - G-Easy, Bebe Rehxa
+    id: 489,
+    title: "Me, Myself & I",
+    artists: ["G-Easy", "Bebe Rehxa"],
     url: "https://open.spotify.com/track/40YcuQysJ0KlGQTeGUosTC?si=jQnKRIL_Rmecsh2ouN3kpw",
   },
   {
-    id: 490, // Counting Stars - OneRepublic
+    id: 490,
+    title: "Counting Stars",
+    artists: ["OneRepublic"],
     url: "https://open.spotify.com/track/2tpWsVSb9UEmDRxAl1zhX1?si=TmbnNt8eSu2SyzKzS_qUgA",
   },
   {
-    id: 491, // House of Memories - Panic! At The Disco
+    id: 491,
+    title: "House of Memories",
+    artists: ["Panic! At The Disco"],
     url: "https://open.spotify.com/track/2DgdHcjWmO3qd50RzuBLgZ?si=vAEAK2GnRNW9ElbvmvVn-Q",
   },
   {
-    id: 492, // Use Somebody - Kings of Leon
+    id: 492,
+    title: "Use Somebody",
+    artists: ["Kings of Leon"],
     url: "https://open.spotify.com/track/5VGlqQANWDKJFl0MBG3sg2?si=iBieo9LzSAaWiI9tc6nu_w&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 493, // Shadow of the Day - Linkin Park
+    id: 493,
+    title: "Shadow of the Day",
+    artists: ["Linkin Park"],
     url: "https://open.spotify.com/track/0OYcEfskah1egYHjYRvbg1?si=uHhUrvaEShuTZvz3u8Vh9g&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 494, // Suddenly I See - KT Thunstall
+    id: 494,
+    title: "Suddenly I See",
+    artists: ["KT Thunstall"],
     url: "https://open.spotify.com/track/5p9XWUdvbUzmPCukOmwoU3?si=186TkYq9S-qkGnRfmr2COA&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 495, // Sk8er Boi - Avril Lavigne
+    id: 495,
+    title: "Sk8er Boi",
+    artists: ["Avril Lavigne"],
     url: "https://open.spotify.com/track/00Mb3DuaIH1kjrwOku9CGU?si=ooRwLd60QDasUO9KPKuk3g&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 496, // Waiting On the World to Change - John Mayer
+    id: 496,
+    title: "Waiting On the World to Change",
+    artists: ["John Mayer"],
     url: "https://open.spotify.com/track/1lRmQ9D6oNYiuCXdGlKCs0?si=SzD3A_8STIOI8QfqIYzKbw&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 497, // Upside Down - Jack Johnson
+    id: 497,
+    title: "Upside Down",
+    artists: ["Jack Johnson"],
     url: "https://open.spotify.com/track/0aJrYfARfCKzv6gXjhs4SZ?si=1BxUtxDUSxi4lH5H45qlyQ&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 498, // Sex on Fire - Kings of Leon
+    id: 498,
+    title: "Sex on Fire",
+    artists: ["Kings of Leon"],
     url: "https://open.spotify.com/track/0ntQJM78wzOLVeCUAW7Y45?si=4BG-Ky2oQfOTtMPH0Wtgrw&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 499, // Leave Out All The Rest - Linkin Park
+    id: 499,
+    title: "Leave Out All The Rest",
+    artists: ["Linkin Park"],
     url: "https://open.spotify.com/track/0sp00HSXkQyqTa6QqM0O8V?si=DmrYT_EeS-64Uw5jeKumWg&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 500, // So What - Pink!
+    id: 500,
+    title: "So What",
+    artists: ["Pink!"],
     url: "https://open.spotify.com/track/0JiY190vktuhSGN6aqJdrt?si=rAeJBcl0T4-mJZIstMralw",
   },
   {
-    id: 501, // Raise Your Glass - Pink!
+    id: 501,
+    title: "Raise Your Glass",
+    artists: ["Pink!"],
     url: "https://open.spotify.com/track/1gv4xPanImH17bKZ9rOveR?si=pNWw3FrgQ2GuPlfkRrVq6w",
   },
   {
-    id: 502, // R U Mine? - Arctic Monkeys
+    id: 502,
+    title: "R U Mine?",
+    artists: ["Arctic Monkeys"],
     url: "https://open.spotify.com/track/2AT8iROs4FQueDv2c8q2KE?si=vZp6ORtNRz-hTbP4axCIyw",
   },
   {
-    id: 503, // Why’d You Only Call Me When You’re High? - Arctic Monkeys
+    id: 503,
+    title: "Why’d You Only Call Me When You’re High?",
+    artists: ["Arctic Monkeys"],
     url: "https://open.spotify.com/track/086myS9r57YsLbJpU0TgK9?si=-EMI2euMQa2rEgNGP-Cffg",
   },
   {
-    id: 504, // What I’ve Done - Linkin Park
+    id: 504,
+    title: "What I’ve Done",
+    artists: ["Linkin Park"],
     url: "https://open.spotify.com/track/18lR4BzEs7e3qzc0KVkTpU?si=5-IVI9TxTYO9d4P8ndva_w&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 505, // Hey, Soul Sister - Train
+    id: 505,
+    title: "Hey, Soul Sister",
+    artists: ["Train"],
     url: "https://open.spotify.com/track/4HlFJV71xXKIGcU3kRyttv?si=T1RwMQpUR-q-kz8kNqVLpw&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 506, // Stacy’s Mom - Fountains Of Wayne
+    id: 506,
+    title: "Stacy’s Mom",
+    artists: ["Fountains Of Wayne"],
     url: "https://open.spotify.com/track/27L8sESb3KR79asDUBu8nW?si=9xvZUaIaRoq20ZusItkWig&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 507, // Take Me Out - Franz Ferdinand
+    id: 507,
+    title: "Take Me Out",
+    artists: ["Franz Ferdinand"],
     url: "https://open.spotify.com/track/20I8RduZC2PWMWTDCZuuAN?si=2sEeUzoqSLGA5NdilXRnfw&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 508, // I’m A Believer - Smash Mouth
+    id: 508,
+    title: "I’m A Believer",
+    artists: ["Smash Mouth"],
     url: "https://open.spotify.com/track/0C9jZPUv4SuaXkuEQw6L40?si=2UQG3sb3SgWvH7JNW1mtUw&context=spotify%3Aplaylist%3A37i9dQZF1EIgVLlrvYQpZE",
   },
   {
-    id: 509, // Crush - David Archuleta
+    id: 509,
+    title: "Crush",
+    artists: ["David Archuleta"],
     url: "https://open.spotify.com/track/4wCD0qOFNRu1Q6O3N6ycm4?si=3CeW8Yb6QdqEexpZSkW6Iw",
   },
   {
-    id: 510, // Can’t Stop - Red Hot Chili Peppers
+    id: 510,
+    title: "Can’t Stop",
+    artists: ["Red Hot Chili Peppers"],
     url: "https://open.spotify.com/track/3ZOEytgrvLwQaqXreDs2Jx?si=OT6hC7fHStW8iwq0vybcjA",
   },
   {
-    id: 511, // How You Remind Me - Nickleback
+    id: 511,
+    title: "How You Remind Me",
+    artists: ["Nickleback"],
     url: "https://open.spotify.com/track/0gmbgwZ8iqyMPmXefof8Yf?si=4bIpZkhrSdu_tTx51fZqpg",
   },
   {
-    id: 512, // Photograph - Nickleback
+    id: 512,
+    title: "Photograph",
+    artists: ["Nickleback"],
     url: "https://open.spotify.com/track/3bYrSlgvWacP1LZV44pfzp?si=Bst24MeaQiC_1baacBCRrw",
   },
   {
-    id: 513, // Burn It to the Ground - Nickelback
+    id: 513,
+    title: "Burn It to the Ground",
+    artists: ["Nickelback"],
     url: "https://open.spotify.com/track/1jq28NGw6wdtFKx8MBPy6C?si=vAdpFppnTZWvv5lrXnEWyw",
   },
   {
-    id: 514, // Rockstar - Nickleback
+    id: 514,
+    title: "Rockstar",
+    artists: ["Nickleback"],
     url: "https://open.spotify.com/track/05tlUh0E6IFks9sCQguQKN?si=IdxW_cl5SK-KtFKhoyJkTA",
   },
   {
-    id: 515, // Who’s That Chick? (feat. Rihanna) - David Guetta, Rihanna
+    id: 515,
+    title: "Who’s That Chick? (feat. Rihanna)",
+    artists: ["David Guetta", "Rihanna"],
     url: "https://open.spotify.com/track/3FrX3mx8qq7SZX2NYbzDoj?si=YJgg6szHQeOsZkVYp4I5Zw",
   },
   {
-    id: 516, // Hall of Fame (feat. will.i.am) - The Script, will.i.am
+    id: 516,
+    title: "Hall of Fame (feat. will.i.am)",
+    artists: ["The Script", "will.i.am"],
     url: "https://open.spotify.com/track/7wMq5n8mYSKlQIGECKUgTX?si=xA-DO1FGT3K6uFZA0PeL2w",
   },
   {
-    id: 517, // Don’t Look Down (feat. Usher) - Martin Garrix, Usher
+    id: 517,
+    title: "Don’t Look Down (feat. Usher)",
+    artists: ["Martin Garrix", "Usher"],
     url: "https://open.spotify.com/track/5M9jOReAKGZ2AttVefFjTY?si=cx9UsWDCQkW8MdJQ_F4lAg",
   },
   {
-    id: 518, // Life is a Highway - Rascal Flatts
+    id: 518,
+    title: "Life is a Highway",
+    artists: ["Rascal Flatts"],
     url: "https://open.spotify.com/track/02SjT88MukDOa9KuuRuODY?si=hfnqri8bTWG9V3paw7Txag",
   },
   {
-    id: 519, // Stronger - Kanye West
+    id: 519,
+    title: "Stronger",
+    artists: ["Kanye West"],
     url: "https://open.spotify.com/track/4y6c5vMzKKM3KsMbHtjKx5?si=l0qoSckjQzee5dMQOSZKIQ",
   },
   {
-    id: 520, // Do It Again - Pia Mia, Chris Brown, Tyga
+    id: 520,
+    title: "Do It Again",
+    artists: ["Pia Mia", "Chris Brown", "Tyga"],
     url: "https://open.spotify.com/track/1PTqbs9FV8hSJCS7OOF5OC?si=9GojqB7sSuex2g0d5DmKDA",
   },
   {
-    id: 521, // Black Widow - Iggy Azalea, Rita Ora
+    id: 521,
+    title: "Black Widow",
+    artists: ["Iggy Azalea", "Rita Ora"],
     url: "https://open.spotify.com/track/2pyhJF2s7myJiXP9ceczB9?si=CORK-aT3Shy-36eth604Hw",
   },
   {
-    id: 522, // Fancy - Iggy Azalea
+    id: 522,
+    title: "Fancy",
+    artists: ["Iggy Azalea"],
     url: "https://open.spotify.com/track/3W3KtDwAIg3mAruSpnfG3Q?si=krs4CfvvQeGQvOyNX9ZlBQ",
   },
   {
-    id: 523, // Worth It (feat. Kid Ink) - Fifth Harmony, Kid Ink
+    id: 523,
+    title: "Worth It (feat. Kid Ink)",
+    artists: ["Fifth Harmony", "Kid Ink"],
     url: "https://open.spotify.com/track/41Fflg7qHiVOD6dEPvsCzO?si=h3HvkzijT2CdOPrRBmWL7w",
   },
   {
-    id: 524, // Good Time - Owl City, Carly Rae Jepsen
+    id: 524,
+    title: "Good Time",
+    artists: ["Owl City", "Carly Rae Jepsen"],
     url: "https://open.spotify.com/track/5w6TVvv71F8px5cObg2xnx?si=JyLvYfvqTp-zNC8N4IOmEw",
   },
   {
-    id: 525, // King - Years & Years (Olly Alexander)
+    id: 525,
+    title: "King",
+    artists: ["Years & Years (Olly Alexander)"],
     url: "https://open.spotify.com/track/3AeicLnm55RqcXGBKYQolM?si=M7dBQe4mSFKnsGfdkuMpPg",
   },
   {
-    id: 526, // Heartless - Kanye West
+    id: 526,
+    title: "Heartless",
+    artists: ["Kanye West"],
     url: "https://open.spotify.com/track/53gcDgFyqqpvCzXWrnFZpH?si=zzstQ8FNRWGydV5heYlJsw",
   },
   {
-    id: 527, // Flashing Lights - Kanye West
+    id: 527,
+    title: "Flashing Lights",
+    artists: ["Kanye West"],
     url: "https://open.spotify.com/track/5TRPicyLGbAF2LGBFbHGvO?si=Py_oYP3YQwCPEytzCrM_qQ",
   },
   {
-    id: 528, // Runaway - Kanye West
+    id: 528,
+    title: "Runaway",
+    artists: ["Kanye West"],
     url: "https://open.spotify.com/track/3DK6m7It6Pw857FcQftMds?si=Jxw4zYBbQbyF2Pe_4CMCxQ",
   },
   {
-    id: 529, // All Falls Down - Kanye West
+    id: 529,
+    title: "All Falls Down",
+    artists: ["Kanye West"],
     url: "https://open.spotify.com/track/5SkRLpaGtvYPhw02vZhQQ9?si=kO4h-K7aRpGUxGUbymcPsw",
   },
   {
-    id: 530, // Ni**as In Paris - JAY-Z, Kanye West
+    id: 530,
+    title: "Ni**as In Paris",
+    artists: ["JAY-Z", "Kanye West"],
     url: "https://open.spotify.com/track/1auxYwYrFRqZP7t3s7w4um?si=axIS-RseQOO46vYoWyT_tQ",
   },
   {
-    id: 531, // Empire State Of Mind - JAY-Z, Alicia Keys
+    id: 531,
+    title: "Empire State Of Mind",
+    artists: ["JAY-Z", "Alicia Keys"],
     url: "https://open.spotify.com/track/2igwFfvr1OAGX9SKDCPBwO?si=THDVEDO9Rm2da2Wpq5mjsQ",
   },
   {
-    id: 532, // Run This Town - JAY-Z, Rihanna, Kanye West
+    id: 532,
+    title: "Run This Town",
+    artists: ["JAY-Z", "Rihanna", "Kanye West"],
     url: "https://open.spotify.com/track/7LR85XLWw2yXqKBSI5brbG?si=G2_vBIwgRzmntXQ5LA0DOw",
   },
   {
-    id: 533, // Numb / Encore - JAY-Z, Linkin Park
+    id: 533,
+    title: "Numb / Encore",
+    artists: ["JAY-Z", "Linkin Park"],
     url: "https://open.spotify.com/track/5sNESr6pQfIhL3krM8CtZn?si=hq1GSDD7TM2MYWChESI7Ow",
   },
   {
-    id: 534, // Can’t Tell Me Nothing - Kanye West
+    id: 534,
+    title: "Can’t Tell Me Nothing",
+    artists: ["Kanye West"],
     url: "https://open.spotify.com/track/0mEdbdeRFQwBhN4xfyIeUM?si=l3hFZa9QT12oaTAnii2zAw",
   },
   {
-    id: 535, // Homecoming - Kanye West, Chris Martin
+    id: 535,
+    title: "Homecoming",
+    artists: ["Kanye West", "Chris Martin"],
     url: "https://open.spotify.com/track/4iz9lGMjU1lXS51oPmUmTe?si=ytjTffL-TPyDOqq0hAIZYg",
   },
   {
-    id: 536, // I Wonder - Kanye West
+    id: 536,
+    title: "I Wonder",
+    artists: ["Kanye West"],
     url: "https://open.spotify.com/track/7rbECVPkY5UODxoOUVKZnA?si=UpLGyr7vSYOQXmCwrDiSFA",
   },
   {
-    id: 537, // Somebody To You - The Vamps
+    id: 537,
+    title: "Somebody To You",
+    artists: ["The Vamps"],
     url: "https://open.spotify.com/track/6VrLYoQKdhu1Jruei06t65?si=wp0C6XDgSGiIcs4SKu2ttA",
   },
   {
-    id: 538, // All Night - The Vamps, Matoma
+    id: 538,
+    title: "All Night",
+    artists: ["The Vamps", "Matoma"],
     url: "https://open.spotify.com/track/0dXNQ8dckG4eYfEtq9zcva?si=BlsgzQTqS0W7GLmy3CF99Q",
   },
   {
-    id: 539, // New Way Home - Isac Elliot
+    id: 539,
+    title: "New Way Home",
+    artists: ["Isac Elliot"],
     url: "https://open.spotify.com/track/4cdYcmajml2Z7ru7ubaHCb?si=cnSFpPnZTDyRn9b820eZcA",
   },
   {
-    id: 540, // All Time Low - Jon Bellion
+    id: 540,
+    title: "All Time Low",
+    artists: ["Jon Bellion"],
     url: "https://open.spotify.com/track/1CnPYaKxTVb4LWOtiGOm0m?si=AKIrDXmMRguPWjgkSOzccg",
   },
   {
-    id: 541, // Believer - Imagine Dragons
+    id: 541,
+    title: "Believer",
+    artists: ["Imagine Dragons"],
     url: "https://open.spotify.com/track/0pqnGHJpmpxLKifKRmU6WP?si=hnlXTPKEQvWkdXccOJpMpQ",
   },
   {
-    id: 542, // Demons - Imagine Dragons
+    id: 542,
+    title: "Demons",
+    artists: ["Imagine Dragons"],
     url: "https://open.spotify.com/track/5qaEfEh1AtSdrdrByCP7qR?si=dhpXPrYBT_WEppZueqDgUQ",
   },
   {
-    id: 543, // Thunder - Imagine Dragons
+    id: 543,
+    title: "Thunder",
+    artists: ["Imagine Dragons"],
     url: "https://open.spotify.com/track/1zB4vmk8tFRmM9UULNzbLB?si=_7jYU7yoQvSZ-K--VvVpOw",
   },
   {
-    id: 544, // Radioactive - Imagine Dragons
+    id: 544,
+    title: "Radioactive",
+    artists: ["Imagine Dragons"],
     url: "https://open.spotify.com/track/62yJjFtgkhUrXktIoSjgP2?si=oiy_lGI6Q4axIOxer08KsA",
   },
   {
-    id: 545, // Enemy (with JID, from Arcane) - Imagine Dragons, JID
+    id: 545,
+    title: "Enemy (with JID, from Arcane)",
+    artists: ["Imagine Dragons", "JID"],
     url: "https://open.spotify.com/track/3CIyK1V4JEJkg02E4EJnDl?si=o2gjyHhtQiSu7Lmj5pz4Aw",
   },
   {
-    id: 546, // Thinking Out Loud - Ed Sheeran
+    id: 546,
+    title: "Thinking Out Loud",
+    artists: ["Ed Sheeran"],
     url: "https://open.spotify.com/track/34gCuhDGsG4bRPIf9bb02f?si=LN9zMlHyRAOcjTQ8n673UQ",
   },
   {
-    id: 547, // Bad Habits - Ed Sheeran
+    id: 547,
+    title: "Bad Habits",
+    artists: ["Ed Sheeran"],
     url: "https://open.spotify.com/track/3rmo8F54jFF8OgYsqTxm5d?si=zdZ2O2xhSGGrSBxMx13V3Q",
   },
   {
-    id: 548, // I Knew You Were Trouble - Taylor Swift
+    id: 548,
+    title: "I Knew You Were Trouble",
+    artists: ["Taylor Swift"],
     url: "https://open.spotify.com/track/72jCZdH0Lhg93z6Z4hBjgj?si=-sq2mB-LRYmnQroqpSq1JA&context=spotify%3Aplaylist%3A37i9dQZF1DX5KpP2LN299J",
   },
   {
-    id: 549, // Blank Space - Taylor Swift
+    id: 549,
+    title: "Blank Space",
+    artists: ["Taylor Swift"],
     url: "https://open.spotify.com/track/1u8c2t2Cy7UBoG4ArRcF5g?si=QiouXeKWRIqb_bIprjxp7A",
   },
   {
-    id: 550, // Cruel Summer - Taylor Swift
+    id: 550,
+    title: "Cruel Summer",
+    artists: ["Taylor Swift"],
     url: "https://open.spotify.com/track/1BxfuPKGuaTgP7aM0Bbdwr?si=svS3beWIQMimNtj31-k6eQ",
   },
   {
-    id: 551, // Shake It Off - Taylor Swift
+    id: 551,
+    title: "Shake It Off",
+    artists: ["Taylor Swift"],
     url: "https://open.spotify.com/track/0cqRj7pUJDkTCEsJkx8snD?si=NvXelSdpSxiKEZx9k4Jw9w&context=spotify%3Aplaylist%3A37i9dQZF1DX5KpP2LN299J",
   },
   {
-    id: 552, // We Are Never Ever Getting Back Together - Taylor Swift
+    id: 552,
+    title: "We Are Never Ever Getting Back Together",
+    artists: ["Taylor Swift"],
     url: "https://open.spotify.com/track/7AEAGTc8cReDqcbPoY9gwo?si=X5Hq6gE_R7iGkfph7NJwmw&context=spotify%3Aplaylist%3A37i9dQZF1DX5KpP2LN299J",
   },
   {
-    id: 553, // Love Story - Taylor Swift
+    id: 553,
+    title: "Love Story",
+    artists: ["Taylor Swift"],
     url: "https://open.spotify.com/track/1D4PL9B8gOg78jiHg3FvBb?si=FLWexUzwRjW7dZc-hjtucw",
   },
   {
-    id: 554, // Smack That - Akon, Eminem
+    id: 554,
+    title: "Smack That",
+    artists: ["Akon", "Eminem"],
     url: "https://open.spotify.com/track/2kQuhkFX7uSVepCD3h29g5?si=g7QBjqiXTEO9Y3NAARQClA",
   },
   {
-    id: 555, // Lonely - Akon
+    id: 555,
+    title: "Lonely",
+    artists: ["Akon"],
     url: "https://open.spotify.com/track/4v7DCN09hgXkKazefkznDQ?si=pR_7OpIOT7CVsJ66bbh45A",
   },
   {
-    id: 556, // Party In The U.S.A - Miley Cyrus
+    id: 556,
+    title: "Party In The U.S.A",
+    artists: ["Miley Cyrus"],
     url: "https://open.spotify.com/track/3E7dfMvvCLUddWissuqMwr?si=PNP2IxwcRhaBD8NEwIZWcg",
   },
   {
-    id: 557, // Burn - Ellie Goulding
+    id: 557,
+    title: "Burn",
+    artists: ["Ellie Goulding"],
     url: "https://open.spotify.com/track/5lF0pHbsJ0QqyIrLweHJPW?si=h8U_oBIET-aJ5t5Itc4GuQ",
   },
-  // Roc Boys, Bausa, GOLF, Soppgirobygget, Broiler, Ballinciaga, Haien kommer, 
-  // Ni**as in Paris av Jay-Z og Kanye West, 21 savage, Post Malone, Travis Scott, Juice WRLD, XXXTentacion, Lil Uzi Vert, Lil Yachty, Lil Baby, DaBaby, Megan Thee Stallion, Cardi B, Doja Cat, Saweetie, City
 ];

@@ -434,11 +434,6 @@ export const truthOrDare = {
       no: "mim en emoji helt til noen gjetter den."
     },
     {
-      id: 37,
-      en: "tell a short story using only sound effects and sentences like \"and I just\", for 20 seconds.",
-      no: "fortell en kort historie med bare lydeffekter og setninger som «og jeg bare», i 20 sekunder."
-    },
-    {
       id: 39,
       en: "do an impression of someone ordering drinks at a fancy bar.",
       no: "gjør en imitasjon av noen som bestiller drinker på en fancy bar."

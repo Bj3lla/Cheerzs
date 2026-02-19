@@ -1,93 +1,66 @@
 #!/usr/bin/env python3
 import re
 
+def escape_quotes(text):
+    """Escape double quotes in a string"""
+    return text.replace('"', '\\"')
+
 # Read the file
 with open('src/data/urls/spotifyUrls.ts', 'r', encoding='utf-8') as f:
     content = f.read()
 
-# Split into lines
-lines = content.splitlines(keepends=True)
+# Pattern to match entries with title and artists fields
+# Match: title: "Some Title",
+# We need to find titles that contain unescaped quotes and escape them
 
-# Find where to start (after id: 490)
-last_formatted_idx = None
-for i, line in enumerate(lines):
-    if 'id: 490,' in line:
-        # Find the closing brace of this entry
-        for j in range(i, min(i+5, len(lines))):
-            if '},'.strip() in lines[j]:
-                last_formatted_idx = j
-                break
-        break
-
-if last_formatted_idx is None:
-    print("Could not find last formatted entry")
-    exit(1)
-
-# Collect all the unformatted songs
-unformatted_start = last_formatted_idx + 1
-unformatted_text = ''.join(lines[unformatted_start:])
-
-# Find where the comments start
-comment_start = unformatted_text.find('  // Roc Boys')
-if comment_start == -1:
-    comment_start = unformatted_text.find('// Roc Boys')
-
-if comment_start != -1:
-    songs_text = unformatted_text[:comment_start]
-    comments = unformatted_text[comment_start:]
-else:
-    songs_text = unformatted_text
-    comments = ''
-
-# Parse the songs - split by double newlines and process pairs
-# Remove leading/trailing whitespace
-songs_text = songs_text.strip()
-
-# Split into lines and process
-lines_to_process = songs_text.split('\n')
-formatted_songs = []
-current_id = 491
-
-i = 0
-while i < len(lines_to_process):
-    line = lines_to_process[i].strip()
+# First, let's find all title values
+def fix_title_quotes(match):
+    """Fix quotes within title strings"""
+    full_match = match.group(0)
+    title_content = match.group(1)
     
-    # Skip empty lines
-    if not line:
-        i += 1
-        continue
+    # If the title already has escaped quotes, don't double-escape
+    if '\\"' in title_content:
+        return full_match
     
-    # If this looks like a URL, skip it (it's orphaned)
-    if line.startswith('https://'):
-        i += 1
-        continue
-    
-    # This should be a title
-    title = line
-    i += 1
-    
-    # Skip any empty lines
-    while i < len(lines_to_process) and not lines_to_process[i].strip():
-        i += 1
-    
-    # Get the URL
-    if i < len(lines_to_process):
-        url = lines_to_process[i].strip()
-        if url.startswith('https://'):
-            formatted_songs.append(f'  {{\n')
-            formatted_songs.append(f'    id: {current_id}, // {title}\n')
-            formatted_songs.append(f'    url: "{url}",\n')
-            formatted_songs.append(f'  }},\n')
-            current_id += 1
-        i += 1
+    # Escape any unescaped quotes
+    fixed_title = title_content.replace('"', '\\"')
+    return f'title: "{fixed_title}",'
 
-# Reconstruct the file
-new_content = ''.join(lines[:last_formatted_idx+1])
-new_content += ''.join(formatted_songs)
-new_content += comments
+# Match: title: "anything",
+# The pattern captures the content between the quotes
+pattern = r'title: "([^"]*(?:"[^"]*)*)",'
+
+# This won't work for quotes inside. Let's use a different approach.
+# Find all occurrences of title: "..." and fix them
+
+lines = content.split('\n')
+fixed_lines = []
+
+for line in lines:
+    # Check if this line contains a title field
+    if 'title: "' in line and not '\\"' in line:
+        # Extract the part after title: "
+        start_idx = line.find('title: "') + len('title: "')
+        # Find the closing ",
+        end_idx = line.rfind('",')
+        
+        if end_idx > start_idx:
+            title_content = line[start_idx:end_idx]
+            # Check if there's a quote in the middle (like 7")
+            if '"' in title_content:
+                # Escape it
+                fixed_title = title_content.replace('"', '\\"')
+                line = line[:start_idx] + fixed_title + line[end_idx:]
+    
+    fixed_lines.append(line)
+
+new_content = '\n'.join(fixed_lines)
 
 # Write back
 with open('src/data/urls/spotifyUrls.ts', 'w', encoding='utf-8') as f:
     f.write(new_content)
 
-print(f"Successfully formatted {current_id - 491} songs (IDs 491-{current_id-1})")
+print("Successfully fixed quote escaping in titles!")
+
+

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Ably from "ably";
 import { IoArrowBack } from "react-icons/io5";
 import Button from "../components/Button";
 import Card from "../components/Card";
@@ -11,14 +10,19 @@ import { categoryColors } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 import type { LanguageCode } from "../hooks/useLanguage";
 import SpotifyCard from "../components/SpotifyCard";
+import { useConvexRoom } from "../hooks/useConvexRoom";
+import { useConvexGame } from "../hooks/useConvexGame";
+import type { Id } from "../../convex/_generated/dataModel";
 
 export default function GamePage({ language }: { language: LanguageCode }) {
   const {
     gameStarted,
     category,
+    setCategory,
     prompt,
-    generatePrompt,
+    setPrompt,
     currentCard,
+    setCurrentCard,
     getRoomBroadcastState,
     applyRoomBroadcastState,
     activeRules,
@@ -27,9 +31,14 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     showActiveRules,
     setShowActiveRules: _setShowActiveRules,
     roomId,
+    playersForPrompts,
     setRoomSession,
     clearRoomSession,
     setGameStarted,
+    // Card queue
+    prefillCardQueue,
+    advanceCardQueue,
+    getQueueLength,
   } = useGame();
 
   const navigate = useNavigate();
@@ -43,24 +52,27 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     return localStorage.getItem("playerId") || "";
   }, []);
 
-  const [roomHost, setRoomHost] = useState("");
-  const isRoomGame = Boolean(roomId);
-  const isHost = Boolean(isRoomGame && username && roomHost && username === roomHost);
-
   const normalizedRoomID = useMemo(() => {
     return typeof roomId === "string" ? roomId.trim().toUpperCase() : "";
   }, [roomId]);
 
-  const isSyncing = Boolean(isRoomGame && !currentCard);
+  // Convex real-time subscriptions
+  const { room, players: playerRecords, leaveRoom: leaveRoomMutation, updatePlayerStatus } = useConvexRoom(normalizedRoomID);
+  const roomIdTyped = room?._id as Id<"rooms"> | undefined;
+  const { gameState, seq, updateGameState } = useConvexGame(roomIdTyped);
 
-  const ablyRef = useRef(null);
-  const channelRef = useRef(null);
+  const [roomHost, setRoomHost] = useState("");
+  const isRoomGame = Boolean(roomId);
+  const isHost = Boolean(isRoomGame && playerId && room?.hostId && playerId === room.hostId);
+
+  const isSyncing = Boolean(isRoomGame && !currentCard);
 
   const lastSeqRef = useRef(0);
   const lastAppliedLanguageRef = useRef(language);
-  const fetchGameStateInFlightRef = useRef(false);
   const initialLanguageRef = useRef(language);
   const startedAtRef = useRef("");
+  const prevIsHostRef = useRef(false);
+  const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const [lateJoinMessage, setLateJoinMessage] = useState("");
   const [showLateJoinPopup, setShowLateJoinPopup] = useState(false);
@@ -71,7 +83,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
 
   const drawCardInFlightRef = useRef(false);
 
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
   const isRepealCard = Boolean(repelActive || category === "repeal");
 
   const cardPrompt = isSyncing
@@ -101,67 +113,44 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   useEffect(() => {
     if (isRoomGame) return;
     if (gameStarted && !prompt) {
-      generatePrompt();
+      // Single-player: prefill queue and show first card
+      prefillCardQueue(7);
+      advanceCardQueue();
     }
-  }, [isRoomGame, gameStarted, prompt, generatePrompt]);
+  }, [isRoomGame, gameStarted, prompt, prefillCardQueue, advanceCardQueue]);
 
-  const fetchGameState = async () => {
-    if (!normalizedRoomID) return;
-
-    if (fetchGameStateInFlightRef.current) return;
-    fetchGameStateInFlightRef.current = true;
-
-    try {
-      const res = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
-      const data = await res.json().catch(() => null);
-
-      if (res.status === 404) {
-        clearRoomSession();
-        setGameStarted(false);
-        navigate("/");
-        return;
-      }
-
-      if (!res.ok) return;
-
-      setRoomHost(data?.host || "");
-
-      const nextSeq = Number(data?.seq || 0);
-      const isNewer = Number.isFinite(nextSeq) && nextSeq > lastSeqRef.current;
-      const isSameButNewLanguage =
-        Number.isFinite(nextSeq) &&
-        nextSeq === lastSeqRef.current &&
-        language !== lastAppliedLanguageRef.current;
-
-      if ((isNewer || isSameButNewLanguage) && data?.state) {
-        if (isNewer) lastSeqRef.current = nextSeq;
-        lastAppliedLanguageRef.current = language;
-
-        const startedAt = typeof data.state?.startedAt === "string" ? data.state.startedAt : "";
-        if (startedAt) startedAtRef.current = startedAt;
-
-        applyRoomBroadcastState(data.state, language);
-      }
-    } catch {
-      // ignore
-    } finally {
-      fetchGameStateInFlightRef.current = false;
-    }
-  };
+  // Keep the FIFO queue topped up to 7 after every card advance (single-player)
+  useEffect(() => {
+    if (isRoomGame) return;
+    if (!gameStarted) return;
+    if (getQueueLength() >= 7) return;
+    prefillCardQueue(7);
+  }, [isRoomGame, gameStarted, currentCard, getQueueLength, prefillCardQueue]);
 
   useEffect(() => {
     if (!isRoomGame) return;
-    if (!normalizedRoomID) return;
+    if (!gameState) return;
 
-    // When language changes mid-game, re-apply current state (same seq is OK).
-    if (language === initialLanguageRef.current) return;
-    initialLanguageRef.current = language;
-    void fetchGameState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [language, isRoomGame, normalizedRoomID]);
+    const nextSeq = seq ?? 0;
+    const isNewer = Number.isFinite(nextSeq) && nextSeq > lastSeqRef.current;
+    const isSameButNewLanguage =
+      Number.isFinite(nextSeq) &&
+      nextSeq === lastSeqRef.current &&
+      language !== lastAppliedLanguageRef.current;
+
+    if ((isNewer || isSameButNewLanguage) && gameState) {
+      if (isNewer) lastSeqRef.current = nextSeq;
+      lastAppliedLanguageRef.current = language;
+
+      const startedAt = typeof gameState?.startedAt === "string" ? gameState.startedAt : "";
+      if (startedAt) startedAtRef.current = startedAt;
+
+      applyRoomBroadcastState(gameState, language);
+    }
+  }, [isRoomGame, gameState, seq, language, applyRoomBroadcastState]);
 
   const publishCurrentRoomState = async (retryCount = 0, isRetryCall = false): Promise<boolean> => {
-    if (!normalizedRoomID || !username) return false;
+    if (!playerId || !roomIdTyped) return false;
 
     const state = getRoomBroadcastState();
     if (!state || typeof state !== "object") return false;
@@ -178,14 +167,10 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     const baseDelay = 500; // ms
 
     try {
-      const response = await fetch("/api/draw-card", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId, state }),
-      });
+      const result = await updateGameState(playerId, state);
 
-      if (!response.ok) {
-        throw new Error(`Server responded with status ${response.status}`);
+      if (!result.success) {
+        throw new Error(result.error || "Failed to update game state");
       }
 
       // Success - reset state and add smooth transition delay
@@ -223,197 +208,143 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   };
 
   const hostNext = async () => {
-    if (!isHost) return;
-    if (drawCardInFlightRef.current) return; // Prevent spam clicks
+    console.log("[GamePage] hostNext START", { isHost, isRoomGame, roomId: roomIdTyped, playerId });
     
-    generatePrompt();
-    const success = await publishCurrentRoomState();
-    
-    if (!success) {
-      console.warn("[hostNext] Failed to publish card state after all retries");
-      // The error message is already displayed via setPublishError in publishCurrentRoomState
+    if (isRoomGame && !isHost) {
+      console.log("[GamePage] hostNext: not host in room game, skipping");
+      return;
     }
-  };
+    if (drawCardInFlightRef.current) {
+      console.log("[GamePage] hostNext: already in flight, preventing spam clicks");
+      return;
+    }
+    
+    // Pop the next pre-generated card from the queue and display it instantly.
+    // advanceCardQueue() also generates one replacement card to keep the buffer full.
+    console.log("[GamePage] hostNext: popping next card from queue");
+    const snap = advanceCardQueue();
 
-  const fetchRoomState = async () => {
-    if (!normalizedRoomID) return;
-
-    try {
-      const res = await fetch(`/api/room-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
-      const data = await res.json().catch(() => null);
-      if (res.status === 404) {
-        clearRoomSession();
-        setGameStarted(false);
-        navigate("/");
-        return;
+    // Refill queue back to 7 if it dropped below
+    if (getQueueLength() < 7) {
+      prefillCardQueue(7);
+    }
+    
+    // For room games, publish the state to Convex so non-host players get the update.
+    if (isRoomGame && roomIdTyped) {
+      console.log("[GamePage] hostNext: publishing state to Convex for multiplayer sync");
+      // broadcastStateRef was already set by advanceCardQueue → _applySnapshot
+      const success = await publishCurrentRoomState();
+      if (!success) {
+        console.warn("[GamePage] hostNext: failed to publish card state after all retries");
       }
-      if (!res.ok) return;
-
-      const nextPlayers = Array.isArray(data?.players) ? data.players : [];
-      setRoomSession({ roomID: data?.roomID || normalizedRoomID, players: nextPlayers });
-    } catch {
-      // ignore (room sync is best-effort)
     }
+    
+    console.log("[GamePage] hostNext: completed");
   };
+
+  // Update room session from Convex subscription
+  const playersArray = useMemo(() => {
+    return playerRecords?.map(p => p.name) || [];
+  }, [playerRecords]);
+
+  useEffect(() => {
+    if (!room || !playerRecords || playersArray.length === 0) return;
+
+    setRoomSession({ roomID: normalizedRoomID, players: playersArray });
+  }, [room?.status, normalizedRoomID, playersArray]);
+
+  // NOTE: Card sync from Convex to local state is handled by the gameState
+  // useEffect above (line ~131) which calls applyRoomBroadcastState.
+  // The host uses generatePrompt() locally → publishCurrentRoomState() → updateGameState
+  // → which updates room.gameState → all clients sync via applyRoomBroadcastState.
 
   const leaveFromGamePage = async () => {
-    if (!isRoomGame || !normalizedRoomID || !username) {
+    // Stop heartbeat to prevent write conflicts with leaveRoom mutation
+    if (heartbeatIntervalRef.current) {
+      clearInterval(heartbeatIntervalRef.current);
+      heartbeatIntervalRef.current = null;
+    }
+
+    if (!isRoomGame || !roomIdTyped || !playerId) {
       setGameStarted(false);
-      navigate("/join-room");
+      navigate("/", { replace: true });
       return;
     }
 
-    // Host should be able to go back to the waiting room without deleting the room.
-    if (isHost) {
-      setGameStarted(false);
-      navigate(`/room/${encodeURIComponent(normalizedRoomID)}`);
-      return;
-    }
-
-    // Non-host: actually leave the room/game.
+    // Both host and non-host: leave the room and go home.
+    // Backend assigns a new random host if the host is the one leaving.
     try {
-      await fetch("/api/leave-room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      });
-    } catch {
-      // ignore
+      await leaveRoomMutation(roomIdTyped, playerId);
+    } catch (err) {
+      console.error("[GamePage] leaveFromGamePage: mutation failed", err);
     } finally {
       clearRoomSession();
       setGameStarted(false);
       localStorage.removeItem("playerId");
       localStorage.removeItem("playerRoomId");
-      navigate("/join-room");
+      navigate("/", { replace: true });
     }
   };
 
-  const heartbeat = async () => {
-    if (!normalizedRoomID || !username) return;
-
-    try {
-      await fetch("/api/heartbeat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      });
-    } catch {
-      // ignore
-    }
-  };
-
-  const sendLeaveBeacon = () => {
-    if (!normalizedRoomID || !username) return;
-
-    try {
-      const blob = new Blob([JSON.stringify({ roomID: normalizedRoomID, username, playerId })], {
-        type: "application/json",
-      });
-      navigator.sendBeacon("/api/leave-room", blob);
-    } catch {
-      // ignore
-    }
-  };
-
+  // Update player online status (heartbeat)
   useEffect(() => {
-    if (!normalizedRoomID) return;
+    if (!roomIdTyped || !playerId) return;
 
-    // Load existing current card (supports reconnect / late join)
-    fetchGameState();
-    fetchRoomState();
-    heartbeat();
+    // Mark as online when joining
+    updatePlayerStatus(roomIdTyped, playerId, true);
 
-    const intervalId = window.setInterval(heartbeat, 5 * 60 * 1000);
-    const onVisibilityChange = () => {
-      if (!document.hidden) heartbeat();
+    // Heartbeat interval (stored in ref so we can stop it before leaving)
+    heartbeatIntervalRef.current = setInterval(() => {
+      updatePlayerStatus(roomIdTyped, playerId, true);
+    }, 30 * 1000); // Every 30 seconds
+
+    // Handle visibility change
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        updatePlayerStatus(roomIdTyped, playerId, true);
+      }
     };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    document.addEventListener("visibilitychange", onVisibilityChange);
-    window.addEventListener("pagehide", sendLeaveBeacon);
+    // On page unload, mark player as offline
+    const handleBeforeUnload = () => {
+      updatePlayerStatus(roomIdTyped, playerId, false);
+    };
+    window.addEventListener("pagehide", handleBeforeUnload);
 
+    // Cleanup
     return () => {
-      window.clearInterval(intervalId);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-      window.removeEventListener("pagehide", sendLeaveBeacon);
+      if (heartbeatIntervalRef.current) {
+        clearInterval(heartbeatIntervalRef.current);
+        heartbeatIntervalRef.current = null;
+      }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pagehide", handleBeforeUnload);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedRoomID, username]);
+  }, [roomIdTyped, playerId, updatePlayerStatus]);
 
+  // Redirect if room deleted or player removed
   useEffect(() => {
-    if (!normalizedRoomID) return;
+    if (!isRoomGame) return;
 
-    const ably = new Ably.Realtime({
-      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}&playerId=${encodeURIComponent(playerId)}`,
-    });
-    ablyRef.current = ably;
-
-    const channel = ably.channels.get(`room-${normalizedRoomID}`);
-    channelRef.current = channel;
-
-    const refetch = () => {
-      fetchRoomState();
-    };
-
-    channel.subscribe("player-joined", refetch);
-    channel.subscribe("player-left", refetch);
-    channel.subscribe("player-removed", (msg) => {
-      const removedUsername = msg?.data?.removedUsername;
-
-      // If you were removed by the host, force you out of the room immediately.
-      if (removedUsername && removedUsername === username) {
-        clearRoomSession();
-        setGameStarted(false);
-        localStorage.removeItem("playerId");
-        localStorage.removeItem("playerRoomId");
-        navigate("/join-room", { replace: true });
-        return;
-      }
-
-      refetch();
-    });
-
-    channel.subscribe("card-updated", (msg) => {
-      const nextSeq = Number(msg?.data?.seq || 0);
-      const hasNewerSeq = Number.isFinite(nextSeq) && nextSeq > lastSeqRef.current;
-
-      // Fast path: apply the authoritative server-published state immediately.
-      if (hasNewerSeq && msg?.data?.state && typeof msg.data.state === "object") {
-        lastSeqRef.current = nextSeq;
-        lastAppliedLanguageRef.current = language;
-
-        if (typeof msg.data.state?.startedAt === "string") {
-          startedAtRef.current = msg.data.state.startedAt;
-        }
-
-        applyRoomBroadcastState(msg.data.state, language);
-        return;
-      }
-
-      // Fallback: DB is still the source of truth.
-      void fetchGameState();
-    });
-
-    channel.subscribe("room-deleted", () => {
+    // Room deleted
+    if (room === null && normalizedRoomID) {
       clearRoomSession();
       setGameStarted(false);
       navigate("/");
-    });
+      return;
+    }
 
-    return () => {
-      channel.unsubscribe();
-      try {
-        channel.detach();
-      } catch {
-        // ignore
-      }
-      try {
-        ably.close();
-      } catch {
-        // ignore
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedRoomID, username, language]);
+    // Player removed from room
+    if (room && playerId && playerRecords && !playerRecords.some(p => p.playerId === playerId)) {
+      clearRoomSession();
+      setGameStarted(false);
+      localStorage.removeItem("playerId");
+      localStorage.removeItem("playerRoomId");
+      navigate("/", { replace: true });
+      return;
+    }
+  }, [isRoomGame, room, playerRecords, normalizedRoomID, playerId, clearRoomSession, setGameStarted, navigate]);
 
   useEffect(() => {
     if (!isRoomGame) return;
@@ -442,13 +373,15 @@ export default function GamePage({ language }: { language: LanguageCode }) {
     const minutesLate = Math.max(0, Math.floor((Date.now() - startedAtMs) / 60000));
 
     const penalty =
-      minutesLate < 5
-        ? i18n.ui.penalty3 || "drink 3 sips"
-        : minutesLate < 7
-          ? i18n.ui.penalty5 || "drink 5 sips"
-          : minutesLate < 10
-            ? i18n.ui.penalty7 || "drink 7 sips"
-            : i18n.ui.penaltyShot || "take a shot";
+      minutesLate < 3
+        ? i18n.ui.penalty1 || "drink 1 sip"
+        : minutesLate < 5
+          ? i18n.ui.penalty3 || "drink 3 sips"
+          : minutesLate < 7
+            ? i18n.ui.penalty5 || "drink 5 sips"
+            : minutesLate < 10
+              ? i18n.ui.penalty7 || "drink 7 sips"
+              : i18n.ui.penaltyShot || "take a shot";
 
     const shownKey = `latePenaltyShown:${normalizedRoomID}:${username}`;
     try {
@@ -466,34 +399,40 @@ export default function GamePage({ language }: { language: LanguageCode }) {
   }, [i18n, isRoomGame, normalizedRoomID, username, isHost, location]);
 
   useEffect(() => {
-    if (!isRoomGame) return;
-    if (!gameStarted) return;
-    if (isHost) return;
-    if (prompt) return;
-
-    void fetchGameState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRoomGame, gameStarted, isHost, prompt]);
-
-  useEffect(() => {
-    // Host: if game starts and there is no current card stored yet, draw the first card and publish it.
+    // Host: if game starts and there is no current card stored yet,
+    // prefill the card queue and display the first card.
     if (!isRoomGame) return;
     if (!gameStarted) return;
     if (!isHost) return;
     if (currentCard) return;
+    if (!roomIdTyped) return;
 
+    console.log("[GamePage] Prefilling card queue (7 cards) and showing first card");
+    prefillCardQueue(7);
+    const snap = advanceCardQueue();
+    
+    // Publish the first card for multiplayer sync
     (async () => {
-      // Ensure we have host info (from DB) before drawing.
-      await fetchGameState();
-      if (roomHost && username !== roomHost) return;
-      generatePrompt();
       const success = await publishCurrentRoomState();
       if (!success) {
         console.warn("[GamePage] Failed to publish initial card state");
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRoomGame, gameStarted, isHost]);
+  }, [isRoomGame, gameStarted, isHost, roomIdTyped]);
+
+  // Detect host transfer: when a non-host becomes host mid-game, prefill their FIFO queue
+  useEffect(() => {
+    if (!isRoomGame || !gameStarted || !roomIdTyped) {
+      prevIsHostRef.current = isHost;
+      return;
+    }
+    if (!prevIsHostRef.current && isHost) {
+      console.log("[GamePage] Host transfer detected — prefilling card queue");
+      prefillCardQueue(7);
+    }
+    prevIsHostRef.current = isHost;
+  }, [isHost, isRoomGame, gameStarted, roomIdTyped, prefillCardQueue]);
 
   return (
     <div className="game-screen">
@@ -520,11 +459,11 @@ export default function GamePage({ language }: { language: LanguageCode }) {
           type="button"
           className="button"
           onClick={() => {
-            if (isHost) {
-              leaveFromGamePage();
-              return;
-            } else {
+            if (isRoomGame) {
               setShowLeaveRoomPopup(true);
+            } else {
+              setGameStarted(false);
+              navigate("/", { replace: true });
             }
           }}
           aria-label={i18n.ui.leaveGame}
@@ -594,7 +533,10 @@ export default function GamePage({ language }: { language: LanguageCode }) {
                 : i18n.ui.next
             }
             color="primary"
-            onClick={isRoomGame ? hostNext : generatePrompt}
+            onClick={isRoomGame ? hostNext : () => {
+              advanceCardQueue();
+              if (getQueueLength() < 7) prefillCardQueue(7);
+            }}
             size="large"
             disabled={isRoomGame && isDrawingCard}
           />

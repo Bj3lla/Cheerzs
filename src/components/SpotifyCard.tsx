@@ -16,7 +16,7 @@ type SpotifyCardProps = {
 export default function SpotifyCard({ trackUrl, language, selectedPlayer }: SpotifyCardProps) {
   const { generateQr } = useQrGenerator();
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   useEffect(() => {
     let cancelled = false;

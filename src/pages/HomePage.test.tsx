@@ -22,7 +22,7 @@ describe("HomePage", () => {
     await user.click(screen.getByRole("button", { name: /create room/i }));
 
     expect(
-      screen.getByText(translations.en.ui.pleaseEnterPlayerName)
+      screen.getByText(translations.no.ui.pleaseEnterPlayerName)
     ).toBeInTheDocument();
   });
 
@@ -39,7 +39,7 @@ describe("HomePage", () => {
     );
 
     await user.type(
-      screen.getByPlaceholderText(translations.en.ui.placeholderPlayerName),
+      screen.getByPlaceholderText(translations.no.ui.placeholderPlayerName),
       "Kristine"
     );
 

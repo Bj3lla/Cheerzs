@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useMutation, useQuery } from "convex/react";
 import { useNavigate, useParams } from "react-router-dom";
-import Ably from "ably";
 import Button from "../components/Button";
 import CheerzsRulesPopup from "../components/CheerzsRulesPopup";
 import { useGame } from "../context/GameContext";
@@ -8,14 +8,19 @@ import { translations } from "../locales/translations";
 import type { LanguageCode } from "../hooks/useLanguage";
 import { IoArrowBack } from "react-icons/io5";
 import LeaveRoomPopup from "../components/LeaveRoomPopup";
-import LanguageSelector from "src/components/LanguageSelector";
+import { useConvexRoom } from "../hooks/useConvexRoom";
+import { api } from "../../convex/_generated/api";
+import type { Id } from "../../convex/_generated/dataModel";
 
-export default function WaitingRoomPage({ language = "en" }: { language?: LanguageCode }) {
+export default function WaitingRoomPage({ language = "no" }: { language?: LanguageCode }) {
   const navigate = useNavigate();
   const { roomId } = useParams();
   const { setGameStarted, setRoomSession, clearRoomSession } = useGame();
 
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
+
+  // Log that component mounted
+  console.log("[WaitingRoom] Component rendered, roomId from URL:", roomId);
 
   const normalizedRoomID = useMemo(() => {
     return typeof roomId === "string" ? roomId.trim().toUpperCase() : "";
@@ -29,109 +34,174 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
     return localStorage.getItem("playerId") || "";
   }, []);
 
-  const [host, setHost] = useState<string>("");
-  const [players, setPlayers] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  // Convex real-time subscription
+  const { room, players: playerRecords, leaveRoom, updatePlayerStatus } = useConvexRoom(normalizedRoomID);
+  
+  // Direct mutation calls for operations the hook doesn't provide
+  const startGameDirectMutation = useMutation(api.rooms.startGame);
+
   const [error, setError] = useState<string>("");
   const [showRulesPopup, setShowRulesPopup] = useState<boolean>(false);
   const [showLeaveRoomPopup, setShowLeaveRoomPopup] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
+  
+  // Ref to track heartbeat interval so we can clear it before leaving
+  const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const ablyRef = useRef(null);
-  const channelRef = useRef(null);
-  const gameStateFetchInFlightRef = useRef(false);
+  // Debug - check if api.rooms.startGame exists
+  useEffect(() => {
+    console.log("[WaitingRoom] API available:", {
+      hasStartGame: api.rooms && "startGame" in api.rooms,
+    });
+  }, []);
 
-  const isHost = Boolean(username) && Boolean(host) && username === host;
+  const isHost = room?.hostId === playerId;
 
+  // Debug the isHost calculation
+  useEffect(() => {
+    console.log("[WaitingRoom] isHost calculation:", {
+      roomHostId: room?.hostId,
+      currentPlayerId: playerId,
+      isHost: isHost,
+      comparison: `"${room?.hostId}" === "${playerId}"`,
+    });
+  }, [room?.hostId, playerId, isHost]);
+
+  // Debug logging
+  useEffect(() => {
+    console.log("[WaitingRoom] Hook values updated:", {
+      normalizedRoomID,
+      roomId: roomId,
+      room: room ? { _id: room._id, status: room.status, playerIds: room.playerIds } : "null",
+      playersCount: playerRecords?.length || 0,
+      isHost,
+      playerId: playerId ? "set" : "not set",
+      username: username ? `"${username}"` : "not set",
+      startGameDirectMutation: typeof startGameDirectMutation,
+    });
+  }, [normalizedRoomID, roomId, room, playerRecords, isHost, playerId, username, startGameDirectMutation]);
+  const players = playerRecords?.map(p => p.name) || [];
+  const host = playerRecords?.find(p => p.playerId === room?.hostId)?.name || "";
+  const loading = room === undefined || playerRecords === undefined;
+
+  // Redirect if no room or not logged in
   useEffect(() => {
     if (!normalizedRoomID || !username) {
       clearRoomSession();
       setGameStarted(false);
       navigate("/", { replace: true });
-    }
-  }, [clearRoomSession, navigate, normalizedRoomID, setGameStarted, username]);
-
-  const fetchRoomState = async () => {
-    if (!normalizedRoomID) return;
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await fetch(`/api/room-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
-      const data = await res.json().catch(() => null);
-
-      if (res.status === 404) {
-        // Room deleted (likely host left). Kick back to Home.
-        clearRoomSession();
-        setGameStarted(false);
-        navigate("/");
-        return;
-      }
-
-      if (!res.ok) {
-        setError((data && data.error) || i18n.ui.failedToLoadRoom);
-        setPlayers([]);
-        setHost("");
-        return;
-      }
-
-      const nextHost = data.host || "";
-      const nextIsHost = Boolean(username) && Boolean(nextHost) && username === nextHost;
-
-      setHost(nextHost);
-      const nextPlayers = Array.isArray(data.players) ? data.players : [];
-      setPlayers(nextPlayers);
-      setRoomSession({ roomID: data?.roomID || normalizedRoomID, players: nextPlayers });
-
-      // If someone opens the waiting room after the host already started the game,
-      // skip straight to the game page.
-      try {
-        const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
-        const gsData = await gsRes.json().catch(() => null);
-        const started = Boolean(gsData?.state?.started);
-        // If someone opens the waiting room after the host already started the game,
-        // only non-hosts should be forced into the game.
-        if (gsRes.ok && started && !nextIsHost) {
-          setGameStarted(true);
-          navigate("/game");
-          return;
-        }
-      } catch {
-        // ignore
-      }
-    } catch (err) {
-      console.error("[WaitingRoom] room-state failed", err);
-      setError(i18n.ui.failedToLoadRoom);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const leaveGame = async () => {
-    const destination = isHost ? "/create-room" : "/join-room";
-
-    if (!normalizedRoomID || !username) {
-      clearRoomSession();
-      setGameStarted(false);
-      navigate(destination);
       return;
     }
 
+    // room === undefined means still loading – do nothing yet.
+    // room === null means the query completed and the room was not found.
+    if (room === null) {
+      clearRoomSession();
+      setGameStarted(false);
+      navigate("/", { replace: true });
+      return;
+    }
+
+    // Player was removed from the room by the host
+    if (room && playerId && playerRecords && !playerRecords.some(p => p.playerId === playerId)) {
+      clearRoomSession();
+      setGameStarted(false);
+      localStorage.removeItem("playerId");
+      localStorage.removeItem("playerRoomId");
+      navigate("/", { replace: true });
+      return;
+    }
+  }, [clearRoomSession, navigate, normalizedRoomID, setGameStarted, username, room, playerId, playerRecords]);
+
+  // Update local game context when room data changes
+  const playersArray = useMemo(() => {
+    return playerRecords?.map(p => p.name) || [];
+  }, [playerRecords]);
+
+  const roomStatus = room?.status;
+  
+  useEffect(() => {
+    if (room && roomStatus !== "finished" && playersArray.length > 0) {
+      setRoomSession({ 
+        roomID: normalizedRoomID, 
+        players: playersArray 
+      });
+    }
+  }, [room, roomStatus, normalizedRoomID, playersArray, setRoomSession]);
+
+  // Handle game started state - navigate all players when status changes to "playing"
+  useEffect(() => {
+    console.log("[WaitingRoom] room.status effect triggered", { roomStatus: room?.status, shouldNavigate: room?.status === "playing" });
+    if (room?.status === "playing") {
+      console.log("[WaitingRoom] NAVIGATING TO GAME - room status is playing");
+      // All players (including host) navigate when game starts
+      setGameStarted(true);
+      navigate("/game");
+    }
+  }, [room?.status, setGameStarted, navigate]);
+
+  // Update player online status (heartbeat)
+  useEffect(() => {
+    if (!room?._id || !playerId) return;
+
+    // Mark as online when joining
+    updatePlayerStatus(room._id, playerId, true);
+
+    // Heartbeat interval
+    heartbeatIntervalRef.current = setInterval(() => {
+      updatePlayerStatus(room._id, playerId, true);
+    }, 30 * 1000); // Every 30 seconds
+
+    // Handle visibility change
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        updatePlayerStatus(room._id, playerId, true);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      if (heartbeatIntervalRef.current) {
+        clearInterval(heartbeatIntervalRef.current);
+        heartbeatIntervalRef.current = null;
+      }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [room?._id, playerId, updatePlayerStatus]);
+
+  const handleLeaveRoom = async () => {
+    console.log("[WaitingRoom] handleLeaveRoom START", { room: room?._id, playerId, hasUser: !!username });
+    
+    if (!room?._id || !playerId) {
+      console.log("[WaitingRoom] handleLeaveRoom: missing room or playerId, navigating to home");
+      clearRoomSession();
+      setGameStarted(false);
+      navigate("/", { replace: true });
+      return;
+    }
+
+    // Stop heartbeat to prevent write conflicts with leaveRoom mutation
+    if (heartbeatIntervalRef.current) {
+      clearInterval(heartbeatIntervalRef.current);
+      heartbeatIntervalRef.current = null;
+    }
+
     setError("");
+    console.log("[WaitingRoom] handleLeaveRoom: calling leaveRoom mutation");
 
     try {
-      const res = await fetch("/api/leave-room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      });
-
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        setError((data && data.error) || i18n.ui.failedToLeaveRoom);
+      console.log("[WaitingRoom] handleLeaveRoom: executing leaveRoom with", { roomId: room._id, playerId });
+      const result = await leaveRoom(room._id, playerId);
+      console.log("[WaitingRoom] handleLeaveRoom: leaveRoom result", result);
+      
+      if (!result.success) {
+        console.error("[WaitingRoom] handleLeaveRoom: mutation failed with error", result.error);
+        setError(result.error || i18n.ui.failedToLeaveRoom);
         return;
       }
 
+      console.log("[WaitingRoom] handleLeaveRoom: clearing session and local storage");
       clearRoomSession();
       setGameStarted(false);
 
@@ -144,195 +214,97 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
       localStorage.removeItem("playerId");
       localStorage.removeItem("playerRoomId");
 
-      navigate(destination);
+      console.log("[WaitingRoom] handleLeaveRoom: navigating to home");
+      navigate("/", { replace: true });
     } catch (err) {
-      console.error("[WaitingRoom] leave-room failed", err);
+      console.error("[WaitingRoom] handleLeaveRoom: caught exception", err);
       setError(i18n.ui.failedToLeaveRoom);
     }
   };
 
-  const heartbeat = async () => {
-    if (!normalizedRoomID || !username) return;
+  const handleStartGame = async () => {
+    console.log("[WaitingRoom] handleStartGame START", { room: room?._id, playerId, isHost, startGameDirect: typeof startGameDirectMutation });
+    
+    if (!room?._id) {
+      console.error("[WaitingRoom] handleStartGame: no room._id");
+      setError("Error: Room not found");
+      return;
+    }
+    if (!playerId) {
+      console.error("[WaitingRoom] handleStartGame: no playerId");
+      setError("Error: Player not found");
+      return;
+    }
+    if (!isHost) {
+      console.error("[WaitingRoom] handleStartGame: current user is not host");
+      setError("Error: Only host can start game");
+      return;
+    }
+
+    console.log("[WaitingRoom] handleStartGame: validation passed, setting isStarting=true");
+    setIsStarting(true);
+    setError("");
 
     try {
-      await fetch("/api/heartbeat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      });
-    } catch (err) {
-      console.warn("[WaitingRoom] heartbeat failed", err);
-    }
-  };
+      const questionTypes = ["truth", "dare", "never_have_i_ever", "drinking_buddy", "wildcard"];
+      console.log("[WaitingRoom] handleStartGame: calling startGameDirectMutation", { roomId: room._id, questionTypes });
+      
+      if (!startGameDirectMutation) {
+        console.error("[WaitingRoom] handleStartGame: startGameDirectMutation is UNDEFINED!");
+        setError("Error: Start game function not available");
+        setIsStarting(false);
+        return;
+      }
+      
+      const result = await startGameDirectMutation({ roomId: room._id, questionTypes });
+      
+      console.log("[WaitingRoom] handleStartGame: mutation response", result);
 
-  const startGame = async () => {
-    if (!normalizedRoomID || !username) return;
-
-    try {
-      const res = await fetch("/api/start-game", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, playerId }),
-      });
-
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        setError((data && data.error) || i18n.ui.failedToStartGame);
+      if (!result?.success) {
+        console.error("[WaitingRoom] handleStartGame: mutation returned success=false or no result", result);
+        setError((result as any)?.error || i18n.ui.failedToStartGame);
+        setIsStarting(false);
         return;
       }
 
-      // Host will also receive the Ably event, but this removes perceived latency.
-      // Pull latest players into game state before entering /game.
-      await fetchRoomState();
-      setGameStarted(true);
-      navigate("/game");
-    } catch (err) {
-      console.error("[WaitingRoom] start-game failed", err);
-      setError(i18n.ui.failedToStartGame);
-    }
-  };
-
-  const removePlayer = async (targetUsername) => {
-    if (!normalizedRoomID || !username) return;
-    if (!isHost) return;
-    if (!targetUsername) return;
-
-    try {
-      const res = await fetch("/api/remove-player", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomID: normalizedRoomID, username, targetUsername, playerId }),
-      });
-
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        setError((data && data.error) || i18n.ui.failedToRemovePlayer);
-        return;
-      }
-
-      await fetchRoomState();
-    } catch (err) {
-      console.error("[WaitingRoom] remove-player failed", err);
-      setError(i18n.ui.failedToRemovePlayer);
-    }
-  };
-
-  useEffect(() => {
-    fetchRoomState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedRoomID]);
-
-  useEffect(() => {
-    // Presence handling
-    heartbeat();
-    const intervalId = window.setInterval(heartbeat, 5 * 60 * 1000);
-
-    const onVisibilityChange = () => {
-      if (!document.hidden) heartbeat();
-    };
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
-    return () => {
-      window.clearInterval(intervalId);
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedRoomID, username]);
-
-  useEffect(() => {
-    if (!normalizedRoomID) return;
-
-    const ably = new Ably.Realtime({
-      authUrl: `/api/ably-auth?roomID=${encodeURIComponent(normalizedRoomID)}&username=${encodeURIComponent(username)}&playerId=${encodeURIComponent(playerId)}`,
-    });
-    ablyRef.current = ably;
-
-    const channel = ably.channels.get(`room-${normalizedRoomID}`);
-    channelRef.current = channel;
-
-    const refetch = () => {
-      fetchRoomState();
-    };
-
-    channel.subscribe("player-joined", refetch);
-    channel.subscribe("player-left", refetch);
-    channel.subscribe("player-removed", (msg) => {
-      const removedUsername = msg?.data?.removedUsername;
-
-      // If you were removed by the host, force you out of the room immediately.
-      if (removedUsername && removedUsername === username) {
-        clearRoomSession();
-        setGameStarted(false);
-        localStorage.removeItem("playerId");
-        localStorage.removeItem("playerRoomId");
-        navigate("/join-room", { replace: true });
-        return;
-      }
-
-      refetch();
-    });
-    channel.subscribe("room-created", refetch);
-
-    channel.subscribe("card-updated", async (msg) => {
-      // If the host is already in-game, redirect non-hosts.
-      const startedFromEvent = Boolean(msg?.data?.state?.started);
-      if (startedFromEvent && !isHost) {
-        setGameStarted(true);
-        navigate("/game");
-        return;
-      }
-
-      // Fallback for older events that don't include state.
-      if (gameStateFetchInFlightRef.current) return;
-      gameStateFetchInFlightRef.current = true;
-      try {
-        const gsRes = await fetch(`/api/game-state?roomID=${encodeURIComponent(normalizedRoomID)}`);
-        const gsData = await gsRes.json().catch(() => null);
-        const started = Boolean(gsData?.state?.started);
-        if (gsRes.ok && started && !isHost) {
-          setGameStarted(true);
-          navigate("/game");
-        }
-      } catch {
-        // ignore
-      } finally {
-        gameStateFetchInFlightRef.current = false;
-      }
-    });
-
-    channel.subscribe("room-deleted", () => {
-      clearRoomSession();
-      setGameStarted(false);
-      navigate("/");
-    });
-
-    channel.subscribe("game-started", async () => {
-      await fetchRoomState();
-      setGameStarted(true);
+      console.log("[WaitingRoom] handleStartGame: storing session info");
       try {
         sessionStorage.setItem("joinedBeforeStartRoomId", normalizedRoomID);
       } catch {
         // ignore
       }
-      navigate("/game");
-    });
+      
+      console.log("[WaitingRoom] handleStartGame: mutation succeeded, resetting isStarting and waiting for room.status change");
+      setIsStarting(false);
+    } catch (err) {
+      console.error("[WaitingRoom] handleStartGame: exception thrown", err);
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error("[WaitingRoom] handleStartGame: error message:", errorMsg);
+      setError(errorMsg || i18n.ui.failedToStartGame);
+      setIsStarting(false);
+    }
+  };
 
-    return () => {
-      channel.unsubscribe();
-      try {
-        channel.detach();
-      } catch {
-        // ignore
+  const handleRemovePlayer = async (targetUsername: string) => {
+    if (!room?._id || !playerId || !isHost || !targetUsername || !playerRecords) return;
+
+    setError("");
+
+    try {
+      // Find the player's ID
+      const targetPlayer = playerRecords.find(p => p.name === targetUsername);
+      if (!targetPlayer) return;
+
+      const result = await leaveRoom(room._id, targetPlayer.playerId);
+
+      if (!result.success) {
+        setError(result.error || i18n.ui.failedToRemovePlayer);
       }
-      try {
-        ably.close();
-      } catch {
-        // ignore
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedRoomID, username]);
+    } catch (err) {
+      console.error("[WaitingRoom] remove-player failed", err);
+      setError(i18n.ui.failedToRemovePlayer);
+    }
+  };
 
   return (
     <div className="waiting-room-page">
@@ -345,8 +317,9 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
           language={language}
           onClose={() => setShowLeaveRoomPopup(false)}
           onConfirm={() => {
+            console.log("[WaitingRoom] LEAVE ROOM POPUP CONFIRMED!");
             setShowLeaveRoomPopup(false);
-            void leaveGame();
+            void handleLeaveRoom();
           }}
         />
       )}
@@ -355,7 +328,10 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
         <button
           type="button"
           className="button"
-          onClick={() => setShowLeaveRoomPopup(true)}
+          onClick={() => {
+            console.log("[WaitingRoom] LEAVE BUTTON IN TOP BAR CLICKED!");
+            setShowLeaveRoomPopup(true);
+          }}
           aria-label={i18n.ui.leaveGame}
           title={i18n.ui.leaveGame}
         >
@@ -382,7 +358,7 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
                   <button
                     type="button"
                     className="remove-btn"
-                    onClick={() => removePlayer(name)}
+                    onClick={() => handleRemovePlayer(name)}
                     aria-label={`Remove ${name}`}
                   >
                     ×
@@ -400,18 +376,30 @@ export default function WaitingRoomPage({ language = "en" }: { language?: Langua
               size="large"
             />
 
-            {isHost ? (
-              <Button
-                label={i18n.ui.startGame}
-                color="primary"
-                onClick={startGame}
-                size="large"
-              />
-            ) : (
-              <p className="waiting-for-host-message">
-                {i18n.ui.waitingForHostToStart || "Waiting for the host to start the game."}
-              </p>
-            )}
+            {(() => {
+              if (isHost) {
+                return (
+                  <div>
+                    <Button
+                      label={i18n.ui.startGame}
+                      color="primary"
+                      onClick={() => {
+                        console.log("[WaitingRoom] START GAME BUTTON CLICKED!");
+                        void handleStartGame();
+                      }}
+                      size="large"
+                      disabled={isStarting}
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <p className="waiting-for-host-message">
+                    {i18n.ui.waitingForHostToStart || "Waiting for the host to start the game."}
+                  </p>
+                );
+              }
+            })()}
           </div>
         </>
       )}

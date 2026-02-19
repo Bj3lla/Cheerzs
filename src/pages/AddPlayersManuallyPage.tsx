@@ -11,7 +11,7 @@ type FriendErrorCode = "emptyFriend" | null;
 
 export default function AddPlayersManuallyPage({ language }: { language: LanguageCode }) {
   const navigate = useNavigate();
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
   const [friendInput, setFriendInput] = useState<string>("");
   const [friends, setFriends] = useState<string[]>([]);
   const [friendErrorCode, setFriendErrorCode] = useState<FriendErrorCode>(null);

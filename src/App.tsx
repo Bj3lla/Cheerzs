@@ -11,37 +11,49 @@ import CreateRoomPage from "./pages/CreateRoomPage";
 import JoinRoomPage from "./pages/JoinRoomPage";
 import AddPlayersManuallyPage from "./pages/AddPlayersManuallyPage";
 import WaitingRoomPage from "./pages/WaitingRoomPage";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../convex/_generated/api";
 
 function RoomCleanupOnLanding() {
   const location = useLocation();
+  const leaveRoomMutation = useMutation(api.rooms.leaveRoom);
+
+  // Get room data if we have a room code
+  const roomCode = (localStorage.getItem("playerRoomId") || "").trim();
+  const room = useQuery(
+    api.rooms.getRoomByCode,
+    roomCode ? { code: roomCode.toUpperCase() } : "skip"
+  );
 
   useEffect(() => {
     const pathname = location?.pathname || "/";
     const shouldCleanup = pathname === "/" || pathname === "/join-room" || pathname === "/create-room";
     if (!shouldCleanup) return;
 
-    const roomID = (localStorage.getItem("playerRoomId") || "").trim();
     const username = (localStorage.getItem("playerName") || "").trim();
     const playerId = (localStorage.getItem("playerId") || "").trim();
 
-    // Only attempt cleanup when we have a plausible online session.
-    if (!roomID || !username) return;
+    // Only attempt cleanup when we have all required data
+    if (!roomCode || !username || !playerId || !room?._id) return;
 
-    const payload = { roomID, username, playerId };
+    // Use Convex to leave the room
+    const cleanupRoom = async () => {
+      try {
+        console.log("[RoomCleanup] Attempting to leave room", { roomCode, roomId: room._id, playerId, username });
+        
+        await leaveRoomMutation({
+          roomId: room._id,
+          playerId,
+        });
+        
+        console.log("[RoomCleanup] Successfully left room");
+      } catch (error) {
+        console.log("[RoomCleanup] Failed to leave room:", error);
+        // Ignore errors - user is navigating away anyway
+      }
+    };
 
-    try {
-      const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
-      navigator.sendBeacon("/api/leave-room", blob);
-    } catch (error) {
-      fetch("/api/leave-room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        keepalive: true,
-      }).catch(() => {
-        // ignore
-      });
-    }
+    cleanupRoom();
 
     // Clear local room identifiers so we don't repeatedly attempt cleanup.
     localStorage.removeItem("playerId");
@@ -51,7 +63,7 @@ function RoomCleanupOnLanding() {
     } catch {
       // ignore
     }
-  }, [location?.pathname]);
+  }, [location?.pathname, room, roomCode, leaveRoomMutation]);
 
   return null;
 }

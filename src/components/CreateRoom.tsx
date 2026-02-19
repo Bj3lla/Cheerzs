@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "./Button";
 import { translations } from "../locales/translations";
 import type { LanguageCode } from "../hooks/useLanguage";
+import { useConvexRoom } from "../hooks/useConvexRoom";
 
 type CreateRoomProps = {
   onRoomCreated: (args: { roomID: string; username: string }) => void;
@@ -9,11 +10,12 @@ type CreateRoomProps = {
   username?: string;
 };
 
-export default function CreateRoom({ onRoomCreated, language = "en", username }: CreateRoomProps) {
+export default function CreateRoom({ onRoomCreated, language = "no", username }: CreateRoomProps) {
   const [roomID, setRoomID] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
+  const { createRoom } = useConvexRoom();
 
   const handleCreate = async () => {
     if (!username || typeof username !== "string" || !username.trim()) {
@@ -29,57 +31,41 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
     setLoading(true);
     setError("");
 
-    const payload = { roomID: roomID.trim().toUpperCase(), username: username.trim() };
-    console.groupCollapsed("[CreateRoom] POST /api/create-room");
-    console.log("payload", payload);
+    const cleanRoomCode = roomID.trim().toUpperCase();
+    const cleanUsername = username.trim();
+
+    // Generate a unique player ID
+    const playerId = `player_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 
     try {
-      const res = await fetch("/api/create-room", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      const result = await createRoom({
+        code: cleanRoomCode,
+        hostId: playerId,
+        hostName: cleanUsername,
+        gameMode: "classic",
+        language,
       });
 
-      const contentType = res.headers.get("content-type") || "";
-      const vercelError = res.headers.get("x-vercel-error") || "";
-      const vercelId = res.headers.get("x-vercel-id") || "";
-
-      const rawText = await res.text();
-      let data: Record<string, unknown> | null = null;
-      if (rawText) {
-        try {
-          data = JSON.parse(rawText) as Record<string, unknown>;
-        } catch {
-          data = null;
-        }
-      }
-
-      console.log("status", res.status);
-      console.log("content-type", contentType);
-      if (vercelError) console.log("x-vercel-error", vercelError);
-      if (vercelId) console.log("x-vercel-id", vercelId);
-      console.log("parsed response", data);
-      console.log("playerId value:", (data as Record<string, unknown>)?.playerId, "type:", typeof (data as Record<string, unknown>)?.playerId);
-      if (!data && rawText) console.log("raw response", rawText);
-
-      if (res.ok) {
-        const playerId = (data as Record<string, unknown>)?.playerId;
-        if (playerId) {
-          localStorage.setItem("playerId", String(playerId));
-          localStorage.setItem("playerRoomId", roomID.trim().toUpperCase());
-        }
-        onRoomCreated({ roomID: roomID.trim().toUpperCase(), username: username.trim() });
+      if (result.success && result.roomCode) {
+        // Store player session
+        localStorage.setItem("playerId", playerId);
+        localStorage.setItem("playerRoomId", result.roomCode);
+        localStorage.setItem("playerName", cleanUsername);
+        
+        onRoomCreated({ roomID: result.roomCode, username: cleanUsername });
       } else {
-        const requestId = typeof (data as Record<string, unknown>)?.requestId === "string" ? (data as Record<string, unknown>).requestId : "";
-        if (requestId) console.log("requestId", requestId);
-        const errorMsg = typeof (data as Record<string, unknown>)?.error === "string" ? (data as Record<string, unknown>).error as string : i18n.ui.networkError || "Network error";
-        setError(errorMsg);
+        setError(result.error || i18n.ui.networkError || "Failed to create room");
       }
     } catch (err) {
       console.error("[CreateRoom] request failed", err);
-      setError(i18n.ui.networkError || "Network error");
+      // Extract the actual error message, handling Convex error format
+      const errorMessage = err?.message || String(err);
+      if (errorMessage.includes("Room code already exists")) {
+        setError("Room code already exists. Please choose a different name.");
+      } else {
+        setError(i18n.ui.networkError || "Network error");
+      }
     } finally {
-      console.groupEnd();
       setLoading(false);
     }
   };
@@ -101,7 +87,7 @@ export default function CreateRoom({ onRoomCreated, language = "en", username }:
           className={`${error ? "error " : ""}room-code-input`}
         />
       </div>
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="error-message">{"Room already exists"}</p>}
       <div className="create-room-button">
         <Button
           label={loading ? i18n.ui.loading : i18n.ui.createRoom}

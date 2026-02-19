@@ -23,11 +23,11 @@ export const getRandomCategory = (): RandomDrawCategoryKey => {
   if (random < 2) return "drinkingbuddy"; // 2%
   if (random < 4) return "wildcard"; // 2%
   if (random < 8) return "rule"; // 4%
-  if (random < 14) return "spotify"; // 6%
-  if (random < 34) return "point"; // 20%
-  if (random < 60) return "never"; // 26%
-  if (random < 80) return "truth"; // 20%
-  return "dare"; // 20%
+  if (random < 18) return "spotify"; // 10%
+  if (random < 46) return "point"; // 28%
+  if (random < 76) return "never"; // 30%
+  if (random < 88) return "truth"; // 12%
+  return "dare"; // 12%
 };
 
 export const categoryColors: Record<CategoryKey, string> = {

@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { getRandomItem, getRandomCategory, type CategoryKey } from "../utils/gameUtils";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { getRandomItem, getRandomCategory, getRandomRounds, type CategoryKey } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 import useQuestionState from "./useQuestionState";
 import useFriendManagement from "./useFriendManagement";
@@ -8,7 +10,7 @@ import type { LanguageCode } from "./useLanguage";
 import { truthOrDare } from "../data/truthOrDare";
 import { neverHaveIEver } from "../data/neverHaveIEver";
 import { pointAtSomeone } from "../data/pointAtSomeone";
-import { newRules } from "../data/newRule";
+import { newRules as localNewRules } from "../data/newRule";
 import { drinkingBuddy } from "../data/drinkingBuddy";
 import { wildcard } from "../data/wildcard";
 import { spotifyUrls } from "../data/urls/spotifyUrls";
@@ -31,7 +33,19 @@ const pickTwoDifferentPlayers = (players: PlayerName[]) => {
 };
 
 export default function useGameLogic(language: LanguageCode) {
-  const { unread: _unread, read, pickQuestion, resetAllQuestions } = useQuestionState();
+  // ─── Fetch all questions from Convex DB ─────────────────────────────────
+  const convexQuestions = useQuery(api.questions.getAllQuestions);
+
+  // Derive Convex rules (with repel fields) — falls back to local data
+  const convexRules = convexQuestions?.newRules ?? null;
+  // The definitive "all rules" list used throughout this hook
+  const newRules = (convexRules && convexRules.length > 0) ? convexRules : localNewRules;
+  const newRulesRef = useRef(newRules);
+  newRulesRef.current = newRules;
+
+  const { unread: _unread, read, pickQuestion, resetAllQuestions } = useQuestionState(
+    convexQuestions ?? null
+  );
   const {
     friends,
     replaceFriends,
@@ -46,14 +60,16 @@ export default function useGameLogic(language: LanguageCode) {
   const {
     availableRules,
     activeRules,
+    activeRulesRef,
     repelMessage,
     repelActive,
+    repelActiveRef,
     updateActiveRules,
     addRule,
     clearRepel,
     replaceActiveRules,
     resetRules,
-  } = useRuleManagement(language);
+  } = useRuleManagement(language, convexRules);
 
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [category, setCategory] = useState<CategoryKey | null>(null);
@@ -70,27 +86,39 @@ export default function useGameLogic(language: LanguageCode) {
   const [roomId, setRoomId] = useState<string | null>(null);
   const [roomPlayers, setRoomPlayers] = useState<PlayerName[]>([]);
 
-  const resetGameState = () => {
+  // Refs for unstable callbacks so memoized functions always call the latest version
+  const replaceFriendsRef = useRef(replaceFriends);
+  replaceFriendsRef.current = replaceFriends;
+  const resetAllQuestionsRef = useRef(resetAllQuestions);
+  resetAllQuestionsRef.current = resetAllQuestions;
+  const resetRulesRef = useRef(resetRules);
+  resetRulesRef.current = resetRules;
+  const roomIdRef = useRef(roomId);
+  roomIdRef.current = roomId;
+
+  const resetGameState = useCallback(() => {
     setGameStarted(false);
     setCategory(null);
     setPrompt("");
     setCurrentCard(null);
     broadcastStateRef.current = null;
+    cardQueueRef.current = [];
+    reservedRuleIdsRef.current = new Set();
     setPlayer("");
     setShowActiveRules(true);
 
     // Local mode state should never leak between rooms or sessions.
-    replaceFriends([]);
+    replaceFriendsRef.current([]);
     setFriendInput("");
 
     // Reset decks/rules so a new room is always a fresh game.
-    resetAllQuestions();
-    resetRules();
-  };
+    resetAllQuestionsRef.current();
+    resetRulesRef.current();
+  }, [setPlayer, setFriendInput]);
 
   const playersForPrompts = roomId ? roomPlayers : friends;
 
-  const setRoomSession = ({
+  const setRoomSession = useCallback(({
     roomID,
     players,
   }: {
@@ -98,18 +126,18 @@ export default function useGameLogic(language: LanguageCode) {
     players?: PlayerName[];
   }) => {
     const nextRoomId = roomID || null;
-    if (nextRoomId !== roomId) {
+    if (nextRoomId !== roomIdRef.current) {
       resetGameState();
     }
     setRoomId(nextRoomId);
     setRoomPlayers(Array.isArray(players) ? players : []);
-  };
+  }, [resetGameState]);
 
-  const clearRoomSession = () => {
+  const clearRoomSession = useCallback(() => {
     resetGameState();
     setRoomId(null);
     setRoomPlayers([]);
-  };
+  }, [resetGameState]);
 
   useEffect(() => {
     // If current selected player left the room, clear it.
@@ -117,6 +145,274 @@ export default function useGameLogic(language: LanguageCode) {
     if (player && !roomPlayers.includes(player)) setPlayer("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, roomPlayers]);
+
+  // ─── Card Queue (FIFO buffer) ───────────────────────────────────────────
+  // We keep a ref-based queue of pre-generated card snapshots so the UI can
+  // serve the next card instantly while a replacement is generated.
+
+  interface CardSnapshot {
+    card: CardDescriptor;
+    category: CategoryKey | "repeal" | null;
+    prompt: string;
+    player: string;
+    broadcastState: any;
+    pendingRule?: any; // Rule to activate when this card is actually displayed
+  }
+
+  const cardQueueRef = useRef<CardSnapshot[]>([]);
+  // Track rule IDs reserved by cards in the queue (not yet displayed).
+  // Prevents the same rule from being picked for multiple queued cards.
+  const reservedRuleIdsRef = useRef<Set<number | string>>(new Set());
+  // Keep a ref to playersForPrompts so _generateCardSnapshot reads the latest value.
+  const playersForPromptsRef = useRef(playersForPrompts);
+  playersForPromptsRef.current = playersForPrompts;
+
+  /**
+   * Generate a card snapshot WITHOUT touching display state. Uses refs for
+   * deck & rule state so it can be called multiple times synchronously.
+   * Returns a self-contained snapshot that can be applied to the UI later.
+   */
+  const _generateCardSnapshot = (): CardSnapshot => {
+    const players = playersForPromptsRef.current;
+    const i18n = translations[language] || translations.no;
+
+    // NOTE: Rule ticking, expiry, and activation are ALL deferred to
+    // _applySnapshot() (display time). This ensures countdowns start when
+    // cards are shown to the user, not when pre-generated for the 7-card
+    // queue buffer.
+
+    const cat = getRandomCategory();
+
+    if (cat === "spotify") {
+      const track = getRandomItem(spotifyUrls);
+      const trackUrl = track?.url || "https://open.spotify.com";
+      const selectedPlayer = players.length > 0 ? getRandomItem(players) : null;
+      const card: CardDescriptor = { kind: "question", category: "spotify", questionId: track?.id, selectedPlayer };
+      return {
+        card,
+        category: "spotify",
+        prompt: trackUrl,
+        player: selectedPlayer || "",
+        broadcastState: { card, started: true, textEn: trackUrl, textNo: trackUrl },
+      };
+    }
+
+    if (cat === "rule") {
+      // Check both already-active rules and rules reserved in the queue
+      const activeAndReservedIds = new Set([
+        ...activeRulesRef.current.map((r: any) => r.id),
+        ...reservedRuleIdsRef.current,
+      ]);
+      const remainingRules = newRulesRef.current.filter((r: any) => !activeAndReservedIds.has(r.id));
+      if (remainingRules.length === 0) {
+        const card: CardDescriptor = { kind: "wildcard", questionId: undefined };
+        return {
+          card,
+          category: "wildcard",
+          prompt: i18n.ui.noMoreRules,
+          player: "",
+          broadcastState: { card, started: true },
+        };
+      }
+      const picked = getRandomItem(remainingRules);
+      const rounds = getRandomRounds();
+      // Reserve this rule so other queued cards don't pick it again
+      reservedRuleIdsRef.current.add(picked.id);
+      const card: CardDescriptor = { kind: "rule", ruleId: picked.id };
+      return {
+        card,
+        category: "rule",
+        prompt: picked[language],
+        player: "",
+        broadcastState: { card, started: true, textEn: picked.en, textNo: picked.no },
+        pendingRule: { ...picked, roundsLeft: rounds },
+      };
+    }
+
+    if (cat === "drinkingbuddy") {
+      const questionObj = pickQuestion("drinkingbuddy");
+      const { p1, p2 } = pickTwoDifferentPlayers(players);
+      const suffix = questionObj?.[language] || "";
+      const promptText = p1 && p2
+        ? `${p1}${i18n.ui.and}${p2} ${suffix}`
+        : `${i18n.ui.you}${i18n.ui.and}${i18n.ui.i} ${suffix}`;
+      const card: CardDescriptor = { kind: "drinkingbuddy", p1: p1 || null, p2: p2 || null };
+      return {
+        card,
+        category: "drinkingbuddy",
+        prompt: promptText,
+        player: "",
+        broadcastState: { card, started: true, textEn: questionObj?.en || "", textNo: questionObj?.no || "" },
+      };
+    }
+
+    if (cat === "wildcard") {
+      const wildcardType = Math.random() < 0.5 ? "onePlayer" : "allPlayers";
+      const deckKey = wildcardType === "onePlayer" ? "wildcardOne" : "wildcardAll";
+      const questionObj = pickQuestion(deckKey);
+      const selectedPlayer =
+        wildcardType === "onePlayer" && players.length > 0 ? getRandomItem(players) : null;
+      const text = questionObj?.[language] || "";
+      const promptText = selectedPlayer ? `${selectedPlayer}, ${text}` : text;
+      const card: CardDescriptor = { kind: "wildcard", questionId: questionObj.id, selectedPlayer };
+      return {
+        card,
+        category: "wildcard",
+        prompt: promptText,
+        player: selectedPlayer || "",
+        broadcastState: { card, started: true, textEn: questionObj?.en || "", textNo: questionObj?.no || "" },
+      };
+    }
+
+    // truth, dare, never, point
+    const questionObj = pickQuestion(cat);
+    const text = questionObj[language];
+
+    if ((cat === "truth" || cat === "dare") && players.length > 0) {
+      const selectedPlayer = getRandomItem(players);
+      const card: CardDescriptor = { kind: "question", category: cat, questionId: questionObj.id, selectedPlayer };
+      return {
+        card,
+        category: cat,
+        prompt: `${selectedPlayer}, ${text}`,
+        player: selectedPlayer,
+        broadcastState: { card, started: true, textEn: questionObj.en, textNo: questionObj.no },
+      };
+    }
+
+    const card: CardDescriptor = { kind: "question", category: cat, questionId: questionObj.id, selectedPlayer: undefined };
+    return {
+      card,
+      category: cat,
+      prompt: text,
+      player: "",
+      broadcastState: { card, started: true, textEn: questionObj.en, textNo: questionObj.no },
+    };
+  };
+
+  /**
+   * Apply a snapshot to the UI display state.
+   * Rule ticking and activation happen HERE (display time), not during
+   * queue generation. If a rule expires, a repeal card is shown instead
+   * and the original snapshot is pushed back to the front of the queue.
+   * Returns the snapshot that was actually displayed.
+   */
+  const _applySnapshot = (snap: CardSnapshot): CardSnapshot => {
+    // Clear any lingering repeal state from the previous card
+    if (repelActiveRef.current) {
+      clearRepel();
+    }
+
+    // Tick active rules — countdown happens at display time
+    const tick = updateActiveRules();
+
+    // If a rule expired, show the repeal card instead of the queued card
+    if (tick?.expiredRule) {
+      const rule = newRulesRef.current.find((r: any) => r.id === tick.expiredRule.id);
+      const i18n = translations[language] || translations.no;
+      const promptText = rule
+        ? (language === "en" ? rule.repelEn : rule.repelNo)
+        : i18n.ui.pressNext;
+
+      const repealCard: CardDescriptor = { kind: "repeal", ruleId: tick.expiredRule.id };
+
+      // Push the original card back to front of queue for the next advance
+      cardQueueRef.current.unshift(snap);
+
+      // Display the repeal card
+      setCategory("repeal" as CategoryKey);
+      setPrompt(promptText);
+      setPlayer("");
+      setCurrentCard(repealCard);
+
+      const repealSnap: CardSnapshot = {
+        card: repealCard,
+        category: "repeal",
+        prompt: promptText,
+        player: "",
+        broadcastState: {
+          card: repealCard,
+          activeRules: activeRulesRef.current,
+          started: true,
+          textEn: rule ? rule.repelEn : "",
+          textNo: rule ? rule.repelNo : "",
+        },
+      };
+
+      broadcastStateRef.current = repealSnap.broadcastState;
+      return repealSnap;
+    }
+
+    // If this snapshot has a pending rule, activate it now (display time)
+    if (snap.pendingRule) {
+      if (!activeRulesRef.current.some((r: any) => r.id === snap.pendingRule.id)) {
+        addRule(snap.pendingRule);
+      }
+      reservedRuleIdsRef.current.delete(snap.pendingRule.id);
+    }
+
+    // Apply visual state
+    setCategory(snap.category as CategoryKey);
+    setPrompt(snap.prompt);
+    setPlayer(snap.player);
+    setCurrentCard(snap.card);
+
+    broadcastStateRef.current = {
+      ...snap.broadcastState,
+      activeRules: activeRulesRef.current,
+    };
+
+    return snap;
+  };
+
+  /**
+   * Fill the queue up to `target` cards (default 7).
+   * Generates cards synchronously using ref-based state.
+   */
+  const prefillCardQueue = useCallback((target = 7) => {
+    const needed = target - cardQueueRef.current.length;
+    for (let i = 0; i < needed; i++) {
+      cardQueueRef.current.push(_generateCardSnapshot());
+    }
+    console.log(`[useGameLogic] Queue prefilled to ${cardQueueRef.current.length} cards`);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
+
+  /**
+   * Pop the next card from the queue, apply it to the UI, and generate
+   * one replacement card to keep the buffer full.  Returns the snapshot
+   * so the caller can publish it (multiplayer).
+   *
+   * If the queue is empty (shouldn't happen), falls back to generating
+   * a card on the spot.
+   */
+  const advanceCardQueue = useCallback((): CardSnapshot => {
+    let snap: CardSnapshot;
+    if (cardQueueRef.current.length > 0) {
+      snap = cardQueueRef.current.shift()!;
+    } else {
+      console.warn("[useGameLogic] Queue empty – generating card on the fly");
+      snap = _generateCardSnapshot();
+    }
+
+    // Apply popped card to UI. _applySnapshot handles rule ticking at display
+    // time and may show a repeal card instead (pushing snap back to the queue).
+    const displayedSnap = _applySnapshot(snap);
+
+    // Only generate a replacement if we actually consumed the card.
+    // If a repeal was injected, the original snap was pushed back onto the queue.
+    const wasRepeal = displayedSnap.card.kind === "repeal" && snap.card.kind !== "repeal";
+    if (!wasRepeal) {
+      cardQueueRef.current.push(_generateCardSnapshot());
+    }
+    console.log(`[useGameLogic] Queue advanced. Remaining: ${cardQueueRef.current.length}`);
+
+    return displayedSnap;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
+
+  /** How many cards are currently buffered. */
+  const getQueueLength = () => cardQueueRef.current.length;
 
   const generatePrompt = () => {
     if (repelActive) {
@@ -128,9 +424,14 @@ export default function useGameLogic(language: LanguageCode) {
     const activeAfterTick = tick?.activeRules ?? (Array.isArray(activeRules) ? activeRules : []);
 
     if (tick?.expiredRule) {
+      const expRule = newRulesRef.current.find((r: any) => r.id === tick.expiredRule.id);
       const nextCard: CardDescriptor = { kind: "repeal", ruleId: tick.expiredRule.id };
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      broadcastStateRef.current = {
+        card: nextCard, activeRules: activeAfterTick, started: true,
+        textEn: expRule ? expRule.repelEn : "",
+        textNo: expRule ? expRule.repelNo : "",
+      };
       return nextCard;
     }
 
@@ -156,18 +457,18 @@ export default function useGameLogic(language: LanguageCode) {
       };
 
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: trackUrl, textNo: trackUrl };
       return nextCard;
     }
     if (cat === "rule") {
-      const remainingRules = newRules.filter((r) => !activeAfterTick.some((a) => a.id === r.id));
+      const remainingRules = newRulesRef.current.filter((r: any) => !activeAfterTick.some((a: any) => a.id === r.id));
 
       if (remainingRules.length === 0) {
         setPrompt(translations[language].ui.noMoreRules);
         // Use wildcard as fallback card type
         const nextCard: CardDescriptor = { kind: "wildcard", questionId: undefined };
         setCurrentCard(nextCard);
-        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: "", textNo: "" };
         return nextCard;
       }
 
@@ -177,7 +478,7 @@ export default function useGameLogic(language: LanguageCode) {
       setPrompt(picked[language]);
       const nextCard: CardDescriptor = { kind: "rule", ruleId: picked.id };
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: nextActiveRules };
+      broadcastStateRef.current = { card: nextCard, activeRules: nextActiveRules, started: true, textEn: picked.en, textNo: picked.no };
       return nextCard;
     }
 
@@ -198,7 +499,7 @@ export default function useGameLogic(language: LanguageCode) {
       };
 
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: questionObj?.en || "", textNo: questionObj?.no || "" };
       setPrompt(newPrompt);
       return nextCard;
     }
@@ -222,7 +523,7 @@ export default function useGameLogic(language: LanguageCode) {
       };
 
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: questionObj?.en || "", textNo: questionObj?.no || "" };
       setPrompt(newPrompt);
       return nextCard;
     }
@@ -240,7 +541,7 @@ export default function useGameLogic(language: LanguageCode) {
           selectedPlayer: undefined,
         };
         setCurrentCard(nextCard);
-        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: questionObj.en, textNo: questionObj.no };
         setPrompt(newPrompt);
         return nextCard;
       } else {
@@ -254,7 +555,7 @@ export default function useGameLogic(language: LanguageCode) {
           selectedPlayer,
         };
         setCurrentCard(nextCard);
-        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: questionObj.en, textNo: questionObj.no };
         setPrompt(newPrompt);
         return nextCard;
       }
@@ -262,7 +563,7 @@ export default function useGameLogic(language: LanguageCode) {
       newPrompt = questionObj[language];
       const nextCard: CardDescriptor = { kind: "question", category: cat, questionId: questionObj.id, selectedPlayer: undefined };
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: questionObj.en, textNo: questionObj.no };
       setPrompt(newPrompt);
       return nextCard;
     }
@@ -322,7 +623,7 @@ export default function useGameLogic(language: LanguageCode) {
       if (nextCard.kind === "rule" && nextCard.ruleId) {
         const existing = activeRules.some((r) => r.id === nextCard.ruleId);
         if (!existing) {
-          const rule = newRules.find((r) => r.id === nextCard.ruleId);
+          const rule = newRulesRef.current.find((r: any) => r.id === nextCard.ruleId);
           if (rule) {
             replaceActiveRules([...activeRules, { ...rule, roundsLeft: 999 }]);
           }
@@ -345,21 +646,28 @@ export default function useGameLogic(language: LanguageCode) {
 
     setCurrentCard(nextCard);
 
+    // Helper: get question text from broadcast state (Convex-safe)
+    // Falls back to searching local data arrays (for older broadcast formats).
+    const getText = (localLookup?: () => { en: string; no: string } | null | undefined) => {
+      const broadcastText = nextLanguage === "en" ? state.textEn : state.textNo;
+      if (broadcastText) return broadcastText;
+      const found = localLookup?.();
+      return found ? found[nextLanguage] : null;
+    };
+
     if (nextCard.kind === "repeal") {
-      const rule = newRules.find((r) => r.id === nextCard.ruleId);
-      if (rule) {
-        setPrompt(nextLanguage === "en" ? rule.repelEn : rule.repelNo);
-      } else {
-        setPrompt(translations[nextLanguage].ui.pressNext);
-      }
+      const rule = newRulesRef.current.find((r: any) => r.id === nextCard.ruleId);
+      const text = getText(() => rule ? { en: rule.repelEn, no: rule.repelNo } : null);
+      setPrompt(text || translations[nextLanguage].ui.pressNext);
       setPlayer("");
       setCategory("repeal");
       return;
     }
 
     if (nextCard.kind === "rule") {
-      const rule = newRules.find((r) => r.id === nextCard.ruleId);
-      if (rule) setPrompt(rule[nextLanguage]);
+      const rule = newRulesRef.current.find((r: any) => r.id === nextCard.ruleId);
+      const text = getText(() => rule ? { en: rule.en, no: rule.no } : null);
+      if (text) setPrompt(text);
       setPlayer("");
       setCategory("rule");
       return;
@@ -376,6 +684,33 @@ export default function useGameLogic(language: LanguageCode) {
       return;
     }
 
+    if (nextCard.kind === "drinkingbuddy") {
+      const { p1, p2 } = nextCard;
+      const i18nNext = translations[nextLanguage] || translations.no;
+      const text = getText(() => null);
+      const suffix = text || "";
+      const prompt = p1 && p2
+        ? `${p1}${i18nNext.ui.and}${p2} ${suffix}`
+        : `${i18nNext.ui.you}${i18nNext.ui.and}${i18nNext.ui.i} ${suffix}`;
+      setPrompt(prompt);
+      setPlayer("");
+      setCategory("drinkingbuddy");
+      return;
+    }
+
+    if (nextCard.kind === "wildcard") {
+      const { selectedPlayer } = nextCard;
+      const text = getText(() => null);
+      if (selectedPlayer && text) {
+        setPrompt(`${selectedPlayer}, ${text}`);
+      } else {
+        setPrompt(text || translations[nextLanguage].ui.pressNext);
+      }
+      setPlayer(selectedPlayer || "");
+      setCategory("wildcard");
+      return;
+    }
+
     if (nextCard.kind === "question") {
       const { category: cat, questionId, selectedPlayer } = nextCard;
       setCategory(cat);
@@ -384,12 +719,14 @@ export default function useGameLogic(language: LanguageCode) {
       // Handle spotify category specially
       if (cat === "spotify") {
         const track = spotifyUrls.find((t) => t.id === questionId);
-        const trackUrl = track?.url || "https://open.spotify.com";
+        const trackUrl = track?.url || state.textEn || "https://open.spotify.com";
         setPrompt(trackUrl);
         return;
       }
 
-      const question = (() => {
+      // Use broadcast text (works for both Convex and local question IDs).
+      // Fall back to local array lookup for older broadcast formats.
+      const text = getText(() => {
         if (cat === "truth") return truthOrDare.truth.find((q) => q.id === questionId);
         if (cat === "dare") return truthOrDare.dare.find((q) => q.id === questionId);
         if (cat === "never") return neverHaveIEver.find((q) => q.id === questionId);
@@ -401,14 +738,13 @@ export default function useGameLogic(language: LanguageCode) {
           return wildcard.onePlayer.find((q) => q.id === questionId);
         }
         return null;
-      })();
+      });
 
-      if (!question) {
+      if (!text) {
         setPrompt(translations[nextLanguage].ui.pressNext);
         return;
       }
 
-      const text = question[nextLanguage];
       if (cat === "drinkingbuddy") {
         const p1 = nextCard.selectedPlayer;
         const p2 = nextCard.selectedPlayer2;
@@ -457,9 +793,12 @@ export default function useGameLogic(language: LanguageCode) {
     setRoomSession,
     clearRoomSession,
     category,
+    setCategory,
     prompt,
+    setPrompt,
     generatePrompt,
     currentCard,
+    setCurrentCard,
     getRoomBroadcastState,
     applyRoomBroadcastState,
     availableRules,
@@ -469,5 +808,9 @@ export default function useGameLogic(language: LanguageCode) {
     showActiveRules,
     setShowActiveRules,
     translations,
+    // Card queue API
+    prefillCardQueue,
+    advanceCardQueue,
+    getQueueLength,
   };
 }
