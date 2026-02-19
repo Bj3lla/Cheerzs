@@ -155,7 +155,7 @@ export default function useGameLogic(language: LanguageCode) {
    */
   const _generateCardSnapshot = (): CardSnapshot => {
     const players = playersForPromptsRef.current;
-    const i18n = translations[language] || translations.en;
+    const i18n = translations[language] || translations.no;
 
     // Handle repeal (clear it for the queue – each snapshot is independent).
     if (repelActiveRef.current) {

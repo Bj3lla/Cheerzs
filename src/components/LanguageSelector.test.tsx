@@ -11,7 +11,7 @@ describe("LanguageSelector", () => {
 
     render(
       <MemoryRouter initialEntries={["/"]}>
-        <LanguageSelector language="en" onLanguageChange={onLanguageChange} />
+        <LanguageSelector language="no" onLanguageChange={onLanguageChange} />
       </MemoryRouter>
     );
 

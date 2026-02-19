@@ -7,7 +7,7 @@ import type { LanguageCode } from "../hooks/useLanguage";
 
 type PlayerNameErrorCode = "emptyPlayerName" | null;
 
-const getErrorMessage = (errorCode: PlayerNameErrorCode, i18nData: typeof translations["en"]): string | null => {
+const getErrorMessage = (errorCode: PlayerNameErrorCode, i18nData: typeof translations[LanguageCode]): string | null => {
   if (!errorCode) return null;
 
   const errorMap: Record<Exclude<PlayerNameErrorCode, null>, string | undefined> = {
@@ -17,11 +17,11 @@ const getErrorMessage = (errorCode: PlayerNameErrorCode, i18nData: typeof transl
   return errorMap[errorCode] || null;
 };
 
-export default function HomePage({ language = "en" }: { language?: LanguageCode }) {
+export default function HomePage({ language = "no" }: { language?: LanguageCode }) {
   const [playerName, setPlayerName] = useState<string>("");
   const [playerNameErrorCode, setPlayerNameErrorCode] = useState<PlayerNameErrorCode>(null);
   const navigate = useNavigate();
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
   const { ui } = i18n;
 
   // Optional: persist username in localStorage

@@ -24,7 +24,7 @@ export default function AddPlayers({
   onAddFriend: () => void;
   errorCode: FriendErrorCode;
 }) {
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
   const errorMessage = getErrorMessage(errorCode, i18n);
 
   return (

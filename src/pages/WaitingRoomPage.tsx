@@ -12,12 +12,12 @@ import { useConvexRoom } from "../hooks/useConvexRoom";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
-export default function WaitingRoomPage({ language = "en" }: { language?: LanguageCode }) {
+export default function WaitingRoomPage({ language = "no" }: { language?: LanguageCode }) {
   const navigate = useNavigate();
   const { roomId } = useParams();
   const { setGameStarted, setRoomSession, clearRoomSession } = useGame();
 
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   // Log that component mounted
   console.log("[WaitingRoom] Component rendered, roomId from URL:", roomId);

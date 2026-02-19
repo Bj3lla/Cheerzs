@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export type LanguageCode = "en" | "no";
 
-export default function useLanguage(initial: LanguageCode = "en") {
+export default function useLanguage(initial: LanguageCode = "no") {
   const [language, setLanguage] = useState<LanguageCode>(initial);
   const [languageMenuOpen, setLanguageMenuOpen] = useState<boolean>(false);
 

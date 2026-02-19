@@ -10,7 +10,7 @@ export default function CheerzsRulesPopup({
   onClose: () => void;
   language?: LanguageCode;
 }) {
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   return (
     <div className="popup-overlay" role="dialog" aria-modal="true">

@@ -83,7 +83,7 @@ export default function GamePage({ language }: { language: LanguageCode }) {
 
   const drawCardInFlightRef = useRef(false);
 
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
   const isRepealCard = Boolean(repelActive || category === "repeal");
 
   const cardPrompt = isSyncing

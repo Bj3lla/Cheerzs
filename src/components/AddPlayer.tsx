@@ -24,7 +24,7 @@ export default function AddPlayer({
 }: AddPlayerProps) {
   const [internalName, setInternalName] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const i18n = translations[language] || translations.en;
+  const i18n = translations[language] || translations.no;
 
   const playerName = typeof value === "string" ? value : internalName;
   const setPlayerName = typeof onChange === "function" ? onChange : setInternalName;
