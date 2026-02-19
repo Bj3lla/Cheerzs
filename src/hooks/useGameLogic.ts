@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { getRandomItem, getRandomCategory, getRandomRounds, type CategoryKey } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 import useQuestionState from "./useQuestionState";
@@ -8,7 +10,7 @@ import type { LanguageCode } from "./useLanguage";
 import { truthOrDare } from "../data/truthOrDare";
 import { neverHaveIEver } from "../data/neverHaveIEver";
 import { pointAtSomeone } from "../data/pointAtSomeone";
-import { newRules } from "../data/newRule";
+import { newRules as localNewRules } from "../data/newRule";
 import { drinkingBuddy } from "../data/drinkingBuddy";
 import { wildcard } from "../data/wildcard";
 import { spotifyUrls } from "../data/urls/spotifyUrls";
@@ -31,7 +33,19 @@ const pickTwoDifferentPlayers = (players: PlayerName[]) => {
 };
 
 export default function useGameLogic(language: LanguageCode) {
-  const { unread: _unread, read, pickQuestion, resetAllQuestions } = useQuestionState();
+  // ─── Fetch all questions from Convex DB ─────────────────────────────────
+  const convexQuestions = useQuery(api.questions.getAllQuestions);
+
+  // Derive Convex rules (with repel fields) — falls back to local data
+  const convexRules = convexQuestions?.newRules ?? null;
+  // The definitive "all rules" list used throughout this hook
+  const newRules = (convexRules && convexRules.length > 0) ? convexRules : localNewRules;
+  const newRulesRef = useRef(newRules);
+  newRulesRef.current = newRules;
+
+  const { unread: _unread, read, pickQuestion, resetAllQuestions } = useQuestionState(
+    convexQuestions ?? null
+  );
   const {
     friends,
     replaceFriends,
@@ -55,7 +69,7 @@ export default function useGameLogic(language: LanguageCode) {
     clearRepel,
     replaceActiveRules,
     resetRules,
-  } = useRuleManagement(language);
+  } = useRuleManagement(language, convexRules);
 
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [category, setCategory] = useState<CategoryKey | null>(null);
@@ -179,7 +193,7 @@ export default function useGameLogic(language: LanguageCode) {
         category: "spotify",
         prompt: trackUrl,
         player: selectedPlayer || "",
-        broadcastState: { card, started: true },
+        broadcastState: { card, started: true, textEn: trackUrl, textNo: trackUrl },
       };
     }
 
@@ -189,7 +203,7 @@ export default function useGameLogic(language: LanguageCode) {
         ...activeRulesRef.current.map((r: any) => r.id),
         ...reservedRuleIdsRef.current,
       ]);
-      const remainingRules = newRules.filter((r) => !activeAndReservedIds.has(r.id));
+      const remainingRules = newRulesRef.current.filter((r: any) => !activeAndReservedIds.has(r.id));
       if (remainingRules.length === 0) {
         const card: CardDescriptor = { kind: "wildcard", questionId: undefined };
         return {
@@ -210,7 +224,7 @@ export default function useGameLogic(language: LanguageCode) {
         category: "rule",
         prompt: picked[language],
         player: "",
-        broadcastState: { card, started: true },
+        broadcastState: { card, started: true, textEn: picked.en, textNo: picked.no },
         pendingRule: { ...picked, roundsLeft: rounds },
       };
     }
@@ -228,7 +242,7 @@ export default function useGameLogic(language: LanguageCode) {
         category: "drinkingbuddy",
         prompt: promptText,
         player: "",
-        broadcastState: { card, started: true },
+        broadcastState: { card, started: true, textEn: questionObj?.en || "", textNo: questionObj?.no || "" },
       };
     }
 
@@ -246,7 +260,7 @@ export default function useGameLogic(language: LanguageCode) {
         category: "wildcard",
         prompt: promptText,
         player: selectedPlayer || "",
-        broadcastState: { card, started: true },
+        broadcastState: { card, started: true, textEn: questionObj?.en || "", textNo: questionObj?.no || "" },
       };
     }
 
@@ -262,7 +276,7 @@ export default function useGameLogic(language: LanguageCode) {
         category: cat,
         prompt: `${selectedPlayer}, ${text}`,
         player: selectedPlayer,
-        broadcastState: { card, started: true },
+        broadcastState: { card, started: true, textEn: questionObj.en, textNo: questionObj.no },
       };
     }
 
@@ -272,7 +286,7 @@ export default function useGameLogic(language: LanguageCode) {
       category: cat,
       prompt: text,
       player: "",
-      broadcastState: { card, started: true },
+      broadcastState: { card, started: true, textEn: questionObj.en, textNo: questionObj.no },
     };
   };
 
@@ -294,7 +308,7 @@ export default function useGameLogic(language: LanguageCode) {
 
     // If a rule expired, show the repeal card instead of the queued card
     if (tick?.expiredRule) {
-      const rule = newRules.find((r) => r.id === tick.expiredRule.id);
+      const rule = newRulesRef.current.find((r: any) => r.id === tick.expiredRule.id);
       const i18n = translations[language] || translations.no;
       const promptText = rule
         ? (language === "en" ? rule.repelEn : rule.repelNo)
@@ -316,7 +330,13 @@ export default function useGameLogic(language: LanguageCode) {
         category: "repeal",
         prompt: promptText,
         player: "",
-        broadcastState: { card: repealCard, activeRules: activeRulesRef.current, started: true },
+        broadcastState: {
+          card: repealCard,
+          activeRules: activeRulesRef.current,
+          started: true,
+          textEn: rule ? rule.repelEn : "",
+          textNo: rule ? rule.repelNo : "",
+        },
       };
 
       broadcastStateRef.current = repealSnap.broadcastState;
@@ -404,9 +424,14 @@ export default function useGameLogic(language: LanguageCode) {
     const activeAfterTick = tick?.activeRules ?? (Array.isArray(activeRules) ? activeRules : []);
 
     if (tick?.expiredRule) {
+      const expRule = newRulesRef.current.find((r: any) => r.id === tick.expiredRule.id);
       const nextCard: CardDescriptor = { kind: "repeal", ruleId: tick.expiredRule.id };
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      broadcastStateRef.current = {
+        card: nextCard, activeRules: activeAfterTick, started: true,
+        textEn: expRule ? expRule.repelEn : "",
+        textNo: expRule ? expRule.repelNo : "",
+      };
       return nextCard;
     }
 
@@ -432,18 +457,18 @@ export default function useGameLogic(language: LanguageCode) {
       };
 
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: trackUrl, textNo: trackUrl };
       return nextCard;
     }
     if (cat === "rule") {
-      const remainingRules = newRules.filter((r) => !activeAfterTick.some((a) => a.id === r.id));
+      const remainingRules = newRulesRef.current.filter((r: any) => !activeAfterTick.some((a: any) => a.id === r.id));
 
       if (remainingRules.length === 0) {
         setPrompt(translations[language].ui.noMoreRules);
         // Use wildcard as fallback card type
         const nextCard: CardDescriptor = { kind: "wildcard", questionId: undefined };
         setCurrentCard(nextCard);
-        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: "", textNo: "" };
         return nextCard;
       }
 
@@ -453,7 +478,7 @@ export default function useGameLogic(language: LanguageCode) {
       setPrompt(picked[language]);
       const nextCard: CardDescriptor = { kind: "rule", ruleId: picked.id };
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: nextActiveRules };
+      broadcastStateRef.current = { card: nextCard, activeRules: nextActiveRules, started: true, textEn: picked.en, textNo: picked.no };
       return nextCard;
     }
 
@@ -474,7 +499,7 @@ export default function useGameLogic(language: LanguageCode) {
       };
 
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: questionObj?.en || "", textNo: questionObj?.no || "" };
       setPrompt(newPrompt);
       return nextCard;
     }
@@ -498,7 +523,7 @@ export default function useGameLogic(language: LanguageCode) {
       };
 
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: questionObj?.en || "", textNo: questionObj?.no || "" };
       setPrompt(newPrompt);
       return nextCard;
     }
@@ -516,7 +541,7 @@ export default function useGameLogic(language: LanguageCode) {
           selectedPlayer: undefined,
         };
         setCurrentCard(nextCard);
-        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: questionObj.en, textNo: questionObj.no };
         setPrompt(newPrompt);
         return nextCard;
       } else {
@@ -530,7 +555,7 @@ export default function useGameLogic(language: LanguageCode) {
           selectedPlayer,
         };
         setCurrentCard(nextCard);
-        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+        broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: questionObj.en, textNo: questionObj.no };
         setPrompt(newPrompt);
         return nextCard;
       }
@@ -538,7 +563,7 @@ export default function useGameLogic(language: LanguageCode) {
       newPrompt = questionObj[language];
       const nextCard: CardDescriptor = { kind: "question", category: cat, questionId: questionObj.id, selectedPlayer: undefined };
       setCurrentCard(nextCard);
-      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick };
+      broadcastStateRef.current = { card: nextCard, activeRules: activeAfterTick, started: true, textEn: questionObj.en, textNo: questionObj.no };
       setPrompt(newPrompt);
       return nextCard;
     }
@@ -598,7 +623,7 @@ export default function useGameLogic(language: LanguageCode) {
       if (nextCard.kind === "rule" && nextCard.ruleId) {
         const existing = activeRules.some((r) => r.id === nextCard.ruleId);
         if (!existing) {
-          const rule = newRules.find((r) => r.id === nextCard.ruleId);
+          const rule = newRulesRef.current.find((r: any) => r.id === nextCard.ruleId);
           if (rule) {
             replaceActiveRules([...activeRules, { ...rule, roundsLeft: 999 }]);
           }
@@ -621,21 +646,28 @@ export default function useGameLogic(language: LanguageCode) {
 
     setCurrentCard(nextCard);
 
+    // Helper: get question text from broadcast state (Convex-safe)
+    // Falls back to searching local data arrays (for older broadcast formats).
+    const getText = (localLookup?: () => { en: string; no: string } | null | undefined) => {
+      const broadcastText = nextLanguage === "en" ? state.textEn : state.textNo;
+      if (broadcastText) return broadcastText;
+      const found = localLookup?.();
+      return found ? found[nextLanguage] : null;
+    };
+
     if (nextCard.kind === "repeal") {
-      const rule = newRules.find((r) => r.id === nextCard.ruleId);
-      if (rule) {
-        setPrompt(nextLanguage === "en" ? rule.repelEn : rule.repelNo);
-      } else {
-        setPrompt(translations[nextLanguage].ui.pressNext);
-      }
+      const rule = newRulesRef.current.find((r: any) => r.id === nextCard.ruleId);
+      const text = getText(() => rule ? { en: rule.repelEn, no: rule.repelNo } : null);
+      setPrompt(text || translations[nextLanguage].ui.pressNext);
       setPlayer("");
       setCategory("repeal");
       return;
     }
 
     if (nextCard.kind === "rule") {
-      const rule = newRules.find((r) => r.id === nextCard.ruleId);
-      if (rule) setPrompt(rule[nextLanguage]);
+      const rule = newRulesRef.current.find((r: any) => r.id === nextCard.ruleId);
+      const text = getText(() => rule ? { en: rule.en, no: rule.no } : null);
+      if (text) setPrompt(text);
       setPlayer("");
       setCategory("rule");
       return;
@@ -652,6 +684,33 @@ export default function useGameLogic(language: LanguageCode) {
       return;
     }
 
+    if (nextCard.kind === "drinkingbuddy") {
+      const { p1, p2 } = nextCard;
+      const i18nNext = translations[nextLanguage] || translations.no;
+      const text = getText(() => null);
+      const suffix = text || "";
+      const prompt = p1 && p2
+        ? `${p1}${i18nNext.ui.and}${p2} ${suffix}`
+        : `${i18nNext.ui.you}${i18nNext.ui.and}${i18nNext.ui.i} ${suffix}`;
+      setPrompt(prompt);
+      setPlayer("");
+      setCategory("drinkingbuddy");
+      return;
+    }
+
+    if (nextCard.kind === "wildcard") {
+      const { selectedPlayer } = nextCard;
+      const text = getText(() => null);
+      if (selectedPlayer && text) {
+        setPrompt(`${selectedPlayer}, ${text}`);
+      } else {
+        setPrompt(text || translations[nextLanguage].ui.pressNext);
+      }
+      setPlayer(selectedPlayer || "");
+      setCategory("wildcard");
+      return;
+    }
+
     if (nextCard.kind === "question") {
       const { category: cat, questionId, selectedPlayer } = nextCard;
       setCategory(cat);
@@ -660,12 +719,14 @@ export default function useGameLogic(language: LanguageCode) {
       // Handle spotify category specially
       if (cat === "spotify") {
         const track = spotifyUrls.find((t) => t.id === questionId);
-        const trackUrl = track?.url || "https://open.spotify.com";
+        const trackUrl = track?.url || state.textEn || "https://open.spotify.com";
         setPrompt(trackUrl);
         return;
       }
 
-      const question = (() => {
+      // Use broadcast text (works for both Convex and local question IDs).
+      // Fall back to local array lookup for older broadcast formats.
+      const text = getText(() => {
         if (cat === "truth") return truthOrDare.truth.find((q) => q.id === questionId);
         if (cat === "dare") return truthOrDare.dare.find((q) => q.id === questionId);
         if (cat === "never") return neverHaveIEver.find((q) => q.id === questionId);
@@ -677,14 +738,13 @@ export default function useGameLogic(language: LanguageCode) {
           return wildcard.onePlayer.find((q) => q.id === questionId);
         }
         return null;
-      })();
+      });
 
-      if (!question) {
+      if (!text) {
         setPrompt(translations[nextLanguage].ui.pressNext);
         return;
       }
 
-      const text = question[nextLanguage];
       if (cat === "drinkingbuddy") {
         const p1 = nextCard.selectedPlayer;
         const p2 = nextCard.selectedPlayer2;

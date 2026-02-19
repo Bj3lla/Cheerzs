@@ -1,13 +1,29 @@
-import { useState, useRef } from "react";
-import { newRules } from "../data/newRule";
+import { useState, useRef, useEffect } from "react";
+import { newRules as localNewRules } from "../data/newRule";
 import { getRandomRounds } from "../utils/gameUtils";
 import type { LanguageCode } from "./useLanguage";
 
-export default function useRuleManagement(language: LanguageCode) {
-  const [availableRules, setAvailableRules] = useState<any[]>([...newRules]);
+export default function useRuleManagement(language: LanguageCode, convexRules?: any[] | null) {
+  // Use Convex rules when available and non-empty, otherwise fallback to local
+  const allRulesSource = (convexRules && convexRules.length > 0) ? convexRules : localNewRules;
+  const allRulesRef = useRef(allRulesSource);
+  allRulesRef.current = allRulesSource;
+
+  const [availableRules, setAvailableRules] = useState<any[]>([...allRulesSource]);
   const [activeRules, setActiveRules] = useState<any[]>([]);
   const [repelMessage, setRepelMessage] = useState<string>("");
   const [repelActive, setRepelActive] = useState<boolean>(false);
+
+  // Track whether Convex rules have been ingested
+  const convexRulesIngestedRef = useRef(false);
+
+  useEffect(() => {
+    if (!convexRules || convexRules.length === 0) return;
+    if (convexRulesIngestedRef.current) return;
+    convexRulesIngestedRef.current = true;
+    console.log("[useRuleManagement] Loaded rules from Convex DB");
+    setAvailableRules([...convexRules]);
+  }, [convexRules]);
 
   // Refs mirror state for synchronous access (needed for card queue pre-generation)
   const activeRulesRef = useRef<any[]>([]);
@@ -29,7 +45,7 @@ export default function useRuleManagement(language: LanguageCode) {
     syncActiveRules(normalized);
     // Keep availableRules in sync (important for host refresh / late join).
     const activeIds = new Set(normalized.map((r) => r?.id).filter(Boolean));
-    setAvailableRules(newRules.filter((r) => !activeIds.has(r.id)));
+    setAvailableRules(allRulesRef.current.filter((r) => !activeIds.has(r.id)));
   };
 
   const updateActiveRules = (baseActiveRules?: any[]) => {
@@ -77,7 +93,7 @@ export default function useRuleManagement(language: LanguageCode) {
   };
 
   const resetRules = () => {
-    setAvailableRules([...newRules]);
+    setAvailableRules([...allRulesRef.current]);
     syncActiveRules([]);
     setRepelMessage("");
     syncRepelActive(false);
