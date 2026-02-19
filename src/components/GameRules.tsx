@@ -3,7 +3,7 @@ import type { LanguageCode } from "../hooks/useLanguage";
 
 type RuleItem = { title: string; text: string };
 
-export default function GameRules({ language = "en" }: { language?: LanguageCode }) {
+export default function GameRules({ language = "no" }: { language?: LanguageCode }) {
   const i18n = translations[language] || translations.no;
   const fallback = translations.no;
 

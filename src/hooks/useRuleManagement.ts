@@ -61,7 +61,10 @@ export default function useRuleManagement(language: LanguageCode) {
 
   const addRule = (rule: any, baseActiveRules?: any[]) => {
     const base = baseActiveRules ?? activeRulesRef.current;
-    const ruleWithRounds = { ...rule, roundsLeft: getRandomRounds() };
+    // If roundsLeft is already pre-computed (deferred queue activation), use it.
+    const ruleWithRounds = (typeof rule.roundsLeft === "number" && rule.roundsLeft > 0)
+      ? { ...rule }
+      : { ...rule, roundsLeft: getRandomRounds() };
     const nextActive = [...(Array.isArray(base) ? base : []), ruleWithRounds];
     syncActiveRules(nextActive);
     setAvailableRules((prev) => prev.filter((r) => r.id !== rule.id));

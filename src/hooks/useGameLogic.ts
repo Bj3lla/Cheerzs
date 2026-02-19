@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getRandomItem, getRandomCategory, type CategoryKey } from "../utils/gameUtils";
+import { getRandomItem, getRandomCategory, getRandomRounds, type CategoryKey } from "../utils/gameUtils";
 import { translations } from "../locales/translations";
 import useQuestionState from "./useQuestionState";
 import useFriendManagement from "./useFriendManagement";
@@ -89,6 +89,7 @@ export default function useGameLogic(language: LanguageCode) {
     setCurrentCard(null);
     broadcastStateRef.current = null;
     cardQueueRef.current = [];
+    reservedRuleIdsRef.current = new Set();
     setPlayer("");
     setShowActiveRules(true);
 
@@ -141,9 +142,13 @@ export default function useGameLogic(language: LanguageCode) {
     prompt: string;
     player: string;
     broadcastState: any;
+    pendingRule?: any; // Rule to activate when this card is actually displayed
   }
 
   const cardQueueRef = useRef<CardSnapshot[]>([]);
+  // Track rule IDs reserved by cards in the queue (not yet displayed).
+  // Prevents the same rule from being picked for multiple queued cards.
+  const reservedRuleIdsRef = useRef<Set<number | string>>(new Set());
   // Keep a ref to playersForPrompts so _generateCardSnapshot reads the latest value.
   const playersForPromptsRef = useRef(playersForPrompts);
   playersForPromptsRef.current = playersForPrompts;
@@ -157,29 +162,10 @@ export default function useGameLogic(language: LanguageCode) {
     const players = playersForPromptsRef.current;
     const i18n = translations[language] || translations.no;
 
-    // Handle repeal (clear it for the queue – each snapshot is independent).
-    if (repelActiveRef.current) {
-      clearRepel();
-    }
-
-    // Tick active rules (reads from ref, writes back to ref + state).
-    const tick = updateActiveRules();
-    const activeAfterTick = tick?.activeRules ?? activeRulesRef.current;
-
-    if (tick?.expiredRule) {
-      const card: CardDescriptor = { kind: "repeal", ruleId: tick.expiredRule.id };
-      const rule = newRules.find((r) => r.id === tick.expiredRule.id);
-      const promptText = rule
-        ? (language === "en" ? rule.repelEn : rule.repelNo)
-        : i18n.ui.pressNext;
-      return {
-        card,
-        category: "repeal",
-        prompt: promptText,
-        player: "",
-        broadcastState: { card, activeRules: activeAfterTick, started: true },
-      };
-    }
+    // NOTE: Rule ticking, expiry, and activation are ALL deferred to
+    // _applySnapshot() (display time). This ensures countdowns start when
+    // cards are shown to the user, not when pre-generated for the 7-card
+    // queue buffer.
 
     const cat = getRandomCategory();
 
@@ -193,14 +179,17 @@ export default function useGameLogic(language: LanguageCode) {
         category: "spotify",
         prompt: trackUrl,
         player: selectedPlayer || "",
-        broadcastState: { card, activeRules: activeAfterTick, started: true },
+        broadcastState: { card, started: true },
       };
     }
 
     if (cat === "rule") {
-      const remainingRules = newRules.filter(
-        (r) => !activeAfterTick.some((a: any) => a.id === r.id)
-      );
+      // Check both already-active rules and rules reserved in the queue
+      const activeAndReservedIds = new Set([
+        ...activeRulesRef.current.map((r: any) => r.id),
+        ...reservedRuleIdsRef.current,
+      ]);
+      const remainingRules = newRules.filter((r) => !activeAndReservedIds.has(r.id));
       if (remainingRules.length === 0) {
         const card: CardDescriptor = { kind: "wildcard", questionId: undefined };
         return {
@@ -208,19 +197,21 @@ export default function useGameLogic(language: LanguageCode) {
           category: "wildcard",
           prompt: i18n.ui.noMoreRules,
           player: "",
-          broadcastState: { card, activeRules: activeAfterTick, started: true },
+          broadcastState: { card, started: true },
         };
       }
       const picked = getRandomItem(remainingRules);
-      const addResult = addRule(picked);
-      const nextActiveRules = addResult?.activeRules ?? activeAfterTick;
+      const rounds = getRandomRounds();
+      // Reserve this rule so other queued cards don't pick it again
+      reservedRuleIdsRef.current.add(picked.id);
       const card: CardDescriptor = { kind: "rule", ruleId: picked.id };
       return {
         card,
         category: "rule",
         prompt: picked[language],
         player: "",
-        broadcastState: { card, activeRules: nextActiveRules, started: true },
+        broadcastState: { card, started: true },
+        pendingRule: { ...picked, roundsLeft: rounds },
       };
     }
 
@@ -237,7 +228,7 @@ export default function useGameLogic(language: LanguageCode) {
         category: "drinkingbuddy",
         prompt: promptText,
         player: "",
-        broadcastState: { card, activeRules: activeAfterTick, started: true },
+        broadcastState: { card, started: true },
       };
     }
 
@@ -255,7 +246,7 @@ export default function useGameLogic(language: LanguageCode) {
         category: "wildcard",
         prompt: promptText,
         player: selectedPlayer || "",
-        broadcastState: { card, activeRules: activeAfterTick, started: true },
+        broadcastState: { card, started: true },
       };
     }
 
@@ -271,7 +262,7 @@ export default function useGameLogic(language: LanguageCode) {
         category: cat,
         prompt: `${selectedPlayer}, ${text}`,
         player: selectedPlayer,
-        broadcastState: { card, activeRules: activeAfterTick, started: true },
+        broadcastState: { card, started: true },
       };
     }
 
@@ -281,17 +272,77 @@ export default function useGameLogic(language: LanguageCode) {
       category: cat,
       prompt: text,
       player: "",
-      broadcastState: { card, activeRules: activeAfterTick, started: true },
+      broadcastState: { card, started: true },
     };
   };
 
-  /** Apply a snapshot to the UI display state. */
-  const _applySnapshot = (snap: CardSnapshot) => {
+  /**
+   * Apply a snapshot to the UI display state.
+   * Rule ticking and activation happen HERE (display time), not during
+   * queue generation. If a rule expires, a repeal card is shown instead
+   * and the original snapshot is pushed back to the front of the queue.
+   * Returns the snapshot that was actually displayed.
+   */
+  const _applySnapshot = (snap: CardSnapshot): CardSnapshot => {
+    // Clear any lingering repeal state from the previous card
+    if (repelActiveRef.current) {
+      clearRepel();
+    }
+
+    // Tick active rules — countdown happens at display time
+    const tick = updateActiveRules();
+
+    // If a rule expired, show the repeal card instead of the queued card
+    if (tick?.expiredRule) {
+      const rule = newRules.find((r) => r.id === tick.expiredRule.id);
+      const i18n = translations[language] || translations.no;
+      const promptText = rule
+        ? (language === "en" ? rule.repelEn : rule.repelNo)
+        : i18n.ui.pressNext;
+
+      const repealCard: CardDescriptor = { kind: "repeal", ruleId: tick.expiredRule.id };
+
+      // Push the original card back to front of queue for the next advance
+      cardQueueRef.current.unshift(snap);
+
+      // Display the repeal card
+      setCategory("repeal" as CategoryKey);
+      setPrompt(promptText);
+      setPlayer("");
+      setCurrentCard(repealCard);
+
+      const repealSnap: CardSnapshot = {
+        card: repealCard,
+        category: "repeal",
+        prompt: promptText,
+        player: "",
+        broadcastState: { card: repealCard, activeRules: activeRulesRef.current, started: true },
+      };
+
+      broadcastStateRef.current = repealSnap.broadcastState;
+      return repealSnap;
+    }
+
+    // If this snapshot has a pending rule, activate it now (display time)
+    if (snap.pendingRule) {
+      if (!activeRulesRef.current.some((r: any) => r.id === snap.pendingRule.id)) {
+        addRule(snap.pendingRule);
+      }
+      reservedRuleIdsRef.current.delete(snap.pendingRule.id);
+    }
+
+    // Apply visual state
     setCategory(snap.category as CategoryKey);
     setPrompt(snap.prompt);
     setPlayer(snap.player);
     setCurrentCard(snap.card);
-    broadcastStateRef.current = snap.broadcastState;
+
+    broadcastStateRef.current = {
+      ...snap.broadcastState,
+      activeRules: activeRulesRef.current,
+    };
+
+    return snap;
   };
 
   /**
@@ -324,14 +375,19 @@ export default function useGameLogic(language: LanguageCode) {
       snap = _generateCardSnapshot();
     }
 
-    // Apply popped card to UI
-    _applySnapshot(snap);
+    // Apply popped card to UI. _applySnapshot handles rule ticking at display
+    // time and may show a repeal card instead (pushing snap back to the queue).
+    const displayedSnap = _applySnapshot(snap);
 
-    // Generate one replacement to refill the buffer
-    cardQueueRef.current.push(_generateCardSnapshot());
+    // Only generate a replacement if we actually consumed the card.
+    // If a repeal was injected, the original snap was pushed back onto the queue.
+    const wasRepeal = displayedSnap.card.kind === "repeal" && snap.card.kind !== "repeal";
+    if (!wasRepeal) {
+      cardQueueRef.current.push(_generateCardSnapshot());
+    }
     console.log(`[useGameLogic] Queue advanced. Remaining: ${cardQueueRef.current.length}`);
 
-    return snap;
+    return displayedSnap;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language]);
 
